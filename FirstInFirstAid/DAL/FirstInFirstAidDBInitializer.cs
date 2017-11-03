@@ -1,4 +1,4 @@
-﻿using FirstInFirstAid.Models;
+﻿using FirstInFirstAid.Models.User;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;

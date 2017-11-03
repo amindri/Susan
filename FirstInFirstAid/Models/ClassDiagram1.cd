@@ -8,7 +8,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAGAAAAAAAAAAAAAAAgAAQAAgAABAAAAAAIAAAAAAA=</HashCode>
+      <HashCode>AAACAAAAAAAAAAAAAAAAQAQAAgAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Client.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -18,7 +18,7 @@
   <Class Name="FirstInFirstAid.Models.Event">
     <Position X="3.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAACAAAAAAAIAAAAAgAAAAAAAIAAAAAAAAAAAAAAACQ=</HashCode>
+      <HashCode>QAACAAAAAAAICAAAAgAAABAAAIAAAAAAAAAAAAAAACQ=</HashCode>
       <FileName>Models\Event.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -44,7 +44,7 @@
       <Property Name="one" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="FirstInFirstAid.Models.TrainorEventSegAllocation">
+  <Class Name="FirstInFirstAid.Models.TrainorAllocationForEventSeg">
     <Position X="6" Y="3.25" Width="2" />
     <AssociationLine Name="Trainor" Type="FirstInFirstAid.Models.Trainor">
       <MemberNameLabel ManuallyPlaced="true">
@@ -57,8 +57,8 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AABSAAQAAAAwKAAAAAAAAAAAAACAAAAAAAAAAABAAAA=</HashCode>
-      <FileName>Models\TrainorAllocation.cs</FileName>
+      <HashCode>AABSAAQAAAAwIAAAAAAAAAAAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\TrainorAllocationForEventSeg.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Trainor" />
@@ -81,36 +81,36 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="FirstInFirstAid.Models.EventSegment">
-    <Position X="5.75" Y="0.5" Width="1.5" />
-    <AssociationLine Name="Event" Type="FirstInFirstAid.Models.Event">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="1.496" Y="-8.77" />
-      </MemberNameLabel>
-    </AssociationLine>
+    <Position X="5.75" Y="0.5" Width="2" />
     <AssociationLine Name="Venue" Type="FirstInFirstAid.Models.Venue">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.623" Y="-7.081" />
       </MemberNameLabel>
     </AssociationLine>
+    <AssociationLine Name="Event" Type="FirstInFirstAid.Models.Event">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="1.496" Y="-8.77" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAIAQAAAAAAIAAAAAKgAgAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAIAQAAAAAAIAAAAAKgAgAAgAAAAAAAAAAAA=</HashCode>
       <FileName>Models\EventSegment.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Event" />
       <Property Name="Venue" />
+      <Property Name="Event" />
     </ShowAsAssociation>
   </Class>
   <Class Name="FirstInFirstAid.Models.EquipmentAllocation">
     <Position X="3.25" Y="6" Width="1.5" />
-    <AssociationLine Name="Trainor" Type="FirstInFirstAid.Models.Trainor">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-3.039" Y="3.768" />
-      </MemberNameLabel>
-    </AssociationLine>
     <AssociationLine Name="Equipment" Type="FirstInFirstAid.Models.Equipment">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="3.927" Y="-3.722" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Trainor" Type="FirstInFirstAid.Models.Trainor">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-3.039" Y="3.768" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
@@ -118,8 +118,8 @@
       <FileName>Models\EquipmentAllocation.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Trainor" />
       <Property Name="Equipment" />
+      <Property Name="Trainor" />
     </ShowAsAssociation>
   </Class>
   <Class Name="FirstInFirstAid.Models.Address">
@@ -130,7 +130,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="FirstInFirstAid.Models.Venue">
-    <Position X="8.25" Y="1.75" Width="1.5" />
+    <Position X="8.75" Y="1.75" Width="1.5" />
     <AssociationLine Name="one" Type="FirstInFirstAid.Models.Address" FixedToPoint="true">
       <Path>
         <Point X="8.938" Y="3.046" />

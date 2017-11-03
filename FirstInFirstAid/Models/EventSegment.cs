@@ -15,5 +15,6 @@ namespace FirstInFirstAid.Models
         public Venue Venue { get; set; }
         public ICollection<TrainorAllocationForEventSeg> TrainorAllocations { get; set; }
         public Event Event { get; set; }
+        public ClientContact ClientContact { get; set; }
     }
 }
