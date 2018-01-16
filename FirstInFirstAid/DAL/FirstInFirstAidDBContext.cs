@@ -31,5 +31,7 @@ namespace FirstInFirstAid.DAL
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
+
+        public System.Data.Entity.DbSet<FirstInFirstAid.Models.ClientContact> ClientContacts { get; set; }
     }
 }
