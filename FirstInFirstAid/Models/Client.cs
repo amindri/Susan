@@ -9,11 +9,11 @@ namespace FirstInFirstAid.Models
 {
     public class Client
     {
-        [Key, ForeignKey("Event")]
+        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
         
-        public Event Event { get; set; }
+        public ICollection<Event> Events { get; set; }
         public ICollection<ClientContact> ClientContacts { get; set; }
 
     }

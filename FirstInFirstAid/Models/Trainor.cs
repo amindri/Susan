@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -15,9 +16,7 @@ namespace FirstInFirstAid.Models
         public DateTime DOB { get; set; }      
         public string TaxFileNo { get; set; }
 
-
-        public Address one { get; set; }
-        public ICollection<Qualification> Qualifications { get; set; }
-        //public ICollection<StaffPayment> StaffPayments { get; set; }
+        public Address Address { get; set; }
+        public ICollection<Qualification> Qualifications { get; set; }        
     }
 }

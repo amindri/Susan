@@ -9,15 +9,21 @@ namespace FirstInFirstAid.Models
 {
     public class EventSegment
     {
-        [Key, ForeignKey("ClientContact")]
+        [Key]
         public int Id { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public long Hours { get; set; }
-        public int RequiredNumberOfstaff { get; set; }
 
-        public Venue Venue { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm:ss}")]
+        public DateTime StartTime { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm:ss}")]
+        public DateTime EndTime { get; set; }
+
+        public long Hours { get; set; }
+        public int RequiredNumberOfStaff { get; set; }
+
         public ICollection<TrainorAllocationForEventSeg> TrainorAllocations { get; set; }
+        
+        public Venue Venue { get; set; }      
         public Event Event { get; set; }
         public ClientContact ClientContact { get; set; }
     }
