@@ -1,0 +1,170 @@
+﻿@model FirstInFirstAid.Models.Event
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+    @Scripts.Render("~/Scripts/bootstrap.min.js")
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var i = 0;
+            $("#addChild").click(function () {              
+                $('#segments> tbody:last-child').append(
+                    "<tr id=" + i + ">"+
+                        "<td> " + $("#StartTime").val() + "</td>" +
+                        "<td>" + $("#EndTime").val() + "</td>" +
+                        "<td>" + $("#RequiredNumberOfStaff").val() + "</td>" +
+                        "<td>" + $("#Hours").val() + "</td>" +
+                        "<td><input type='button' value='Delete' onclick='deleteSegment(" + i + ")'/></td>" +
+                    "</tr >");
+                i++;
+                $('#modal').modal('hide');
+            });           
+        });
+
+        function deleteSegment(id) {
+            $("#" + id).remove();
+        };
+
+        function addASegmentsToForm() {
+            var count = 0;
+
+            $('#segments > tbody > tr:not(:first)').each(function () {
+                var columns = $(this).find('td');
+
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].StartTime'" + " value='" + $(columns[0]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].EndTime'" + " value='" + $(columns[1]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].RequiredNumberOfStaff'" + " value='" + $(columns[2]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Hours'" + " value='" + $(columns[3]).html().trim() + "'/>");
+                count++;
+            });
+        }
+    </script>
+}
+<h2>Create</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" id="form">
+        <h4>Event</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.EventName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EventName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EventName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.InvoiceNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.InvoiceNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HourlyRate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.HourlyRate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HourlyRate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TotalFee, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TotalFee, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TotalFee, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EventState, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.EventState, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EventState, "", new { @class = "text-danger" })
+            </div>
+        </div>         
+             
+        <button data-target="#modal" data-toggle="modal"> Add Event Segment </button>
+        <table id="segments" style="width:100%">
+            <tbody>
+                <tr>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Hours</th>
+                    <th>Required Number Of Staff</th>
+                    <th>Actions</th>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input onclick="addASegmentsToForm();" type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div> 
+}
+
+<div id="modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create Event Segment</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    
+                    <div class="form-group">
+                        @Html.Label("Start Time", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.Editor("StartTime", new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("End Time", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.Editor("EndTime", new { htmlAttributes = new { @class = "form-control" } })                            
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Hours", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.Editor("Hours", new { htmlAttributes = new { @class = "form-control" } })                            
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Label("Required Number Of Staff", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.Editor("RequiredNumberOfStaff", new { htmlAttributes = new { @class = "form -control" } })                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="addChild" data-dismiss="modal">Add</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
