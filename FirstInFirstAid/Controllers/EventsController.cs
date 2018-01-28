@@ -30,11 +30,12 @@ namespace FirstInFirstAid.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Event evenat = db.Events.Find(id);
+            Event evenat = db.Events.Include(s => s.EventSegments).Where(x => x.Id == id).First();
             if (evenat == null)
             {
                 return HttpNotFound();
             }
+          
             return View(evenat);
         }
 
@@ -70,7 +71,7 @@ namespace FirstInFirstAid.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Event @event = db.Events.Find(id);
+            Event @event = db.Events.Include(s => s.EventSegments).Where(x => x.Id == id).First();
             if (@event == null)
             {
                 return HttpNotFound();
