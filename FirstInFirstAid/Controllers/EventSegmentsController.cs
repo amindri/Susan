@@ -74,7 +74,7 @@ namespace FirstInFirstAid.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Id = new SelectList(db.ClientContacts, "Id", "ContactName", eventSegment.Id);
+            ViewBag.ClientContacts = new SelectList(db.ClientContacts, "Id", "ContactName", eventSegment.Id);
             return View(eventSegment);
         }
 
