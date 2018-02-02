@@ -1,0 +1,227 @@
+﻿@model FirstInFirstAid.Models.Client
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+    @Scripts.Render("~/Scripts/bootstrap.min.js")
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var i = $("#contacts td").closest("tr").length;
+
+            $("#addContact").click(function () {
+                if ($(this).attr('data-action') == "add") {
+                    $('#contacts> tbody:last-child').append(
+                        "<tr id=" + i + ">" +
+                        "<td> " + $("#name").val() + "</td>" +
+                        "<td>" + $("#position").val() + "</td>" +
+                        "<td>" + $("#phone").val() + "</td>" +
+                        "<td>" + $("#email").val() + "</td>" +
+                        "<td>" +
+                        "<button type= 'button' value= 'Delete' onclick= 'deleteContact(" + i + ")'>" +
+                        "Delete" +
+                        "</button>" +
+                        "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
+                        "Edit" +
+                        "</button>" +
+                        "</td>" +
+                        "</tr >");
+                    i++;
+                } else {
+                    var trId = $("#trId").val();                 
+                    $("#" + trId + " td:nth-child(1)").html($("#name").val());
+                    $("#" + trId + " td:nth-child(2)").html($("#position").val());
+                    $("#" + trId + " td:nth-child(3)").html($("#phone").val());
+                    $("#" + trId + " td:nth-child(4)").html($("#email").val());                            
+                }
+                $('#modal').modal('hide');
+            });
+
+            $("#modal").on('hidden.bs.modal', function () {
+                $(".modal-body input").val("");
+            });
+
+
+            $('#modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var buttonName = button.data('action') // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                if (buttonName == "Change") {
+                    var rowId = button.data('id');
+                    modal.find('.modal-footer button span').text(buttonName);
+                    modal.find('.modal-footer button').attr("data-action", "change");
+                    modal.find('.modal-body input#name').val($("#" + rowId + " td:nth-child(1)").html());
+                    modal.find('.modal-body input#phone').val($("#" + rowId + " td:nth-child(3)").html());
+                    modal.find('.modal-body input#position').val($("#" + rowId + " td:nth-child(2)").html());
+                    modal.find('.modal-body input#email').val($("#" + rowId + " td:nth-child(4)").html());
+                    modal.find('.modal-body input#trId').val(button.data('id'));
+                } else {
+                    modal.find('.modal-footer button span').text("Add");
+                    modal.find('.modal-footer button').attr("data-action", "add");
+                }
+            });
+
+        });
+
+        function addorChange() {
+            if ($("#ss").data('action') == "add") {
+                $('#contacts> tbody:last-child').append(
+                    "<tr id=" + i + ">" +
+                    "<td> " + $("#name").val() + "</td>" +
+                    "<td>" + $("#position").val() + "</td>" +
+                    "<td>" + $("#phone").val() + "</td>" +
+                    "<td>" + $("#email").val() + "</td>" +
+                    "<td>" +
+                    "<button type= 'button' value= 'Delete' onclick= 'deleteContact(" + i + ")'>" +
+                    "Delete" +
+                    "</button>" +
+                    "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
+                    "Edit" +
+                    "</button>" +
+                    "</td>" +
+                    "</tr >");
+                i++;
+            } else {
+                var trId = $("#trId").val();
+                $("#" + trId + " td:nth-child(1)").html($("#name").val());
+                $("#" + trId + " td:nth-child(2)").html($("#position").val());
+                $("#" + trId + " td:nth-child(3)").html($("#phone").val());
+                $("#" + trId + " td:nth-child(4)").html($("#email").val()); 
+            }
+        };
+
+        function deleteContact(id) {
+            $("#" + id).remove();
+        };
+
+        function addAllContactsToForm() {
+            var count = 0;
+
+            $('#contacts > tbody > tr:not(:first)').each(function () {
+                var columns = $(this).find('td');
+                
+                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactName'" + " value='" + $(columns[0]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactPosition'" + " value='" + $(columns[1]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactPhone'" + " value='" + $(columns[2]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactEmail'" + " value='" + $(columns[3]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");
+                alert("d");
+                count++;               
+            });
+        };
+
+
+    </script>
+}
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal" id="form">
+        <h4>Client</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <button data-target="#modal" data-toggle="modal"> Add Client Contact </button>
+        <table id="contacts" style="width:100%">
+            <tbody>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+                @if (Model.ClientContacts != null)
+                {
+                    var count = 0;
+                    foreach (var contact in Model.ClientContacts)
+                    {                        
+                        <tr id=@count data-dbId=@contact.Id>
+                            <td>@contact.ContactName</td>
+                            <td>@contact.ContactPosition</td>
+                            <td>@contact.ContactPhone</td>
+                            <td>@contact.ContactEmail</td>
+                            <td>
+                                <button type="button" value="Delete" onclick="deleteContact(@count)">                                    
+                                    Delete
+                                </button>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal" data-id="@count" data-action="Change">
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                        count++;
+                    }
+                }
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input onclick="addAllContactsToForm();" type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<div id="modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create Client Contact</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+
+                    <div class="form-group">
+                        <label for="name" class="control-label col-md-2">Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="position" class="control-label col-md-2">Position</label>
+                        <input type="text" class="form-control" id="position" placeholder="Position">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone" class="control-label col-md-2">Phone</label>
+                        <input type="number" class="form-control" id="phone" placeholder="Phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="control-label col-md-2">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Email">
+                    </div>
+                    <input type="hidden" id="trId">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="addContact" data-dismiss="modal">
+                    <span class="ui-button-text">Add</span>
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
