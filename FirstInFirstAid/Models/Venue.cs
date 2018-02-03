@@ -11,6 +11,6 @@ namespace FirstInFirstAid.Models
         public int Id { get; set; }
         public String VenueName { get; set; }
 
-        public Address one { get; set; }
+        public Address Address { get; set; }
     }
 }
