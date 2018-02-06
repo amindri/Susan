@@ -12,7 +12,7 @@
 
             var i = $("#qualifications td").closest("tr").length;
 
-            $("#addContact").click(function () {
+            $("#addQualification").click(function () {
                 if ($(this).attr('data-action') == "add") {
                     $('#qualifications> tbody:last-child').append(
                         "<tr id=" + i + ">" +
@@ -30,7 +30,7 @@
                         "</tr >");
                     i++;
                 } else {
-                    var qlfctnId = $("#qlfctnId").dval();
+                    var qlfctnId = $("#qlfctnId").val();
                     $("#" + qlfctnId + " td:nth-child(1)").html($("#name").val());
                     $("#" + qlfctnId + " td:nth-child(2)").html($("#dateAttained").val());
                     $("#" + qlfctnId + " td:nth-child(3)").html($("#expiry").val());
@@ -45,18 +45,17 @@
 
             $('#modal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget) // Button that triggered the modal
-                var buttonName = button.data('action') // Extract info from data-* attributes
-                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var buttonName = button.data('action') // Extract info from data-* attributes           
+                // Update the modal's content. 
                 var modal = $(this);
                 if (buttonName == "Change") {
                     var rowId = button.data('id');
                     modal.find('.modal-footer button span').text(buttonName);
                     modal.find('.modal-footer button').attr("data-action", "change");
-                    modal.find('.modal-body input#name').val($("#" + rowId + " td:nth-child(1)").html());
-                    modal.find('.modal-body input#dateAttained').val($("#" + rowId + " td:nth-child(2)").html());
-                    modal.find('.modal-body input#expiry').val($("#" + rowId + " td:nth-child(3)").html());
-                    modal.find('.modal-body input#trId').val(button.data('id'));
+                    modal.find('.modal-body input#name').val($("tr#" + rowId + " td:nth-child(1)").html());
+                    modal.find('.modal-body input#dateAttained').val($("tr#" + rowId + " td:nth-child(2)").html());
+                    modal.find('.modal-body input#expiry').val($("tr#" + rowId + " td:nth-child(3)").html());
+                    modal.find('.modal-body input#qlfctnId').val(button.data('id'));
                 } else {
                     modal.find('.modal-footer button span').text("Add");
                     modal.find('.modal-footer button').attr("data-action", "add");
@@ -72,7 +71,7 @@
         function addAllCQualificationsToForm() {
             var count = 0;
 
-            $('#contacts > tbody > tr:not(:first)').each(function () {
+            $('#qualifications > tbody > tr:not(:first)').each(function () {
                 var columns = $(this).find('td');
 
                 $("#form").append("<input type='hidden' name='Qualifications[" + count + "].QualificationName'" + " value='" + $(columns[0]).html().trim() + "'/>");
@@ -150,6 +149,7 @@
             @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class="form-inline">
+                    @Html.HiddenFor(model => model.Address.Id)
                     <div class="form-group">
                         @Html.EditorFor(model => model.Address.StreetNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Street Number" } })
                         @Html.ValidationMessageFor(model => model.Address.StreetNumber, "", new { @class = "text-danger" })
@@ -184,7 +184,7 @@
                     var count = 0;
                     foreach (var qualification in Model.Qualifications)
                     {
-                        <tr id=@qualification data-dbId=@qualification.Id>
+                        <tr id=@count data-dbId=@qualification.Id>
                             <td>@qualification.QualificationName</td>
                             <td>@qualification.DateAttained</td>
                             <td>@qualification.ExpiryDate</td>

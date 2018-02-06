@@ -47,7 +47,7 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,FirstName,Lastname,PhoneNumber,Email,DOB,TaxFileNo")] Trainor trainor)
+        public ActionResult Create([Bind(Include = "Id,FirstName,Lastname,PhoneNumber,Email,DOB,TaxFileNo,Address,Qualifications")] Trainor trainor)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace FirstInFirstAid.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Trainor trainor = db.Trainors.Find(id);
+            Trainor trainor = db.Trainors.Include(x => x.Qualifications).Include(y => y.Address).Where(z => z.Id == id).First();
             if (trainor == null)
             {
                 return HttpNotFound();
@@ -79,15 +79,63 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,FirstName,Lastname,PhoneNumber,Email,DOB,TaxFileNo")] Trainor trainor)
+        public ActionResult Edit([Bind(Include = "Id,FirstName,Lastname,PhoneNumber,Email,DOB,TaxFileNo,Address,Qualifications")] Trainor trainer)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(trainor).State = EntityState.Modified;
+                Trainor dbTrainer = db.Trainors.Include(c => c.Qualifications).Where(i => i.Id == trainer.Id).First();
+
+                //updating the client Name
+                dbTrainer.FirstName = trainer.FirstName;
+                dbTrainer.Lastname = trainer.Lastname;
+                dbTrainer.PhoneNumber = trainer.PhoneNumber;
+                dbTrainer.TaxFileNo = trainer.TaxFileNo;
+                dbTrainer.Email = trainer.Email;
+                dbTrainer.DOB = trainer.DOB;
+                db.Entry(trainer.Address).State = EntityState.Modified;
+                //Deleting the deleted qualifications
+                if (dbTrainer.Qualifications != null)
+                {
+                    List<Qualification> qualificationsToBeDeleted = new List<Qualification>();
+                    if (trainer.Qualifications != null)
+                    {
+                        qualificationsToBeDeleted = (from qualification in dbTrainer.Qualifications
+                                           let item = trainer.Qualifications.SingleOrDefault(i => i.Id == qualification.Id)
+                                           where item == null
+                                           select qualification).ToList();
+                    } else
+                    {
+                        qualificationsToBeDeleted = dbTrainer.Qualifications.ToList();
+                    }
+
+                    if (qualificationsToBeDeleted.Any())
+                    {
+                        foreach (var clientContact in qualificationsToBeDeleted.ToList())
+                        {
+                            db.Entry(clientContact).State = EntityState.Deleted;
+                        }
+                    }             
+                }
+                //Updating the existing qualifications
+                if (trainer.Qualifications != null) {
+                    foreach (var qualification in trainer.Qualifications)
+                    {
+                        if (qualification.Id > 0)
+                        {
+                            var qualificationDB = db.Qualifications.Single(e => e.Id == qualification.Id);
+                            db.Entry(qualificationDB).CurrentValues.SetValues(qualification);
+                            db.Entry(qualificationDB).State = EntityState.Modified;
+                        }
+                        else
+                        {
+                            db.Qualifications.Add(qualification);
+                        }
+                    }
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(trainor);
+            return View(trainer);
         }
 
         // GET: Trainors/Delete/5
