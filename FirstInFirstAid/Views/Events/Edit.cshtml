@@ -5,13 +5,44 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @section Scripts {
-    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
-    @Scripts.Render("~/Scripts/bootstrap.min.js")
+
+    <!-- New script to add jQuery datetimepicker by Anu-->
+    <script src="~/Scripts/jquery-ui-timepicker-addon.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input[type=datetime]").datetimepicker({
+                dateFormat: "dd.M.yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-100:+5",
+                controlType: "select",
+                timeFormat: "hh:mm TT"
+            });
+
+
+        });
+
+        /* Code to fix issue with Crome
+        jQuery.validator.methods.date = function (value, element) {
+            var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+            if (isChrome) {
+                var d = new Date();
+                return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
+            } else {
+                return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
+            }
+        };
+
+        });*/
+    </script>
     <script type="text/javascript">
         $(document).ready(function () {
 
         })
     </script>
+
+
 }
 <h2>Edit</h2>
 
@@ -19,72 +50,81 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal" id="form">
-        <h4>Event</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+<div class="form-horizontal" id="form">
+    <h4>Event</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.EventName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EventName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EventName, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" for="EventName">Event Name:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.EventName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.EventName, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.InvoiceNumber, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InvoiceNumber, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" for="InvoiceNumber">Invoice Number:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.InvoiceNumber, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.LabelFor(model => model.BusinessId, htmlAttributes: new { @class = "control-label col-md-2" })
-                @Html.EnumDropDownListFor(model => model.BusinessId, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.BusinessId, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" for="BusinessId">Business ID:</label>
+        <div class="col-md-10">
+            @Html.EnumDropDownListFor(model => model.BusinessId, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.BusinessId, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.EventState, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.EventState, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.EventState, "", new { @class = "text-danger" })
-            </div>
-        </div> 
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.HourlyRate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.HourlyRate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.HourlyRate, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" for="EventState">Event State:</label>
+        <div class="col-md-10">
+            @Html.EnumDropDownListFor(model => model.EventState, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.EventState, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.TotalFee, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TotalFee, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TotalFee, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" for="HourlyRate">Hourly Rate:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.HourlyRate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.HourlyRate, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <button data-target="#modal" data-toggle="modal"> Add Event Segment </button>
-        <table id="segments" style="width:100%">
+    <div class="form-group">
+        <label class="control-label col-md-2" for="TotalFee">Total Fee:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TotalFee, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TotalFee, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Add Event Segments:</label>
+        <div class="col-md-10">
+            <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
+        </div>
+    </div>
+
+    <h4 style="padding-top:30px;"> Event Segments</h4>
+    <div class="table-responsive">
+        <table class="table" id="segments" style="width:100%; padding-top:40px;">
             <tbody>
                 <tr>
-                    <th>Start Time</th>
-                    <th>End Time</th>
+                    <th>Start Date/Time</th>
+                    <th>End Date/Time</th>
                     <th>Hours</th>
                     <th>Required Number Of Staff</th>
                     <th>Actions</th>
                 </tr>
-             
-                @if (Model.EventSegments != null) {
+
+                @if (Model.EventSegments != null)
+                {
 
                     foreach (var segment in Model.EventSegments)
                     {
@@ -93,71 +133,72 @@
                             <td>@segment.EndTime</td>
                             <td>@segment.RequiredNumberOfStaff</td>
                             <td>@segment.Hours</td>
-                            <td>@Html.ActionLink("Edit", "Edit", "EventSegments", new{segment.Id}, null)</td>
+                            <td>@Html.ActionLink("View/Edit", "Edit", "EventSegments", new { segment.Id }, null)</td>
                         </tr>
                     }
-                 }
+                }
             </tbody>
         </table>
+        </div>
 
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+            <div class="col-md-2">
+                <input type="submit" value="Save" class="btn btn-success" />
             </div>
         </div>
     </div>
-}
-<div id="modal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Create Event Segment</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-horizontal">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    }
+    <div id="modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Create Event Segment</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                    <div class="form-group">
-                        @Html.Label("Start Time", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.Editor("StartTime", new { htmlAttributes = new { @class = "form-control" } })
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Start Date/Time:</label>
+                            <div class="col-md-10">
+                                @Html.Editor("StartTime", new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        @Html.Label("End Time", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.Editor("EndTime", new { htmlAttributes = new { @class = "form-control" } })
+                        <div class="form-group">
+                            <label class="control-label col-md-2">End Date/Time:</label>
+                            <div class="col-md-10">
+                                @Html.Editor("EndTime", new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        @Html.Label("Hours", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.Editor("Hours", new { htmlAttributes = new { @class = "form-control" } })
+                        <div class="form-group">
+                            @Html.Label("Hours", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.Editor("Hours", new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        @Html.Label("Required Number Of Staff", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.Editor("RequiredNumberOfStaff", new { htmlAttributes = new { @class = "form -control" } })
+                        <div class="form-group">
+                            @Html.Label("Required Number Of Staff", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.Editor("RequiredNumberOfStaff", new { htmlAttributes = new { @class = "form -control" } })
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="addChild" data-dismiss="modal">Add</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="addChild" data-dismiss="modal">Add</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>

@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<FirstInFirstAid.Models.Venue>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Venues";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Venues</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -13,9 +13,11 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.VenueName)
+            Venue Name
         </th>
-        <th></th>
+        <th>
+            Actions
+        </th>
     </tr>
 
 @foreach (var item in Model) {
