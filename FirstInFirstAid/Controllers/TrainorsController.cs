@@ -128,7 +128,7 @@ namespace FirstInFirstAid.Controllers
                         }
                         else
                         {
-                            db.Qualifications.Add(qualification);
+                            dbTrainer.Qualifications.Add(qualification);
                         }
                     }
                 }
