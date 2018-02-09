@@ -7,7 +7,7 @@
 @section Scripts {
     @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
     @Scripts.Render("~/Scripts/bootstrap.min.js")
-
+    
     <!-- Add datepicker by Anu-->
     <script type="text/javascript">
         $(document).ready(function () {
@@ -17,7 +17,7 @@
                 changeYear: true,
                 yearRange: "-100:+0",
                 controlType: "select",
-              
+
             });
 
 
@@ -25,81 +25,81 @@
 
     </script>
 
-        <script type="text/javascript">
-            $(document).ready(function () {
+    <script type="text/javascript">
+        $(document).ready(function () {
 
-                var i = $("#qualifications td").closest("tr").length;
+            var i = $("#qualifications td").closest("tr").length;
 
-                $("#addContact").click(function () {
-                    if ($(this).attr('data-action') == "add") {
-                $('#qualifications> tbody:last-child').append(
-                    "<tr id=" + i + ">" +
-                    "<td> " + $("#name").val() + "</td>" +
-                    "<td>" + $("#dateAttained").val() + "</td>" +
-                    "<td>" + $("#expiry").val() + "</td>" +
-                    "<td>" +
-                    "<button type= 'button' value= 'Delete' onclick= 'deleteQualification(" + i + ")'>" +
-                    "Delete" +
-                    "</button>" +
-                    "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
-                    "Edit" +
-                    "</button>" +
-                    "</td>" +
-                    "</tr >");
-            i++;
-                    } else {
-                        var qlfctnId = $("#qlfctnId").dval();
-                        $("#" + qlfctnId + " td:nth-child(1)").html($("#name").val());
-                        $("#" + qlfctnId + " td:nth-child(2)").html($("#dateAttained").val());
-                        $("#" + qlfctnId + " td:nth-child(3)").html($("#expiry").val());
-                    }
-                    $('#modal').modal('hide');
-                });
+            $("#addContact").click(function () {
+                if ($(this).attr('data-action') == "add") {
+                    $('#qualifications> tbody:last-child').append(
+                        "<tr id=" + i + ">" +
+                        "<td> " + $("#name").val() + "</td>" +
+                        "<td>" + $("#dateAttained").val() + "</td>" +
+                        "<td>" + $("#expiry").val() + "</td>" +
+                        "<td>" +
+                        "<button type= 'button' value= 'Delete' onclick= 'deleteQualification(" + i + ")'>" +
+                        "Delete" +
+                        "</button>" +
+                        "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
+                        "Edit" +
+                        "</button>" +
+                        "</td>" +
+                        "</tr >");
+                    i++;
+                } else {
+                    var qlfctnId = $("#qlfctnId").dval();
+                    $("#" + qlfctnId + " td:nth-child(1)").html($("#name").val());
+                    $("#" + qlfctnId + " td:nth-child(2)").html($("#dateAttained").val());
+                    $("#" + qlfctnId + " td:nth-child(3)").html($("#expiry").val());
+                }
+                $('#modal').modal('hide');
+            });
 
-                $("#modal").on('hidden.bs.modal', function () {
+            $("#modal").on('hidden.bs.modal', function () {
                 $(".modal-body input").val("");
             });
 
 
-                $('#modal').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget) // Button that triggered the modal
-                    var buttonName = button.data('action') // Extract info from data-* attributes
-                    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                    var modal = $(this);
-                    if (buttonName == "Change") {
-                        var rowId = button.data('id');
-                        modal.find('.modal-footer button span').text(buttonName);
-                        modal.find('.modal-footer button').attr("data-action", "change");
-                        modal.find('.modal-body input#name').val($("#" + rowId + " td:nth-child(1)").html());
-                        modal.find('.modal-body input#dateAttained').val($("#" + rowId + " td:nth-child(2)").html());
-                        modal.find('.modal-body input#expiry').val($("#" + rowId + " td:nth-child(3)").html());
-                        modal.find('.modal-body input#trId').val(button.data('id'));
-                    } else {
-                modal.find('.modal-footer button span').text("Add");
-            modal.find('.modal-footer button').attr("data-action", "add");
-                    }
-                });
-
+            $('#modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var buttonName = button.data('action') // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                if (buttonName == "Change") {
+                    var rowId = button.data('id');
+                    modal.find('.modal-footer button span').text(buttonName);
+                    modal.find('.modal-footer button').attr("data-action", "change");
+                    modal.find('.modal-body input#name').val($("#" + rowId + " td:nth-child(1)").html());
+                    modal.find('.modal-body input#dateAttained').val($("#" + rowId + " td:nth-child(2)").html());
+                    modal.find('.modal-body input#expiry').val($("#" + rowId + " td:nth-child(3)").html());
+                    modal.find('.modal-body input#trId').val(button.data('id'));
+                } else {
+                    modal.find('.modal-footer button span').text("Add");
+                    modal.find('.modal-footer button').attr("data-action", "add");
+                }
             });
 
-            function deleteQualification(id) {
-                $("#" + id).remove();
-            };
+        });
 
-            function addAllCQualificationsToForm() {
-                var count = 0;
+        function deleteQualification(id) {
+            $("#" + id).remove();
+        };
 
-                $('#contacts > tbody > tr:not(:first)').each(function () {
-                    var columns = $(this).find('td');
+        function addAllCQualificationsToForm() {
+            var count = 0;
 
-                    $("#form").append("<input type='hidden' name='Qualifications[" + count + "].QualificationName'" + " value='" + $(columns[0]).html().trim() + "'/>");
-                    $("#form").append("<input type='hidden' name='Qualifications[" + count + "].DateAttained'" + " value='" + $(columns[1]).html().trim() + "'/>");
-                    $("#form").append("<input type='hidden' name='Qualifications[" + count + "].ExpiryDate'" + " value='" + $(columns[2]).html().trim() + "'/>");
-                    $("#form").append("<input type='hidden' name='Qualifications[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");
-                    count++;
-                });
-            };
+            $('#contacts > tbody > tr:not(:first)').each(function () {
+                var columns = $(this).find('td');
+
+                $("#form").append("<input type='hidden' name='Qualifications[" + count + "].QualificationName'" + " value='" + $(columns[0]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='Qualifications[" + count + "].DateAttained'" + " value='" + $(columns[1]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='Qualifications[" + count + "].ExpiryDate'" + " value='" + $(columns[2]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='Qualifications[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");
+                count++;
+            });
+        };
     </script>
 }
 
@@ -110,141 +110,141 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal" id="form">
-    <h4>Trainer</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Id)
+    <div class="form-horizontal" id="form">
+        <h4>Trainer</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
 
-    <div class="form-group">
-        <label class="control-label col-md-2">First Name:</label>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-md-2">Last Name:</label>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Lastname, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Lastname, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-md-2">Phone Number:</label>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-md-2">Email:</label>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-md-2">DOB:</label>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.DOB, new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
-            @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-md-2">Tax File Number:</label>
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.TaxFileNo, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.TaxFileNo, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-md-2">Address:</label>
-        <div class="col-md-10">
-
-            <div class="form-group">
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Address.StreetNumber, new { htmlAttributes = new { @class = "form-control"} })
-                    @Html.ValidationMessageFor(model => model.Address.StreetNumber, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Address.StreetName, new { htmlAttributes = new { @class = "form-control"} })
-                    @Html.ValidationMessageFor(model => model.Address.StreetName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Address.Suburb, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Address.Suburb, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Address.Postcode, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Address.Postcode, "", new { @class = "text-danger" })
-                </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">First Name:</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
             </div>
         </div>
 
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-md-2">Add Trainer Qualification:</label>
-        <div class="col-md-10">
-            <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
+        <div class="form-group">
+            <label class="control-label col-md-2">Last Name:</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Lastname, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Lastname, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Phone Number:</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Email:</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">DOB:</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DOB, new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+                @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Tax File Number:</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TaxFileNo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TaxFileNo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Address:</label>
+            <div class="col-md-10">
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Address.StreetNumber, new { htmlAttributes = new { @class = "form-control"} })
+                        @Html.ValidationMessageFor(model => model.Address.StreetNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Address.StreetName, new { htmlAttributes = new { @class = "form-control"} })
+                        @Html.ValidationMessageFor(model => model.Address.StreetName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Address.Suburb, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Address.Suburb, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Address.Postcode, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Address.Postcode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Add Trainer Qualification:</label>
+            <div class="col-md-10">
+                <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
+            </div>
+        </div>
 
 
-    <h4 style="padding-top:30px;"> Trainer Qualifications</h4>
-    <div class="table-responsive">
-    <table id="qualifications" style="width:100%; padding-top:40px;">
-        <tbody>
-            <tr>
-                <th>Qualification Name</th>
-                <th>Date Attained</th>
-                <th>Expiry Date</th>
+        <h4 style="padding-top:30px;"> Trainer Qualifications</h4>
+        <div class="table-responsive">
+            <table id="qualifications" style="width:100%; padding-top:40px;">
+                <tbody>
+                    <tr>
+                        <th>Qualification Name</th>
+                        <th>Date Attained</th>
+                        <th>Expiry Date</th>
 
-            </tr>
-            @if (Model.Qualifications != null)
-            {
-                var count = 0;
-                foreach (var qualification in Model.Qualifications)
-                {
-                    <tr id=@qualification data-dbId=@qualification.Id>
-                        <td>@qualification.QualificationName</td>
-                        <td>@qualification.DateAttained</td>
-                        <td>@qualification.ExpiryDate</td>
-                        <td>
-                            <button type="button" value="Delete" onclick="deleteQualification(@count)">
-                                Delete
-                            </button>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal" data-id="@count" data-action="Change">
-                                Edit
-                            </button>
-                        </td>
                     </tr>
-                    count++;
-                }
-            }
-        </tbody>
-    </table>
-  </div>
+                    @if (Model.Qualifications != null)
+                    {
+                        var count = 0;
+                        foreach (var qualification in Model.Qualifications)
+                        {
+                            <tr id=@qualification data-dbId=@qualification.Id>
+                                <td>@qualification.QualificationName</td>
+                                <td>@qualification.DateAttained</td>
+                                <td>@qualification.ExpiryDate</td>
+                                <td>
+                                    <button type="button" value="Delete" onclick="deleteQualification(@count)">
+                                        Delete
+                                    </button>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal" data-id="@count" data-action="Change">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+                            count++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
 
-    <div class="form-group">
-        <div class=" col-md-2">
-            <input onclick="addAllCQualificationsToForm();" type="submit" value="Save" class="btn btn-success" />
+        <div class="form-group">
+            <div class=" col-md-2">
+                <input onclick="addAllCQualificationsToForm();" type="submit" value="Save" class="btn btn-success" />
+            </div>
         </div>
     </div>
-</div>
 }
 
 <div id="modal" class="modal fade" role="dialog">
@@ -263,7 +263,7 @@
                         <div class="col-md-10">
                             @Html.Editor("QualificationName", new { htmlAttributes = new { @class = "form-control", @type="text", @placeholder="Name" } })
                         </div>
-                        
+
                     </div>
 
                     <div class="form-group">
