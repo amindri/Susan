@@ -154,7 +154,7 @@
     <div class="form-group">
         <label class="control-label col-md-2">Address</label>
         <div class="col-md-10">
-
+            @Html.HiddenFor(model => model.Address.Id)
             <div class="form-group">
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.Address.StreetNumber, new { htmlAttributes = new { @class = "form-control"} })
