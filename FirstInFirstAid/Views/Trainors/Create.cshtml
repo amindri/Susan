@@ -109,7 +109,7 @@
     <div class="form-group">
         <label class="control-label col-md-2">Tax File Number:</label>
         <div class="col-md-10">
-            @Html.EditorFor(model => model.TaxFileNo, new { htmlAttributes = new { @class = "form-control" , @placeholder ="Tax File Number"} })
+            @Html.EditorFor(model => model.TaxFileNo, new { htmlAttributes = new { @class = "form-control", @placeholder = "Tax File Number" } })
             @Html.ValidationMessageFor(model => model.TaxFileNo, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -145,20 +145,29 @@
         </div>
     </div>
 
-    <button data-target="#modal" data-toggle="modal"> Add Trainor Qualification </button>
-    <table id="qualifications" style="width:100%">
-        <tbody>
-            <tr>
-                <th>Qualification Name</th>
-                <th>Date Attained</th>
-                <th>Expiry Date</th>
-            </tr>
-        </tbody>
-    </table>
+    <div class="form-group">
+        <label class="control-label col-md-2">Add Trainer Qualification:</label>
+        <div class="col-md-10">
+            <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
+        </div>
+    </div>
+
+    <h4 style="padding-top:30px;"> Trainer Qualifications</h4>
+    <div class="table-responsive">
+        <table id="qualifications" style="width:100%; padding-top:40px;">
+            <tbody>
+                <tr>
+                    <th>Qualification Name</th>
+                    <th>Date Attained</th>
+                    <th>Expiry Date</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input onclick="addAllQualificationsToForm();" type="submit" value="Create" class="btn btn-default" />
+        <div class="col-md-2">
+            <input onclick="addAllQualificationsToForm();" type="submit" value="Create" class="btn btn-success" />
         </div>
     </div>
 </div>
@@ -175,18 +184,27 @@
                 <div class="form-horizontal">
 
                     <div class="form-group">
-                        <label for="name" class="control-label col-md-2">Qualification Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="Name">
+                        <label for="name" class="control-label col-md-2">Qualification Name:</label>
+                        <div class="col-md-10">
+                            @Html.Editor("QualificationName", new { htmlAttributes = new { @class = "form-control", @type = "text", @placeholder = "Name", @id = "name" } })
+                        </div>
+                        <!--<input type="text" class="form-control" id="name" placeholder="Name">-->
                     </div>
 
                     <div class="form-group">
-                        <label for="dateAttained" class="control-label col-md-2">Date Attained</label>
-                        <input type="date" class="form-control" id="dateAttained" placeholder="Date attained">
+                        <label for="dateAttained" class="control-label col-md-2">Date Attained:</label>
+                        <div class="col-md-10">
+                            @Html.Editor("DateAttained", new { htmlAttributes = new { @class = "form-control", @placeholder = "Date Attained", @type = "datetime", onkeydown = "return false", onpaste = "return false", @id = "dateAttained" } })
+                        </div>
+                        <!--<input type="date" class="form-control" id="dateAttained" placeholder="Date attained">-->
                     </div>
 
                     <div class="form-group">
-                        <label for="expiry" class="control-label col-md-2">Expiry Date</label>
-                        <input type="date" class="form-control" id="expiry" placeholder="Expiry Date">
+                        <label for="expiry" class="control-label col-md-2">Expiry Date:</label>
+                        <div class="col-md-10">
+                            @Html.Editor("ExpiryDate", new { htmlAttributes = new { @class = "form-control", @placeholder = "Expiry Date", @type = "datetime", onkeydown = "return false", onpaste = "return false", @id = "expiry" } })
+                        </div>
+                        <!--<input type="date" class="form-control" id="expiry" placeholder="Expiry Date">-->
                     </div>
                     <input type="hidden" id="qlfctnId">
                 </div>
