@@ -20,6 +20,30 @@
                 timeFormat: "hh:mm TT"
             });
 
+            $('#Client').on('change', function () {
+                var value = $(this).val();
+            }).change();
+
+            $('#Client').click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Events/GetClients",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (clientList) {
+                        $('#Client').empty();
+                        $('#Client').append($("<option selected='selected'></option>").attr("value", '').text('Please Select'));
+
+                        $.each(clientList, function (index, client) {
+                            $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
+                        });
+                    },
+                    error: function () {
+                        alert("Failed to load Clients");
+                    }
+                })
+            });
+
             var i = 0;
             $("#addChild").click(function () {
                 $('#segments> tbody:last-child').append(
@@ -63,91 +87,98 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal" id="form">
-        <h4>Event</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="form-horizontal" id="form">
+    <h4>Event</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            <label class="control-label col-md-2" for="EventName">Event Name:</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EventName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Event Name" } })
-                @Html.ValidationMessageFor(model => model.EventName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2" for="InvoiceNumber">Invoice Number:</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Invoice Number" } })
-                @Html.ValidationMessageFor(model => model.InvoiceNumber, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2" for="BusinessId">Business ID:</label>
-            <div class="col-md-10">
-
-                @Html.EnumDropDownListFor(model => model.BusinessId, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.BusinessId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2" for="EventState">Event State:</label>
-            <div class="col-md-10">
-                @Html.EnumDropDownListFor(model => model.EventState, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.EventState, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2" for="HourlyRate">Hourly Rate:</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.HourlyRate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.HourlyRate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2" for="TotalFee">Total Fee:</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TotalFee, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TotalFee, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2">Add Event Segments:</label>
-            <div class="col-md-10">
-                <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
-            </div>
-        </div>
-
-
-        <h4 style="padding-top:30px;"> Event Segments</h4>
-        <div class="table-responsive">
-            <table class="table" id="segments" style="width:100%; padding-top:40px; ">
-                <tbody>
-                    <tr>
-                        <th>Start Date/Time</th>
-                        <th>End Date/Time</th>
-                        <th>Hours</th>
-                        <th>Required Number Of Staff</th>
-                        <th>Actions</th>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-
-        <div class="form-group">
-            <div class=" col-md-2">
-                <input onclick="addASegmentsToForm();" type="submit" value="Create" class="btn btn-success" />
-            </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" for="EventName">Event Name:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.EventName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Event Name" } })
+            @Html.ValidationMessageFor(model => model.EventName, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="InvoiceNumber">Invoice Number:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Invoice Number" } })
+            @Html.ValidationMessageFor(model => model.InvoiceNumber, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="BusinessId">Business ID:</label>
+        <div class="col-md-10">
+
+            @Html.EnumDropDownListFor(model => model.BusinessId, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.BusinessId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="EventState">Event State:</label>
+        <div class="col-md-10">
+            @Html.EnumDropDownListFor(model => model.EventState, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.EventState, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="HourlyRate">Hourly Rate:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.HourlyRate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.HourlyRate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="TotalFee">Total Fee:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TotalFee, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TotalFee, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="Client">Client:</label>
+        <div class="col-md-10">
+            <select class="form-control" id="Client"></select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Add Event Segments:</label>
+        <div class="col-md-10">
+            <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
+        </div>
+    </div>
+
+
+    <h4 style="padding-top:30px;"> Event Segments</h4>
+    <div class="table-responsive">
+        <table class="table" id="segments" style="width:100%; padding-top:40px; ">
+            <tbody>
+                <tr>
+                    <th>Start Date/Time</th>
+                    <th>End Date/Time</th>
+                    <th>Hours</th>
+                    <th>Required Number Of Staff</th>
+                    <th>Actions</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <div class="form-group">
+        <div class=" col-md-2">
+            <input onclick="addASegmentsToForm();" type="submit" value="Create" class="btn btn-success" />
+        </div>
+    </div>
+</div>
 }
 
 <div id="modal" class="modal fade" role="dialog">
