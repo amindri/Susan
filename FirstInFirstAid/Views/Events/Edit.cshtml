@@ -21,8 +21,12 @@
                 timeFormat: "hh:mm TT"
             });
 
-            $('#Client').click(function () {
+            $('#Client').on('change', function () {
+                var value = $(this).val();
+                alert("xsdsf");
+            }).change();
 
+            $('#Client').click(function () {
                 $.ajax({
                     type: "POST",
                     url: "/Events/GetClients",
@@ -32,8 +36,9 @@
                     success: function (msg) {
 
                         $.each(msg, function (index, item) {
-                            alert(item);
-                            $('#Client').append($('</option>').text(item));
+                            $('#Client').empty();
+                            $('#Client').append($("<option></option>").attr("value", '').text('Please Select'));
+                            $('#Client').append($("<option></option>").attr("value", item.Id).text(item.Name));
                         });
                     },
                     error: function () {
@@ -106,6 +111,14 @@
     </div>
 
     <div class="form-group">
+        <label class="control-label col-md-2" for="Client">Client:</label>
+        <div class="col-md-10">
+            <select class="form-control" id="Client"></select>
+        </div>
+    </div>
+
+
+    <div class="form-group">
         <label class="control-label col-md-2">Add Event Segments:</label>
         <div class="col-md-10">
             <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
@@ -126,17 +139,16 @@
 
                 @if (Model.EventSegments != null)
                 {
-
-                foreach (var segment in Model.EventSegments)
-                {
-                <tr>
-                    <td>@segment.StartTime</td>
-                    <td>@segment.EndTime</td>
-                    <td>@segment.RequiredNumberOfStaff</td>
-                    <td>@segment.Hours</td>
-                    <td>@Html.ActionLink("View/Edit", "Edit", "EventSegments", new { segment.Id }, null)</td>
-                </tr>
-                }
+                    foreach (var segment in Model.EventSegments)
+                    {
+                        <tr>
+                            <td>@segment.StartTime</td>
+                            <td>@segment.EndTime</td>
+                            <td>@segment.RequiredNumberOfStaff</td>
+                            <td>@segment.Hours</td>
+                            <td>@Html.ActionLink("View/Edit", "Edit", "EventSegments", new { segment.Id }, null)</td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
