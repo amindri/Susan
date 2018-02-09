@@ -6,14 +6,23 @@
 
 
 <style>
-    .jumbotron {
-        background-color: #a1ffa2;
+    #jumb1 {
+        background-color: #88c87b;
     }
 
-    a {
-        font-size: 16px;
-     
+    #jumb2 {
+        background-color: #ff8454;
     }
+
+    #jumb3 {
+        background-color: #f0cd3a;
+    }
+    
+    
+    
+    a {
+            font-size: 16px;
+        }
 
     
     h2{
@@ -24,7 +33,7 @@
 <h2> DASHBOARD - FIRST IN SPORTS FIRST AID</h2>
 <hr/>
 <div class="container">
-    <div class="jumbotron">
+    <div class="jumbotron" id="jumb1">
         <div class="row">
             <div class="col-md-6">
 
@@ -32,7 +41,7 @@
                 <hr />
                 @Html.ActionLink("View", "Index", "Events") <br />
                 @Html.ActionLink("Create", "Create", "Events") <br />
-                @Html.ActionLink("Edit", "Edit", "Events")
+                
             </div>
             <div class="col-md-6">
                 <h3> Event Calendar</h3>
@@ -48,22 +57,22 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <div class="jumbotron">
+            <div class="jumbotron" id="jumb2">
                 <h3> Clients</h3>
                 <hr />
                 @Html.ActionLink("View", "Index", "Clients") <br />
                 @Html.ActionLink("Create", "Create", "Clients") <br />
-                @Html.ActionLink("Edit", "Edit", "Clients")
+                
             </div>
         </div>
 
         <div class="col-md-6">
-            <div class="jumbotron">
+            <div class="jumbotron" id="jumb3">
                 <h3> Trainers</h3>
                 <hr />
                 @Html.ActionLink("View", "Index", "Trainors") <br />
                 @Html.ActionLink("Create", "Create", "Trainors") <br />
-                @Html.ActionLink("Edit", "Edit", "Trainors")
+                
             </div>
         </div>
 
