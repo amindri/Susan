@@ -104,7 +104,7 @@
             $("#" + id).remove();
         };
 
-        function addAllContactsToForm() {
+        function addAllSegmentsToForm() {
             var count = 0;
 
             $('#segments > tbody > tr:not(:first)').each(function () {
@@ -236,7 +236,7 @@
 
     <div class="form-group">
         <div class="col-md-2">
-            <input type="submit" value="Save" class="btn btn-success" />
+            <input onclick="addAllSegmentsToForm();" type="submit" value="Save" class="btn btn-success" />
         </div>
     </div>
 </div>

@@ -85,15 +85,75 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,EventState")] Event @event)
+        public ActionResult Edit([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,EventState,EventSegments,Client")] Event @event)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(@event).State = EntityState.Modified;
+                Event dbEvent = db.Events.Include(c => c.EventSegments).Where(i => i.Id == @event.Id).First();
+
+                //updating the Event fields
+                dbEvent.EventName = @event.EventName;
+                dbEvent.EventState = @event.EventState;
+                dbEvent.BusinessId = @event.BusinessId;
+                dbEvent.HourlyRate = @event.HourlyRate;
+                dbEvent.InvoiceNumber = @event.InvoiceNumber;
+                dbEvent.TotalFee = @event.TotalFee;
+                if (@event.Client != null) {
+                    if (@event.Client.Id > 0)
+                    {
+                        db.Entry(@event.Client).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        db.Entry(@event.Client).State = EntityState.Added;
+                    }
+
+                }
+
+                //Deleting the deleted Segments
+                if (dbEvent.EventSegments != null)
+                {
+                    List<EventSegment> segmentsToBeDeleted = new List<EventSegment>();
+                    if (@event.EventSegments != null)
+                    {
+                        segmentsToBeDeleted = (from eventSegment in dbEvent.EventSegments
+                                                     let item = @event.EventSegments.SingleOrDefault(i => i.Id == eventSegment.Id)
+                                                     where item == null
+                                                     select eventSegment).ToList();
+                    }
+                    else
+                    {
+                        segmentsToBeDeleted = dbEvent.EventSegments.ToList();
+                    }
+
+                    if (segmentsToBeDeleted.Any())
+                    {
+                        foreach (var eventSegment in segmentsToBeDeleted.ToList())
+                        {
+                            db.Entry(eventSegment).State = EntityState.Deleted;
+                        }
+                    }
+                }
+                //Updating the existing eventSegments
+                if (@event.EventSegments != null)
+                {
+                    foreach (var eventSegment in @event.EventSegments)
+                    {
+                        if (eventSegment.Id > 0)
+                        {
+                            var eventsegmentDB = db.EventSegments.Single(e => e.Id == eventSegment.Id);
+                            db.Entry(eventsegmentDB).CurrentValues.SetValues(eventSegment);
+                            db.Entry(eventsegmentDB).State = EntityState.Modified;
+                        }
+                        else
+                        {
+                            dbEvent.EventSegments.Add(eventSegment);
+                        }
+                    }
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.Clients = new SelectList(db.Clients, "Id", "Name", @event.Id);
             return View(@event);
         }
         
