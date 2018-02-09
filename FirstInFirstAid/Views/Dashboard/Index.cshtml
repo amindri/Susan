@@ -4,5 +4,63 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Dashboard</h2>
+
+<style>
+    .jumbotron {
+        background-color: #deffe3;
+    }
+    a{
+        font-size:16px;
+
+    }
+</style>
+
+
+<div class="container">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-6">
+
+                <h3> Events</h3>
+                @Html.ActionLink("View", "Index", "Events") <br />
+                @Html.ActionLink("Create", "Create", "Events") <br />
+                @Html.ActionLink("Edit", "Edit", "Events")
+            </div>
+            <div class="col-md-6">
+                <h3> Event Calendar</h3>
+            </div>
+
+        </div>
+       
+    </div>
+</div>
+       
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="jumbotron">
+                <h3> Clients</h3>
+                @Html.ActionLink("View", "Index", "Clients") <br />
+                @Html.ActionLink("Create", "Create", "Clients") <br />
+                @Html.ActionLink("Edit", "Edit", "Clients")
+            </div>
+        </div>
+    
+        <div class="col-md-6">
+            <div class="jumbotron">
+                <h3> Trainers</h3>
+                @Html.ActionLink("View", "Index", "Trainors") <br />
+                @Html.ActionLink("Create", "Create", "Trainors") <br />
+                @Html.ActionLink("Edit", "Edit", "Trainors")
+            </div>
+        </div>
+    
+
+    </div>
+</div>
+
+
+
+
 
