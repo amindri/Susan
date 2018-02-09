@@ -4,13 +4,14 @@
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 @section Scripts {
 
-    <!-- New script to add jQuery datetimepicker by Anu-->
-    <script src="~/Scripts/jquery-ui-timepicker-addon.min.js"></script>
+    @Scripts.Render("~/Scripts/jquery-ui-timepicker-addon.min.js")
 
     <script type="text/javascript">
         $(document).ready(function () {
+
             $("input[type=datetime]").datetimepicker({
                 dateFormat: "dd.M.yy",
                 changeMonth: true,
@@ -20,30 +21,30 @@
                 timeFormat: "hh:mm TT"
             });
 
+            $('#Client').click(function () {
 
-        });
+                $.ajax({
+                    type: "POST",
+                    url: "/Events/GetClients",
+                    data: "{}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
 
-        /* Code to fix issue with Crome
-        jQuery.validator.methods.date = function (value, element) {
-            var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-            if (isChrome) {
-                var d = new Date();
-                return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
-            } else {
-                return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
-            }
-        };
-
-        });*/
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-
+                        $.each(msg, function (index, item) {
+                            alert(item);
+                            $('#Client').append($('</option>').text(item));
+                        });
+                    },
+                    error: function () {
+                        alert("Failed to load genders");
+                    }
+                })
+            });
         })
     </script>
-
-
 }
+
 <h2>Edit</h2>
 
 @using (Html.BeginForm())
@@ -126,79 +127,79 @@
                 @if (Model.EventSegments != null)
                 {
 
-                    foreach (var segment in Model.EventSegments)
-                    {
-                        <tr>
-                            <td>@segment.StartTime</td>
-                            <td>@segment.EndTime</td>
-                            <td>@segment.RequiredNumberOfStaff</td>
-                            <td>@segment.Hours</td>
-                            <td>@Html.ActionLink("View/Edit", "Edit", "EventSegments", new { segment.Id }, null)</td>
-                        </tr>
-                    }
+                foreach (var segment in Model.EventSegments)
+                {
+                <tr>
+                    <td>@segment.StartTime</td>
+                    <td>@segment.EndTime</td>
+                    <td>@segment.RequiredNumberOfStaff</td>
+                    <td>@segment.Hours</td>
+                    <td>@Html.ActionLink("View/Edit", "Edit", "EventSegments", new { segment.Id }, null)</td>
+                </tr>
+                }
                 }
             </tbody>
         </table>
-        </div>
+    </div>
 
 
-        <div class="form-group">
-            <div class="col-md-2">
-                <input type="submit" value="Save" class="btn btn-success" />
-            </div>
+    <div class="form-group">
+        <div class="col-md-2">
+            <input type="submit" value="Save" class="btn btn-success" />
         </div>
     </div>
-    }
-    <div id="modal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Create Event Segment</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-horizontal">
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+</div>
+}
+<div id="modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create Event Segment</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                        <div class="form-group">
-                            <label class="control-label col-md-2">Start Date/Time:</label>
-                            <div class="col-md-10">
-                                @Html.Editor("StartTime", new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
-                            </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Start Date/Time:</label>
+                        <div class="col-md-10">
+                            @Html.Editor("StartTime", new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="control-label col-md-2">End Date/Time:</label>
-                            <div class="col-md-10">
-                                @Html.Editor("EndTime", new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
-                            </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">End Date/Time:</label>
+                        <div class="col-md-10">
+                            @Html.Editor("EndTime", new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            @Html.Label("Hours", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.Editor("Hours", new { htmlAttributes = new { @class = "form-control" } })
-                            </div>
+                    <div class="form-group">
+                        @Html.Label("Hours", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.Editor("Hours", new { htmlAttributes = new { @class = "form-control" } })
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            @Html.Label("Required Number Of Staff", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.Editor("RequiredNumberOfStaff", new { htmlAttributes = new { @class = "form -control" } })
-                            </div>
+                    <div class="form-group">
+                        @Html.Label("Required Number Of Staff", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.Editor("RequiredNumberOfStaff", new { htmlAttributes = new { @class = "form -control" } })
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id="addChild" data-dismiss="modal">Add</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="addChild" data-dismiss="modal">Add</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
 
 
-    <div>
-        @Html.ActionLink("Back to List", "Index")
-    </div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

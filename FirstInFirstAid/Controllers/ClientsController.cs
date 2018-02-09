@@ -91,10 +91,10 @@ namespace FirstInFirstAid.Controllers
                 if (dbClient.ClientContacts != null)
                 { 
                     //Deleting the deleted contacts
-                    var contactsToBeDeleted = (from email in dbClient.ClientContacts
-                                                    let item = client.ClientContacts.SingleOrDefault(i => i.Id == email.Id)
+                    var contactsToBeDeleted = (from clientContact in dbClient.ClientContacts
+                                                    let item = client.ClientContacts.SingleOrDefault(i => i.Id == clientContact.Id)
                                                     where item == null
-                                                    select email).ToList();
+                                                    select clientContact).ToList();
                     if (contactsToBeDeleted.Any())
                     {
                         foreach (var clientContact in contactsToBeDeleted.ToList())

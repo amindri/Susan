@@ -4,121 +4,203 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 @section Scripts {
+
+    @Scripts.Render("~/Scripts/jquery-ui-timepicker-addon.min.js")
+
+
     <script type="text/javascript">
         $(document).ready(function () {
+
             $("input[type=datetime]").datepicker({
                 dateFormat: "dd.M.yy",
                 changeMonth: true,
                 changeYear: true,
                 yearRange: "-100:+0",
                 controlType: "select",
-               
             });
 
+            var i = 0;
+            $("#addQualification").click(function () {
+                $('#qualifications> tbody:last-child').append(
+                    "<tr id=" + i + ">" +
+                    "<td> " + $("#name").val() + "</td>" +
+                    "<td>" + $("#dateAttained").val() + "</td>" +
+                    "<td>" + $("#expiry").val() + "</td>" +
+                    "<td><input type='button' value='Delete' onclick='deleteQualification(" + i + ")'/></td>" +
+                    "</tr >");
+                i++;
+                $('#modal').modal('hide');
+            });
 
+            $("#modal").on('hidden.bs.modal', function () {
+                $(".modal-body input").val("");
+            });
         });
-        </script>
+
+        function deleteQualification(id) {
+            $("#" + id).remove();
+        };
+
+        function addAllQualificationsToForm() {
+            var count = 0;
+
+            $('#qualifications > tbody > tr:not(:first)').each(function () {
+                var columns = $(this).find('td');
+
+                $("#form").append("<input type='hidden' name='Qualifications[" + count + "].QualificationName'" + " value='" + $(columns[0]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='Qualifications[" + count + "].DateAttained'" + " value='" + $(columns[1]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='Qualifications[" + count + "].ExpiryDate'" + " value='" + $(columns[2]).html().trim() + "'/>");
+                count++;
+            });
+        }
+    </script>
 }
 
-    <h2>Create</h2>
+<h2>Create</h2>
+@using (Html.BeginForm())
+{
+@Html.AntiForgeryToken()
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
+<div class="form-horizontal" id="form">
+    <h4>Trainer</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        <label class="control-label col-md-2">First Name:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "First Name" } })
+            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+        </div>
+    </div>
 
-        <div class="form-horizontal">
-            <h4>Trainer</h4>
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        <label class="control-label col-md-2">Last Name:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Lastname, new { htmlAttributes = new { @class = "form-control", @placeholder = "Last Name" } })
+            @Html.ValidationMessageFor(model => model.Lastname, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Phone Number:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number" } })
+            @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Email:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">DOB:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DOB, new { htmlAttributes = new { @class = "form-control", @placeholder = "DOB", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+            @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Tax File Number:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.TaxFileNo, new { htmlAttributes = new { @class = "form-control" , @placeholder ="Tax File Number"} })
+            @Html.ValidationMessageFor(model => model.TaxFileNo, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Address:</label>
+        <div class="col-md-10">
             <div class="form-group">
-                <label class="control-label col-md-2" >First Name:</label>
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "First Name" } })
-                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.Address.StreetNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Street Number" } })
+                    @Html.ValidationMessageFor(model => model.Address.StreetNumber, "", new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group ">
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Address.StreetName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Street Name" } })
+                    @Html.ValidationMessageFor(model => model.Address.StreetName, "", new { @class = "text-danger" })
                 </div>
             </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-2" >Last Name:</label>
+            <div class="form-group ">
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.Lastname, new { htmlAttributes = new { @class = "form-control", @placeholder = "Last Name" } })
-                    @Html.ValidationMessageFor(model => model.Lastname, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.Address.Suburb, new { htmlAttributes = new { @class = "form-control", @placeholder = "Suburb" } })
+                    @Html.ValidationMessageFor(model => model.Address.Suburb, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
-                <label class="control-label col-md-2" >Phone Number:</label>
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Phone Number" } })
-                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-2" >Email:</label>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email" } })
-                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-2" >DOB:</label>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.DOB, new { htmlAttributes = new { @class = "form-control", @placeholder = "DOB", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
-                    @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-2" >Tax File Number:</label>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.TaxFileNo, new { htmlAttributes = new { @class = "form-control" , @placeholder ="Tax File Number"} })
-                    @Html.ValidationMessageFor(model => model.TaxFileNo, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-2">Address:</label>
-                <div class="col-md-10">
-                    <div class="form-group">
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Address.StreetNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Street Number" } })
-                            @Html.ValidationMessageFor(model => model.Address.StreetNumber, "", new { @class = "text-danger" })
-                        </div>
-
-                    </div>
-                    <div class="form-group ">
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Address.StreetName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Street Name" } })
-                            @Html.ValidationMessageFor(model => model.Address.StreetName, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group ">
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Address.Suburb, new { htmlAttributes = new { @class = "form-control", @placeholder = "Suburb" } })
-                            @Html.ValidationMessageFor(model => model.Address.Suburb, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Address.Postcode, new { htmlAttributes = new { @class = "form-control", @placeholder = "Postcode" } })
-                            @Html.ValidationMessageFor(model => model.Address.Postcode, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-success" />
+                    @Html.EditorFor(model => model.Address.Postcode, new { htmlAttributes = new { @class = "form-control", @placeholder = "Postcode" } })
+                    @Html.ValidationMessageFor(model => model.Address.Postcode, "", new { @class = "text-danger" })
                 </div>
             </div>
         </div>
-    }
-
-    <div>
-        @Html.ActionLink("Back to List", "Index")
     </div>
+
+    <button data-target="#modal" data-toggle="modal"> Add Trainor Qualification </button>
+    <table id="qualifications" style="width:100%">
+        <tbody>
+            <tr>
+                <th>Qualification Name</th>
+                <th>Date Attained</th>
+                <th>Expiry Date</th>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input onclick="addAllQualificationsToForm();" type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+<div id="modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Qualification</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+
+                    <div class="form-group">
+                        <label for="name" class="control-label col-md-2">Qualification Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dateAttained" class="control-label col-md-2">Date Attained</label>
+                        <input type="date" class="form-control" id="dateAttained" placeholder="Date attained">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="expiry" class="control-label col-md-2">Expiry Date</label>
+                        <input type="date" class="form-control" id="expiry" placeholder="Expiry Date">
+                    </div>
+                    <input type="hidden" id="qlfctnId">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="addQualification" data-dismiss="modal">
+                    <span class="ui-button-text">Add</span>
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+

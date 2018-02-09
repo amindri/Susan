@@ -13,10 +13,10 @@ namespace FirstInFirstAid.Models
         public int Id { get; set; }
         public string QualificationName { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm:ss}")]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime DateAttained { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm:ss}")]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime ExpiryDate { get; set; }
         public Trainor Trainor { get; set; }
     }

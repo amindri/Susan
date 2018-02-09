@@ -93,10 +93,10 @@ namespace FirstInFirstAid.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.Id = new SelectList(db.Clients, "Id", "Name", @event.Id);
+            ViewBag.Clients = new SelectList(db.Clients, "Id", "Name", @event.Id);
             return View(@event);
         }
-
+        
         // GET: Events/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -121,6 +121,11 @@ namespace FirstInFirstAid.Controllers
             db.Events.Remove(eventVar);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public JsonResult GetClients() // its a GET, not a POST
+        {
+            return Json(db.Clients, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)
