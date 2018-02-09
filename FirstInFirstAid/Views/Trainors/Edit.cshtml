@@ -246,9 +246,9 @@
                 <div class="form-horizontal">
 
                     <div class="form-group">
-                        <label for="name" class="control-label col-md-2">Qualification Name</label>
+                        <label for="name" class="control-label col-md-2">Qualification Name:</label>
                         <div class="col-md-10">
-                            @Html.Editor("QualificationName", new { htmlAttributes = new { @class = "form-control", @type="text", @placeholder="Name" } })
+                            @Html.Editor("QualificationName", new { htmlAttributes = new { @class = "form-control", @type="text", @placeholder="Name", @id="name" } })
                         </div>
 
                     </div>
@@ -256,7 +256,7 @@
                     <div class="form-group">
                         <label for="dateAttained" class="control-label col-md-2">Date Attained</label>
                         <div class="col-md-10">
-                            @Html.Editor("DateAttained", new { htmlAttributes = new { @class = "form-control", @placeholder = "Date Attained", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+                            @Html.Editor("DateAttained", new { htmlAttributes = new { @class = "form-control", @placeholder = "Date Attained", @type = "datetime", onkeydown = "return false", onpaste = "return false", @id= "dateAttained" } })
                             <!--<input type="date" class="form-control" id="dateAttained" placeholder="Date attained">-->
 
                         </div>
@@ -265,7 +265,7 @@
                     <div class="form-group">
                         <label for="expiry" class="control-label col-md-2">Expiry Date</label>
                         <div class="col-md-10">
-                            @Html.Editor("ExpiryDate", new { htmlAttributes = new { @class = "form-control", @placeholder = "Expiry Date", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+                            @Html.Editor("ExpiryDate", new { htmlAttributes = new { @class = "form-control", @placeholder = "Expiry Date", @type = "datetime", onkeydown = "return false", onpaste = "return false", @id= "expiry" } })
                         </div>
                         <!--<input type="date" class="form-control" id="expiry" placeholder="Expiry Date">-->
                     </div>
