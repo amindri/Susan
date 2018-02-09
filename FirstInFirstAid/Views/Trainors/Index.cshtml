@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<FirstInFirstAid.Models.Trainor>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Trainers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Trainers</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -13,24 +13,26 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.FirstName)
+           First Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Lastname)
+            Last Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
+            Phone Number
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Email)
+           Email
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DOB)
+            DOB
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TaxFileNo)
+           Tax File Number
         </th>
-        <th></th>
+        <th>
+            Actions
+        </th>
     </tr>
 
 @foreach (var item in Model) {
