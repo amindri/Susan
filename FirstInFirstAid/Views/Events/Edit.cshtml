@@ -9,7 +9,26 @@
     @Scripts.Render("~/Scripts/bootstrap.min.js")
     <script type="text/javascript">
         $(document).ready(function () {
+            $('#Client').click(function () {
 
+                $.ajax({
+                    type: "POST",
+                    url: "/Events/GetClients",
+                    data: "{}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+
+                        $.each(msg, function (index, item) {
+                            alert(item);
+                            $('#Client').append($('</option>').text(item));
+                        });
+                    },
+                    error: function () {
+                        alert("Failed to load genders");
+                    }
+                })
+            });
         })
     </script>
 }
@@ -70,6 +89,13 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.TotalFee, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.TotalFee, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Client, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select id="Client"></select>
             </div>
         </div>
 
