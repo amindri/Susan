@@ -7,7 +7,7 @@
 @section Scripts {
 
     <!-- New script to add jQuery datetimepicker by Anu-->
-    <script src="~/Scripts/jquery-ui-timepicker-addon.min.js"></script>
+    @Scripts.Render("~/Scripts/jquery-ui-timepicker-addon.min.js")
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -17,29 +17,8 @@
                 changeYear: true,
                 yearRange: "-100:+5",
                 controlType: "select",
-                timeFormat:"hh:mm TT"
+                timeFormat: "hh:mm TT"
             });
-
-
-        });
-
-        /* Code to fix issue with Crome
-        jQuery.validator.methods.date = function (value, element) {
-            var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-            if (isChrome) {
-                var d = new Date();
-                return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
-            } else {
-                return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
-            }
-        };
-
-        });*/
-    </script>
-
-
-    <script type="text/javascript">
-        $(document).ready(function () {
 
             var i = 0;
             $("#addChild").click(function () {
@@ -187,7 +166,7 @@
                         <label class="control-label col-md-2">Start Date/Time:</label>
                         <div class="col-md-10">
                             <!-- Anu edits-->
-                            @Html.Editor("StartTime", new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+                            @Html.Editor("StartTime", new { htmlAttributes = new { @id = "StartTime", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
 
                         </div>
                     </div>
@@ -195,21 +174,21 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">End Date/Time:</label>
                         <div class="col-md-10">
-                            @Html.Editor("EndTime", new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+                            @Html.Editor("EndTime", new { htmlAttributes = new { @id = "EndTime", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label col-md-2">Hours:</label>
                         <div class="col-md-10">
-                            @Html.Editor("Hours", new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.Editor("Hours", new { htmlAttributes = new { @id = "Hours", @class = "form-control" } })
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label col-md-2">Required Number Of Staff: </label>
                         <div class="col-md-10">
-                            @Html.Editor("RequiredNumberOfStaff", new { htmlAttributes = new { @class = "form -control" } })
+                            @Html.Editor("RequiredNumberOfStaff", new { htmlAttributes = new { @id = "RequiredNumberOfStaff", @class = "form -control" } })
                         </div>
                     </div>
                 </div>
