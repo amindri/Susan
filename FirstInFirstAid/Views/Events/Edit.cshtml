@@ -28,14 +28,14 @@
             $('#Client').click(function () {
                 $.ajax({
                     type: "POST",
-                    url: "/Events/GetClients",                    
+                    url: "/Events/GetClients",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (clientList) {
                         $('#Client').empty();
                         $('#Client').append($("<option selected='true'></option>").attr("value", '').text('Please Select'));
 
-                        $.each(clientList, function (index, client) {                            
+                        $.each(clientList, function (index, client) {
                             $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
                         });
                     },
@@ -44,7 +44,80 @@
                     }
                 })
             });
-        })
+
+            var i = $("#segments td").closest("tr").length;
+            $("#addSegment").click(function () {
+                if ($(this).attr('data-action') == "add") {
+                    $('#segments> tbody:last-child').append(
+                        "<tr id=" + i + ">" +
+                        "<td> " + $("#StartTime").val() + "</td>" +
+                        "<td>" + $("#EndTime").val() + "</td>" +
+                        "<td>" + $("#Hours").val() + "</td>" +
+                        "<td>" + $("#RequiredNumberOfStaff").val() + "</td>" +
+                        "<td>" +
+                        "<button type= 'button' value= 'Delete' onclick= 'deleteSegment(" + i + ")'>" +
+                        "Delete" +
+                        "</button>" +
+                        "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
+                        "Edit" +
+                        "</button>" +
+                        "</td>" +
+                        "</tr >");
+                    i++;
+                } else {
+                    var segmentId = $("#segmentId").val();
+                    $("#" + segmentId + " td:nth-child(1)").html($("#StartTime").val());
+                    $("#" + segmentId + " td:nth-child(2)").html($("#EndTime").val());
+                    $("#" + segmentId + " td:nth-child(3)").html($("#Hours").val());
+                    $("#" + segmentId + " td:nth-child(4)").html($("#RequiredNumberOfStaff").val());
+                }
+                $('#modal').modal('hide');
+            });
+
+            $("#modal").on('hidden.bs.modal', function () {
+                $(".modal-body input").val("");
+            });
+
+
+            $('#modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var buttonName = button.data('action') // Extract info from data-* attributes
+                // Update the modal's content.
+                var modal = $(this);
+                if (buttonName == "Change") {
+                    var rowId = button.data('id');
+                    modal.find('.modal-footer button span').text(buttonName);
+                    modal.find('.modal-footer button').attr("data-action", "change");
+                    modal.find('.modal-body input#StartTime').val($("tr#" + rowId + " td:nth-child(1)").html());
+                    modal.find('.modal-body input#EndTime').val($("tr#" + rowId + " td:nth-child(2)").html());
+                    modal.find('.modal-body input#Hours').val($("tr#" + rowId + " td:nth-child(3)").html());
+                    modal.find('.modal-body input#RequiredNumberOfStaff').val($("tr#" + rowId + " td:nth-child(4)").html());
+                    modal.find('.modal-body input#segmentId').val(button.data('id'));
+                } else {
+                    modal.find('.modal-footer button span').text("Add");
+                    modal.find('.modal-footer button').attr("data-action", "add");
+                }
+            });
+        });
+
+        function deleteSegment(id) {
+            $("#" + id).remove();
+        };
+
+        function addAllContactsToForm() {
+            var count = 0;
+
+            $('#segments > tbody > tr:not(:first)').each(function () {
+                var columns = $(this).find('td');
+
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].StartTime'" + " value='" + $(columns[0]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].EndTime'" + " value='" + $(columns[1]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].RequiredNumberOfStaff'" + " value='" + $(columns[2]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Hours'" + " value='" + $(columns[3]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");
+                count++;
+            });
+        };
     </script>
 }
 
@@ -137,14 +210,22 @@
 
                 @if (Model.EventSegments != null)
                 {
+                    var count = 0;
                     foreach (var segment in Model.EventSegments)
                     {
-                        <tr>
+                        <tr id=@count data-dbId=@segment.Id>
                             <td>@segment.StartTime</td>
                             <td>@segment.EndTime</td>
                             <td>@segment.RequiredNumberOfStaff</td>
                             <td>@segment.Hours</td>
-                            <td>@Html.ActionLink("View/Edit", "Edit", "EventSegments", new { segment.Id }, null)</td>
+                            <td>
+                                <button type="button" value="Delete" onclick="deleteSegment(@count)">
+                                    Delete
+                                </button>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal" data-id="@count" data-action="Change">
+                                    Edit
+                                </button>
+                            </td>
                         </tr>
                     }
                 }
@@ -175,34 +256,37 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">Start Date/Time:</label>
                         <div class="col-md-10">
-                            @Html.Editor("StartTime", new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+                            @Html.Editor("StartTime", new { htmlAttributes = new {@id = "StartTime", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label col-md-2">End Date/Time:</label>
                         <div class="col-md-10">
-                            @Html.Editor("EndTime", new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+                            @Html.Editor("EndTime", new { htmlAttributes = new { @id = "EndTime", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false"} })
                         </div>
                     </div>
 
                     <div class="form-group">
                         @Html.Label("Hours", htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.Editor("Hours", new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.Editor("Hours", new { htmlAttributes = new { @id = "Hours", @class = "form-control" } })
                         </div>
                     </div>
 
                     <div class="form-group">
                         @Html.Label("Required Number Of Staff", htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.Editor("RequiredNumberOfStaff", new { htmlAttributes = new { @class = "form -control" } })
+                            @Html.Editor("RequiredNumberOfStaff", new { htmlAttributes = new {@id = "RequiredNumberOfStaff", @class = "form -control" } })
                         </div>
                     </div>
                 </div>
+                <input type="hidden" id="segmentId">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="addChild" data-dismiss="modal">Add</button>
+                <button type="button" class="btn btn-default" id="addSegment" data-dismiss="modal">
+                    <span class="ui-button-text">Add</span>
+                </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
