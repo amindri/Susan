@@ -85,16 +85,25 @@ namespace FirstInFirstAid.Controllers
             {
                 Client dbClient = db.Clients.Include(c => c.ClientContacts).Where(i => i.Id == client.Id).First();
 
-                //updating the client Name
+                //updating the Event fields
                 dbClient.Name = client.Name;
-
+                                
+                //Deleting the deleted Clients
                 if (dbClient.ClientContacts != null)
-                { 
-                    //Deleting the deleted contacts
-                    var contactsToBeDeleted = (from clientContact in dbClient.ClientContacts
-                                                    let item = client.ClientContacts.SingleOrDefault(i => i.Id == clientContact.Id)
-                                                    where item == null
-                                                    select clientContact).ToList();
+                {
+                    List<ClientContact> contactsToBeDeleted = new List<ClientContact>();
+                    if (client.ClientContacts != null)
+                    {
+                        contactsToBeDeleted = (from clientContact in dbClient.ClientContacts
+                                               let item = client.ClientContacts.SingleOrDefault(i => i.Id == clientContact.Id)
+                                               where item == null
+                                               select clientContact).ToList();
+                    }
+                    else
+                    {
+                        contactsToBeDeleted = dbClient.ClientContacts.ToList();
+                    }
+
                     if (contactsToBeDeleted.Any())
                     {
                         foreach (var clientContact in contactsToBeDeleted.ToList())
@@ -102,21 +111,24 @@ namespace FirstInFirstAid.Controllers
                             db.Entry(clientContact).State = EntityState.Deleted;
                         }
                     }
-
-                    //Updating the existing client contacts
+                }
+                //Updating the existing client contacts
+                if (client.ClientContacts != null)
+                {
                     foreach (var clientContact in client.ClientContacts)
                     {
-                        if (clientContact.Id  > 0)
+                        if (clientContact.Id > 0)
                         {
                             var clientContactDB = db.ClientContacts.Single(e => e.Id == clientContact.Id);
                             db.Entry(clientContactDB).CurrentValues.SetValues(clientContact);
                             db.Entry(clientContactDB).State = EntityState.Modified;
-                        } else
+                        }
+                        else
                         {
-                            db.ClientContacts.Add(clientContact);
+                            dbClient.ClientContacts.Add(clientContact);
                         }
                     }
-                }               
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
