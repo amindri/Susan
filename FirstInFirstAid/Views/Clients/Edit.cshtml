@@ -68,33 +68,6 @@
 
         });
 
-        function addorChange() {
-            if ($("#ss").data('action') == "add") {
-                $('#contacts> tbody:last-child').append(
-                    "<tr id=" + i + ">" +
-                    "<td> " + $("#name").val() + "</td>" +
-                    "<td>" + $("#position").val() + "</td>" +
-                    "<td>" + $("#phone").val() + "</td>" +
-                    "<td>" + $("#email").val() + "</td>" +
-                    "<td>" +
-                    "<button type= 'button' value= 'Delete' onclick= 'deleteContact(" + i + ")'>" +
-                    "Delete" +
-                    "</button>" +
-                    "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
-                    "Edit" +
-                    "</button>" +
-                    "</td>" +
-                    "</tr >");
-                i++;
-            } else {
-                var trId = $("#trId").val();
-                $("#" + trId + " td:nth-child(1)").html($("#name").val());
-                $("#" + trId + " td:nth-child(2)").html($("#position").val());
-                $("#" + trId + " td:nth-child(3)").html($("#phone").val());
-                $("#" + trId + " td:nth-child(4)").html($("#email").val());
-            }
-        };
-
         function deleteContact(id) {
             $("#" + id).remove();
         };
@@ -109,8 +82,7 @@
                 $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactPosition'" + " value='" + $(columns[1]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactPhone'" + " value='" + $(columns[2]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactEmail'" + " value='" + $(columns[3]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");
-                alert("d");
+                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");                
                 count++;
             });
         };
