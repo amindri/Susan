@@ -75,12 +75,11 @@ namespace FirstInFirstAid.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EventSegment eventSegment = db.EventSegments.Find(id);
+            EventSegment eventSegment = db.EventSegments.Include(c => c.Event).Where(x => x.Id == id).First();
             if (eventSegment == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ClientContacts = new SelectList(db.ClientContacts, "Id", "ContactName", eventSegment.Id);
             return View(eventSegment);
         }
 
@@ -125,6 +124,24 @@ namespace FirstInFirstAid.Controllers
             db.EventSegments.Remove(eventSegment);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public JsonResult getClientContacts(int eventId) // its a GET, not a POST
+        {
+            Event evnt = db.Events.Include(x => x.Client).Where(z => z.Id == eventId).First();
+            if (evnt.Client != null)
+            {
+                return Json(db.ClientContacts.Where(x => x.Client.Id == evnt.Client.Id), JsonRequestBehavior.AllowGet);
+            } 
+            else
+            {
+                return Json("A client Is not assigned to the event");
+            }
+        }
+
+        public JsonResult getVenues()
+        {
+            return Json(db.Venues, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

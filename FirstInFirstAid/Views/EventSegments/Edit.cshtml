@@ -5,12 +5,54 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section Scripts {
+
+    @Scripts.Render("~/Scripts/jquery-ui-timepicker-addon.min.js")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            //Generated the Client Contact list
+            $('#ClientContact').click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/EventSegments/getClientContacts",
+                    contentType: "application/json; charset=utf-8",
+                    data: "{'clientId' : '" + @Model.Event.Id + "'}",
+                    dataType: "json",
+                    success: function (clientContactList) {
+                        //add the client contacts to the  dropdown
+                    },
+                    error: function () {
+                        alert("Failed to load Clients");
+                    }
+                })
+            });
+
+            //generates the venues list
+            $('#Venue').click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/EventSegments/getVenues",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (venues) {
+                        //add the venues to the drop down
+                    },
+                    error: function () {
+                        alert("Failed to load Clients");
+                    }
+                })
+            })
+        })
+    </script>
+}
 <h2>Edit</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>EventSegment</h4>
         <hr />
@@ -51,7 +93,12 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.ClientContact, htmlAttributes: new { @class = "control-label col-md-2" })
-            
+            <!-- create drop down skeleton with the Id #ClientContact-->
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Venue, htmlAttributes: new { @class = "control-label col-md-2" })
+            <!-- create drop down skeleton with the Id #Venue-->
         </div>
 
         <div class="form-group">
