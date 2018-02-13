@@ -48,18 +48,24 @@ namespace FirstInFirstAid.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,StartTime,EndTime,Hours,RequiredNumberOfstaff")] EventSegment eventSegment)
+        public JsonResult Create(EventSegment eventSegment, int eventId)
         {
             if (ModelState.IsValid)
             {
-                db.EventSegments.Add(eventSegment);
+                Event evnt = db.Events.Include(c => c.EventSegments).Where(i => i.Id == eventId).First();
+                evnt.EventSegments.Add(eventSegment);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(new
+                {
+                    StartTime = eventSegment.StartTime.ToString(),
+                    EndTime = eventSegment.EndTime.ToString(),
+                    Hours = eventSegment.Hours,
+                    RequiredNumberOfStaff = eventSegment.RequiredNumberOfStaff,
+                    Id = eventSegment.Id
+                });
             }
-
-            ViewBag.Id = new SelectList(db.ClientContacts, "Id", "ContactName", eventSegment.Id);
-            return View(eventSegment);
+            return Json("Invalid Model State");
+         
         }
 
         // GET: EventSegments/Edit/5
@@ -91,7 +97,7 @@ namespace FirstInFirstAid.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.Id = new SelectList(db.ClientContacts, "Id", "ContactName", eventSegment.Id);
+           // ViewData[ClientContact] = new SelectList(db.ClientContacts, "Id", "ContactName", eventSegment.Id);
             return View(eventSegment);
         }
 

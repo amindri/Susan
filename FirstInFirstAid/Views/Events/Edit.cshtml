@@ -48,22 +48,47 @@
             var i = $("#segments td").closest("tr").length;
             $("#addSegment").click(function () {
                 if ($(this).attr('data-action') == "add") {
-                    $('#segments> tbody:last-child').append(
-                        "<tr id=" + i + ">" +
-                        "<td> " + $("#StartTime").val() + "</td>" +
-                        "<td>" + $("#EndTime").val() + "</td>" +
-                        "<td>" + $("#Hours").val() + "</td>" +
-                        "<td>" + $("#RequiredNumberOfStaff").val() + "</td>" +
-                        "<td>" +
-                        "<button type= 'button' value= 'Delete' onclick= 'deleteSegment(" + i + ")'>" +
-                        "Delete" +
-                        "</button>" +
-                        "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
-                        "Edit" +
-                        "</button>" +
-                        "</td>" +
-                        "</tr >");
-                    i++;
+                    var segment = {
+                        eventSegment: {
+                            StartTime: $.trim($("#StartTime").val()),
+                            EndTime: $.trim($('#EndTime').val()),
+                            Hours: $.trim($('#Hours').val()),
+                            RequiredNumberOfStaff: $.trim($('#RequiredNumberOfStaff').val())
+                        },
+                        eventId:@Model.Id
+                    };
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Create", "EventSegments")',
+                        data: JSON.stringify(segment),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (responseSegment) {
+                            var url = '@Url.Action("Edit", "EventSegments")' + '/' + responseSegment.Id;
+                            $('#segments> tbody:last-child').append(
+                                "<tr id=" + i + ">" +
+                                "<td> " + responseSegment.StartTime + "</td > " +
+                                "<td>" + responseSegment.EndTime + "</td>" +
+                                "<td>" + responseSegment.Hours + "</td>" +
+                                "<td>" + responseSegment.RequiredNumberOfStaff + "</td>" +
+                                "<td>" +
+                                "<button class='btn btn-danger' type= 'button' value= 'Delete' onclick= 'deleteSegment(" + i + ")'>" +
+                                "Delete" +
+                                "</button>" +
+                                "<button class='btn btn-primary' onclick='window.open(\" " + url + " \")\' type='button' class='btn btn-primary' data-id=" + i + " data-action='Change'>" +
+                                "Edit" +
+                                "</button>" +
+                                "</td>" +
+                                "</tr >");
+                            i++;
+                        },
+                        error: function (msg) {
+                            alert("error" + msg);
+                        }
+                    });
+
+
                 } else {
                     var segmentId = $("#segmentId").val();
                     $("#" + segmentId + " td:nth-child(1)").html($("#StartTime").val());
@@ -222,7 +247,7 @@
                                 <button type="button" class="btn btn-danger" value="Delete" onclick="deleteSegment(@count)">
                                     Delete
                                 </button>
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal" data-id="@count" data-action="Change">
+                                <button type="button" class="btn btn-primary" onclick="window.open('@Url.Action("Edit", "EventSegments", new { id = segment.Id })')" data-id="@count" data-action="Change">
                                     Edit
                                 </button>
                             </td>
