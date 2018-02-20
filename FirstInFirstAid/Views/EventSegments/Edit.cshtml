@@ -43,8 +43,71 @@
                         alert("Failed to load Clients");
                     }
                 })
-            })
-        })
+            });
+
+            //generates available trainer list
+
+
+            $("#addAllocation").click(function () {
+                $("#allocations")
+                    .append('<div class="panel panel-default col-md-12">' +
+                    '<p>' +
+                    '<label class="control-label col-md-2">Name</label>' +
+                    '<div class="col-md-10">' +
+                    '<input id=\"Name\" type="\dropdown\" class=\"form-control\" onclick="getTrainers">' + //drop down here
+                    '</div>' +
+                    '</p>' +
+                    '<p>' +
+                    '<label class="control-label col-md-2">Duty Type</label>' +
+                    '<div class="col-md-10">' +
+                    '<input id=\"DutyType\" type="\text\" class=\"form-control\">' +
+                    '</div>' +
+                    '</p>' +
+                    '<p>' +
+                    '<label class="control-label col-md-2">Hours</label>' +
+                    '<div class="col-md-10">' +
+                    '<input id=\"Hours\" type="\text\" class=\"form-control\">' +
+                    '</div>' +
+                    '</p>' +
+                    '<p>' +
+                    '<label class="control-label col-md-2">Paid</label>' +
+                    '<div class="col-md-10">' +
+                    '<input id=\"Paid\" type="\text\" class=\"form-control\">' +
+                    '</div>' +
+                    '</p>' +
+                    '<p>' +
+                    '<label class="control-label col-md-2">PresenceConfirmation</label>' +
+                    '<div class="col-md-10">' +
+                    '<input id=\"Confirmation\" type="\text\" class=\"form-control\">' +
+                    '</div>' +
+                    '</p>' +
+                    '<p>' +
+                    '<label class="control-label col-md-2">PaymentNote</label>' +
+                    '<div class="col-md-10">' +
+                    '<input id=\"PaymentNote\" type="\text\" class=\"form-control\">' +
+                    '</div>' +
+                    '</p>' +
+                    '<button type="button" value="Delete" class="btn btn-default" onclick="$(this).parent().remove();" />' +
+                    '<button type="button" value="Send Email" class="btn btn-default" />' +
+                    '</div>');
+            });
+        });
+
+        function getTrainers() {
+            $.ajax({
+                type: 'POST',
+                url: '/EventSegments/getAvailableTrainers',
+                data: "{'segmentId' : '" + @Model.Id + "'}",
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (jsonData) {
+                    console.log(jsonData);
+                },
+                error: function (msg) {
+                    console.log(msg);
+                }
+            });
+        };
     </script>
 }
 <h2>Edit</h2>
@@ -101,6 +164,61 @@
             <!-- create drop down skeleton with the Id #Venue-->
         </div>
 
+         
+        <div class="form-group">
+            <label class="control-label col-md-2">Trainer Allocations</label>
+            <div id="allocations" class="panel panel-default panel-body col-md-8">
+                <button id="addAllocation" data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
+                   @if (Model.TrainorAllocations != null)
+                   {
+                       foreach (var allocation in Model.TrainorAllocations)
+                       {
+                        <div class="panel panel-default panel-collapse">
+                            <p>
+                                <label class="control-label col-md-2">Name</label>
+                                <div class="col-md-10">
+                                             <!-- create drop down skeleton with the Id #Trainers fire the function getTrainers-->
+                                </div>
+                            </p>
+                            <p>
+                                <label class="control-label col-md-2">Duty Type</label>
+                                <div class="col-md-10">
+                                    @Html.Editor(allocation.DutyType.ToString(), new { htmlAttributes = new { @id = "DutyType", @class = "form-control" } })
+                                </div>
+                            </p>
+                            <p>
+                                <label class="control-label col-md-2">Hours</label>
+                                <div class="col-md-10">
+                                    @Html.Editor(allocation.Hours.ToString(), new { htmlAttributes = new { @id = "Hours", @class = "form-control" } })
+                                </div>
+                            </p>
+                            <p>
+                                <label class="control-label col-md-2">Paid</label>
+                                <div class="col-md-10">
+                                    @Html.Editor(allocation.Paid.ToString(), new { htmlAttributes = new { @id = "StartTime", @class = "form-control" } })
+                                </div>
+                            </p>
+                            <p>
+                                <label class="control-label col-md-2">PresenceConfirmation</label>
+                                <div class="col-md-10">
+                                    @Html.Editor(allocation.PresenceConfirmation.ToString(), new { htmlAttributes = new { @id = "StartTime", @class = "form-control" } })
+                                </div>
+                            </p>
+                            <p>
+                                <label class="control-label col-md-2">PresenceConfirmation</label>
+                                <div class="col-md-10">
+                                    @Html.TextBox(allocation.PaymentNote, new { htmlAttributes = new { @id = "StartTime", @class = "form-control" } })
+                                </div>
+                            </p>
+
+                            <button type="button" value="Delete" class="btn btn-default" onclick="$(this).parent().remove();" />
+                            <button type="button" value="Send Email" class="btn btn-default" />
+                        </div>
+                       }
+                   }                        
+            </div>            
+        </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
@@ -108,6 +226,7 @@
         </div>
     </div>
 }
+
 
 <div>
     @Html.ActionLink("Back to List", "Index")
