@@ -17,14 +17,15 @@
                 changeYear: true,
                 yearRange: "-100:+5",
                 controlType: "select",
-                timeFormat: "hh:mm TT"
+                timeFormat: "hh:mm TT",
+                "stepMinute": 15
             });
 
             $('#Client').on('change', function () {
                 var value = $(this).val();
             }).change();
 
-            $('#Client').click(function () {
+           /* $('#Client').click(function () {
                 $.ajax({
                     type: "POST",
                     url: "/Events/GetClients",
@@ -42,7 +43,29 @@
                         alert("Failed to load Clients");
                     }
                 })
-            });
+            });*/
+
+            // New code for drop down
+           $(function () {
+                var clientm = $("#Client");
+                clientm.empty().append($("<option selected='selected' value='' disabled='disabled'> Loading.... </option>"));
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "/Events/GetClients",
+                    data: "{}",
+                    dataType: "json",
+                    success: function (clientList) {
+                        clientm.empty().append($("<option selected='selected' value=''> Please Select </option>"));
+                        $.each(clientList, function (index, client) {
+                            clientm.append($("<option></option>").attr("value", client.Id).text(client.Name));
+                        });
+                    },
+                    error: function () {
+                        alert("Failed to load Clients");
+                    }
+                })
+            });                 
 
             var i = 0;
             $("#addChild").click(function () {

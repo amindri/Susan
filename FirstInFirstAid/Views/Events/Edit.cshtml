@@ -18,25 +18,27 @@
                 changeYear: true,
                 yearRange: "-100:+5",
                 controlType: "select",
-                timeFormat: "hh:mm TT"
+                timeFormat: "hh:mm TT",
+                "stepMinute": 15
             });
 
             $('#Client').on('change', function () {
                 var value = $(this).val();
             }).change();
 
-            $('#Client').click(function () {
+            $(function () {
+                var clientm = $("#Client");
+                clientm.empty().append($("<option selected='selected' value='' disabled='disabled'> Loading.... </option>"));
                 $.ajax({
                     type: "POST",
                     url: "/Events/GetClients",
                     contentType: "application/json; charset=utf-8",
+                    data:"{}",
                     dataType: "json",
                     success: function (clientList) {
-                        $('#Client').empty();
-                        $('#Client').append($("<option selected='true'></option>").attr("value", '').text('Please Select'));
-
+                       clientm.empty().append($("<option selected='selected' value=''> Please Select </option>"));
                         $.each(clientList, function (index, client) {
-                            $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
+                           clientm.append($("<option></option>").attr("value", client.Id).text(client.Name));
                         });
                     },
                     error: function () {
@@ -213,6 +215,7 @@
         </div>
     </div>
 
+   
 
     <div class="form-group">
         <label class="control-label col-md-2">Add Event Segments:</label>
