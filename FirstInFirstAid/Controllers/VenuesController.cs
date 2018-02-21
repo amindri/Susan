@@ -47,7 +47,7 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,VenueName")] Venue venue)
+        public ActionResult Create([Bind(Include = "Id,VenueName,Address")] Venue venue)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace FirstInFirstAid.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Venue venue = db.Venues.Find(id);
+            Venue venue = db.Venues.Include(s => s.Address).Where(x => x.Id == id).First();
             if (venue == null)
             {
                 return HttpNotFound();
@@ -79,11 +79,23 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,VenueName")] Venue venue)
+        public ActionResult Edit([Bind(Include = "Id,VenueName,Address")] Venue venue)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(venue).State = EntityState.Modified;
+                if (venue.Address != null)
+                {
+                    if (venue.Address.Id > 0)
+                    {
+                        db.Entry(venue.Address).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        db.Entry(venue.Address).State = EntityState.Added;
+                    }
+
+                } 
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
