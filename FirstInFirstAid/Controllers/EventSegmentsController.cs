@@ -126,7 +126,27 @@ namespace FirstInFirstAid.Controllers
             return RedirectToAction("Index");
         }
 
-        public JsonResult getClientContacts(int eventId) // its a GET, not a POST
+        public JsonResult getAvailableTrainers(int segmentId)
+        { 
+            EventSegment segment = db.EventSegments.Find(segmentId);
+
+            List<EventSegment> overlappingSegs = db.EventSegments.Include(seg => seg.TrainorAllocations.Select(allo => allo.Trainor)).
+                    Where(s => s.StartTime > segment.StartTime && s.EndTime < segment.EndTime).ToList();
+
+            List<Trainor> allocatedTrainers = new List<Trainor>();
+            foreach (var eventSegment in overlappingSegs)
+            {
+                foreach (var allocation in eventSegment.TrainorAllocations)
+                {
+                    allocatedTrainers.Add(allocation.Trainor);
+                }                
+            }
+
+            List<Trainor> availableTrainors = db.Trainors.ToList().Except(allocatedTrainers).ToList(); 
+            return Json(availableTrainors, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult getClientContacts(int eventId) 
         {
             Event evnt = db.Events.Include(x => x.Client).Where(z => z.Id == eventId).First();
             if (evnt.Client != null)

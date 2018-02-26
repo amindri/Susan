@@ -1,0 +1,214 @@
+﻿@model FirstInFirstAid.Models.Equipment
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Scripts {
+
+    @Scripts.Render("~/Scripts/jquery-ui-timepicker-addon.min.js")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input[type=datetime]").datetimepicker({
+                dateFormat: "dd.M.yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-100:+5",
+                controlType: "select",
+                timeFormat: "hh:mm TT",
+                "stepMinute": 15
+            });
+
+            $("#addAllocation").click(function () {
+                if ($(this).attr('data-action') == "add") {
+                    $('#contacts> tbody:last-child').append(
+                        "<tr id=" + i + ">" +
+                        "<td> " + $("#name").val() + "</td>" +
+                        "<td>" + $("#position").val() + "</td>" +
+                        "<td>" + $("#Trainer").val() + "</td>" +
+                        "<td>" +
+                        "<button type= 'button' value= 'Delete' onclick= 'deleteContact(" + i + ")'>" +
+                        "Delete" +
+                        "</button>" +
+                        "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
+                        "Edit" +
+                        "</button>" +
+                        "</td>" +
+                        "</tr >");
+                    i++;
+                } else {
+                    var trId = $("#trId").val();
+                    $("#" + trId + " td:nth-child(1)").html($("#name").val());
+                    $("#" + trId + " td:nth-child(2)").html($("#position").val());
+                    $("#" + trId + " td:nth-child(3)").html($("#phone").val());
+                    $("#" + trId + " td:nth-child(4)").html($("#email").val());
+                }
+                $('#modal').modal('hide');
+            });
+
+            $("#modal").on('hidden.bs.modal', function () {
+                $(".modal-body input").val("");
+            });
+
+
+            $('#modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var buttonName = button.data('action') // Extract info from data-* attributes
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                if (buttonName == "Change") {
+                    var rowId = button.data('id');
+                    modal.find('.modal-footer button span').text(buttonName);
+                    modal.find('.modal-footer button').attr("data-action", "change");
+                    modal.find('.modal-body input#name').val($("#" + rowId + " td:nth-child(1)").html());
+                    modal.find('.modal-body input#phone').val($("#" + rowId + " td:nth-child(3)").html());
+                    modal.find('.modal-body input#position').val($("#" + rowId + " td:nth-child(2)").html());
+                    modal.find('.modal-body input#email').val($("#" + rowId + " td:nth-child(4)").html());
+                    modal.find('.modal-body input#trId').val(button.data('id'));
+                } else {
+                    modal.find('.modal-footer button span').text("Add");
+                    modal.find('.modal-footer button').attr("data-action", "add");
+                }
+            });
+        });
+
+        function deleteAllocation(id) {
+            $("#" + id).remove();
+        };
+
+        function addAllocationsToForm() {
+            var count = 0;
+
+            $('#allocations > tbody > tr:not(:first)').each(function () {
+                var columns = $(this).find('td');
+
+                $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].DateSupplied'" + " value='" + $(columns[0]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].DateReturned'" + " value='" + $(columns[1]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].Trainor'" + " value='" + $(columns[2]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");
+                count++;
+            });
+        }
+    </script>
+}
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal"  id="form">
+        <h4>Equipment</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EquipmentName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EquipmentName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EquipmentName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Add Event Segments:</label>
+            <div class="col-md-10">
+                <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
+            </div>
+        </div>
+
+        <h4 style="padding-top:30px;"> Event Segments</h4>
+        <div class="table-responsive">
+            <table class="table" id="segments" style="width:100%; padding-top:40px;">
+                <tbody>
+                    <tr>
+                        <th>Start Date/Time</th>
+                        <th>End Date/Time</th>
+                        <th>Hours</th>
+                        <th>Required Number Of Staff</th>
+                        <th>Actions</th>
+                    </tr>
+
+                    @if (Model.EquipmentAllocations != null)
+                    {
+                        var count = 0;
+                        foreach (var allocation in Model.EquipmentAllocations)
+                        {
+                            <tr id=@count data-dbId=@allocation.Id>
+                                <td>@allocation.DateSupplied</td>
+                                <td>@allocation.DateReturned</td>
+                                <td>@allocation.Trainor.FirstName  @allocation.Trainor.Lastname</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger" value="Delete" onclick="deleteSegment(@count)">
+                                        Delete
+                                    </button>
+                                    <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#modal"  data-id="@count" data-action="Change">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div id="modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create Equipment Allocation</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Date Supplied:</label>
+                        <div class="col-md-10">
+                            <!-- Anu edits-->
+                            @Html.Editor("DateSupplied", new { htmlAttributes = new { @id = "DateSupplied", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Date Returned</label>
+                        <div class="col-md-10">
+                            @Html.Editor("DateReturned", new { htmlAttributes = new { @id = "DateReturned", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Trainer</label>
+                        <div class="col-md-10">
+                            @Html.Editor("Trainer", new { htmlAttributes = new { @id = "Trainer", @class = "form-control" } })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="addAllocation" data-dismiss="modal">Add</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
