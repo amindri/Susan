@@ -1,0 +1,47 @@
+﻿#jumb1 {
+    background-color: #88c87b;
+}
+
+#jumb2 {
+    background-color: #ff8454;
+}
+
+#jumb3 {
+    background-color: #f0cd3a;
+}
+
+
+
+a {
+    font-size: 16px;
+}
+
+
+#dashboard h2 {
+    text-align: center;
+}
+
+
+
+.custom-combobox {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-combobox-toggle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
+}
+
+.custom-combobox-input {
+    margin: 0;
+    padding: 5px 10px;
+}
+
+.ui-button{
+    background:#fff;
+    border:none;
+}
