@@ -4,34 +4,13 @@
 }
 
 
+<!--Custom css file combobox styles by Anu-->
+@Styles.Render("~/Content/custom-styles.css")
 
-<style>
-    #jumb1 {
-        background-color: #88c87b;
-    }
-
-    #jumb2 {
-        background-color: #ff8454;
-    }
-
-    #jumb3 {
-        background-color: #f0cd3a;
-    }
-    
-    
-    
-    a {
-            font-size: 16px;
-        }
-
-    
-    h2{
-        text-align:center;
-    }
-</style>
-
-<h2> DASHBOARD - FIRST IN SPORTS FIRST AID</h2>
-<hr/>
+<div class="container" id="dashboard"> 
+    <h2>DASHBOARD - FIRST IN SPORTS FIRST AID</h2>
+</div>
+<hr />
 <div class="container">
     <div class="jumbotron" id="jumb1">
         <div class="row">
@@ -41,7 +20,7 @@
                 <hr />
                 @Html.ActionLink("View", "Index", "Events") <br />
                 @Html.ActionLink("Create", "Create", "Events") <br />
-                
+
             </div>
             <div class="col-md-6">
                 <h3> Event Calendar</h3>
@@ -62,7 +41,7 @@
                 <hr />
                 @Html.ActionLink("View", "Index", "Clients") <br />
                 @Html.ActionLink("Create", "Create", "Clients") <br />
-                
+
             </div>
         </div>
 
@@ -72,7 +51,7 @@
                 <hr />
                 @Html.ActionLink("View", "Index", "Trainors") <br />
                 @Html.ActionLink("Create", "Create", "Trainors") <br />
-                
+
             </div>
         </div>
 
