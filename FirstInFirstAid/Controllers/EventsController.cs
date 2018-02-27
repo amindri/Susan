@@ -19,7 +19,7 @@ namespace FirstInFirstAid.Controllers
         // GET: Events
         public ActionResult Index()
         {
-            var events = db.Events;
+            var events = db.Events.Include(c => c.Client);
             return View(events.ToList());
         }
 
