@@ -66,7 +66,7 @@ namespace FirstInFirstAid.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Client client = db.Clients.Include(c => c.ClientContacts).Where(x => x.Id == id).First();
+            Client client = db.Clients.Include(c => c.ClientContacts).Include(a => a.Address).Where(x => x.Id == id).First();
             if (client == null)
             {
                 return HttpNotFound();
