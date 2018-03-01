@@ -111,6 +111,44 @@
         </div>
 
         <div class="form-group">
+            <label class="control-label col-md-2" for="EventName">Address:</label>
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.Address.Id)
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Address.StreetNumber, new { htmlAttributes = new { @id = "Address.StreetNumber", @class = "form-control", @placeholder = "Street Number" } })
+                        @Html.ValidationMessageFor(model => model.Address.StreetNumber, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+                <div class="form-group ">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Address.StreetName, new { htmlAttributes = new { @id = "Address.StreetName", @class = "form-control", @placeholder = "Street Name" } })
+                        @Html.ValidationMessageFor(model => model.Address.StreetName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Address.Suburb, new { htmlAttributes = new { @id = "Address.Suburb", @class = "form-control", @placeholder = "Suburb" } })
+                        @Html.ValidationMessageFor(model => model.Address.Suburb, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.EnumDropDownListFor(model => model.Address.State, "- Please Select State -", new { @id = "Address.State", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Address.State, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Address.Postcode, new { htmlAttributes = new { @id = "Address.Postcode", @class = "form-control", @placeholder = "Postcode" } })
+                        @Html.ValidationMessageFor(model => model.Address.Postcode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
             <label class="control-label col-md-2">Add Client Contacts:</label>
             <div class="col-md-10">
                 <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add  </button>
