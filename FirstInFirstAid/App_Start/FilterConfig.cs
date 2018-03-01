@@ -1,4 +1,4 @@
-﻿using System.Web;
+﻿using FirstInFirstAid.CustomFilters;
 using System.Web.Mvc;
 
 namespace FirstInFirstAid
@@ -7,7 +7,8 @@ namespace FirstInFirstAid
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+            //filters.Add(new HandleErrorAttribute());
+            filters.Add(new ExceptionHandlerAttribute());
         }
     }
 }
