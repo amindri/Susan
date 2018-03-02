@@ -1,48 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using FirstInFirstAid.DAL;
 using FirstInFirstAid.Models;
+using log4net;
+using System.Reflection;
 
 namespace FirstInFirstAid.Controllers
 {
     public class EventSegmentsController : Controller
     {
         private FirstInFirstAidDBContext db = new FirstInFirstAidDBContext();
-
-        // GET: EventSegments
-        public ActionResult Index()
-        {
-            var eventSegments = db.EventSegments;
-            return View(eventSegments.ToList());
-        }
-
-        // GET: EventSegments/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            EventSegment eventSegment = db.EventSegments.Find(id);
-            if (eventSegment == null)
-            {
-                return HttpNotFound();
-            }
-            return View(eventSegment);
-        }
-
-        // GET: EventSegments/Create
-        public ActionResult Create()
-        {
-            ViewBag.Id = new SelectList(db.ClientContacts, "Id", "ContactName");
-            return View();
-        }
+        private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         // POST: EventSegments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -55,6 +27,7 @@ namespace FirstInFirstAid.Controllers
                 Event evnt = db.Events.Include(c => c.EventSegments).Where(i => i.Id == eventId).First();
                 evnt.EventSegments.Add(eventSegment);
                 db.SaveChanges();
+                logger.InfoFormat("Event Segment Created, Name : {0}, Id: {1}", "TODO", eventSegment.Id);
                 return Json(new
                 {
                     StartTime = eventSegment.StartTime.ToString(),
@@ -64,8 +37,7 @@ namespace FirstInFirstAid.Controllers
                     Id = eventSegment.Id
                 });
             }
-            return Json("Invalid Model State");
-         
+            return Json("Invalid Model State");         
         }
 
         // GET: EventSegments/Edit/5
@@ -73,11 +45,13 @@ namespace FirstInFirstAid.Controllers
         {
             if (id == null)
             {
+                logger.Warn("Received null Event Segment Id to modify");
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             EventSegment eventSegment = db.EventSegments.Include(c => c.Event).Where(x => x.Id == id).First();
             if (eventSegment == null)
             {
+                logger.Warn("Received null Event Segement Id to modify");
                 return HttpNotFound();
             }
             return View(eventSegment);
@@ -92,11 +66,13 @@ namespace FirstInFirstAid.Controllers
         {
             if (ModelState.IsValid)
             {
+                logger.DebugFormat("Modifying Event Segment of the Name: {0} and Id:{}", "TODO", eventSegment.Id);
                 db.Entry(eventSegment).State = EntityState.Modified;
                 db.SaveChanges();
+                logger.InfoFormat("Event Segment modified, Name: {0}, Id: {1}", "TODO", eventSegment.Id);
                 return RedirectToAction("Index");
             }
-           // ViewData[ClientContact] = new SelectList(db.ClientContacts, "Id", "ContactName", eventSegment.Id);
+           
             return View(eventSegment);
         }
 
@@ -105,11 +81,13 @@ namespace FirstInFirstAid.Controllers
         {
             if (id == null)
             {
+                logger.Warn("Received null Event Segment Id to delete");
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             EventSegment eventSegment = db.EventSegments.Find(id);
             if (eventSegment == null)
             {
+                logger.WarnFormat("Event Segment not found to delete, Id: {0}", id);
                 return HttpNotFound();
             }
             return View(eventSegment);
@@ -123,6 +101,7 @@ namespace FirstInFirstAid.Controllers
             EventSegment eventSegment = db.EventSegments.Find(id);
             db.EventSegments.Remove(eventSegment);
             db.SaveChanges();
+            logger.InfoFormat("Event Segment deleted, Name: {0}, Id: {1}", "TODO", eventSegment.Id);
             return RedirectToAction("Index");
         }
 

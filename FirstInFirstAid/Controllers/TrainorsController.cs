@@ -1,40 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using FirstInFirstAid.DAL;
 using FirstInFirstAid.Models;
+using log4net;
+using System.Reflection;
 
 namespace FirstInFirstAid.Controllers
 {
     public class TrainorsController : Controller
     {
+        private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private FirstInFirstAidDBContext db = new FirstInFirstAidDBContext();
 
         // GET: Trainors
         public ActionResult Index()
         {
+            logger.Debug("Getting the Trainer list");
             return View(db.Trainors.ToList());
-        }
-
-        // GET: Trainors/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Trainor trainor = db.Trainors.Find(id);
-            if (trainor == null)
-            {
-                return HttpNotFound();
-            }
-            return View(trainor);
-        }
+        }             
 
         // GET: Trainors/Create
         public ActionResult Create()
@@ -53,6 +40,7 @@ namespace FirstInFirstAid.Controllers
             {
                 db.Trainors.Add(trainor);
                 db.SaveChanges();
+                logger.InfoFormat("Trainer Created, Name : {0}, Id: {1}", trainor.FirstName, trainor.Id);
                 return RedirectToAction("Index");
             }
 
@@ -64,11 +52,13 @@ namespace FirstInFirstAid.Controllers
         {
             if (id == null)
             {
+                logger.Warn("Received null Trainer Id to modify");
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Trainor trainor = db.Trainors.Include(x => x.Qualifications).Include(y => y.Address).Where(z => z.Id == id).First();
             if (trainor == null)
             {
+                logger.WarnFormat("Trainer not found to modify, Id: {0}", id);
                 return HttpNotFound();
             }
             return View(trainor);
@@ -83,16 +73,32 @@ namespace FirstInFirstAid.Controllers
         {
             if (ModelState.IsValid)
             {
-                Trainor dbTrainer = db.Trainors.Include(c => c.Qualifications).Where(i => i.Id == trainer.Id).First();
+                logger.DebugFormat("Modifying trainer of the Name: {0} and Id:{}", trainer.FirstName, trainer.Id);
+                Trainor dbTrainer = db.Trainors.Include(c => c.Qualifications).Include(a => a.Address).Where(i => i.Id == trainer.Id).First();
 
-                //updating the client Name
+                //updating the simple trainer fields
                 dbTrainer.FirstName = trainer.FirstName;
                 dbTrainer.Lastname = trainer.Lastname;
                 dbTrainer.PhoneNumber = trainer.PhoneNumber;
                 dbTrainer.TaxFileNo = trainer.TaxFileNo;
                 dbTrainer.Email = trainer.Email;
                 dbTrainer.DOB = trainer.DOB;
-                db.Entry(trainer.Address).State = EntityState.Modified;
+
+                if (trainer.Address != null)
+                {
+                    if (trainer.Address.Id > 0)
+                    {
+                        db.Entry(trainer.Address).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        db.Entry(trainer.Address).State = EntityState.Added;
+                    }
+                } else if (dbTrainer.Address != null)
+                {
+                    db.Entry(trainer.Address).State = EntityState.Deleted;
+                }
+
                 //Deleting the deleted qualifications
                 if (dbTrainer.Qualifications != null)
                 {
@@ -116,16 +122,18 @@ namespace FirstInFirstAid.Controllers
                         }
                     }             
                 }
-                //Updating the existing qualifications
+                
                 if (trainer.Qualifications != null) {
                     foreach (var qualification in trainer.Qualifications)
                     {
+                        //Updating the existing qualifications
                         if (qualification.Id > 0)
                         {
                             var qualificationDB = db.Qualifications.Single(e => e.Id == qualification.Id);
                             db.Entry(qualificationDB).CurrentValues.SetValues(qualification);
                             db.Entry(qualificationDB).State = EntityState.Modified;
                         }
+                        //Adding new qualification
                         else
                         {
                             dbTrainer.Qualifications.Add(qualification);
@@ -133,6 +141,7 @@ namespace FirstInFirstAid.Controllers
                     }
                 }
                 db.SaveChanges();
+                logger.InfoFormat("Trainer modified, Name: {0}, Id: {1}", dbTrainer.FirstName, trainer.Id);
                 return RedirectToAction("Index");
             }
             return View(trainer);
@@ -143,11 +152,13 @@ namespace FirstInFirstAid.Controllers
         {
             if (id == null)
             {
+                logger.Warn("Received null Trainer Id to delete");
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Trainor trainor = db.Trainors.Find(id);
             if (trainor == null)
             {
+                logger.WarnFormat("Trainer not found to delete, Id: {0}", id);
                 return HttpNotFound();
             }
             return View(trainor);
@@ -161,6 +172,7 @@ namespace FirstInFirstAid.Controllers
             Trainor trainor = db.Trainors.Find(id);
             db.Trainors.Remove(trainor);
             db.SaveChanges();
+            logger.InfoFormat("Trainer deleted, Name: {0}, Id: {1}", trainor.FirstName, trainor.Id);
             return RedirectToAction("Index");
         }
 

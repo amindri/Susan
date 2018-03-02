@@ -1,39 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using FirstInFirstAid.DAL;
 using FirstInFirstAid.Models;
+using log4net;
+using System.Reflection;
 
 namespace FirstInFirstAid.Controllers
 {
     public class EquipmentsController : Controller
     {
+        private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private FirstInFirstAidDBContext db = new FirstInFirstAidDBContext();
 
         // GET: Equipments
         public ActionResult Index()
         {
+            logger.Debug("Getting the Equipment list");
             return View(db.Equipment.ToList());
-        }
-
-        // GET: Equipments/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Equipment equipment = db.Equipment.Find(id);
-            if (equipment == null)
-            {
-                return HttpNotFound();
-            }
-            return View(equipment);
         }
 
         // GET: Equipments/Create
@@ -53,6 +40,7 @@ namespace FirstInFirstAid.Controllers
             {
                 db.Equipment.Add(equipment);
                 db.SaveChanges();
+                logger.InfoFormat("Equipment Created, Name : {0}, Id: {1}", equipment.EquipmentName, equipment.Id);
                 return RedirectToAction("Index");
             }
 
@@ -64,11 +52,13 @@ namespace FirstInFirstAid.Controllers
         {
             if (id == null)
             {
+                logger.Warn("Received null Equipment Id to modify");
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Equipment equipment = db.Equipment.Find(id);
             if (equipment == null)
             {
+                logger.WarnFormat("Equipment not found to modify, Id: {0}", id);
                 return HttpNotFound();
             }
             return View(equipment);
@@ -83,6 +73,7 @@ namespace FirstInFirstAid.Controllers
         {
             if (ModelState.IsValid)
             {
+                logger.DebugFormat("Modifying Equipment of the Name: {0} and Id:{}", equipment.EquipmentName, equipment.Id);
                 Equipment dbEquipment = db.Equipment.Include(c => c.EquipmentAllocations).Where(i => i.Id == equipment.Id).First();
 
                 //updating the Equipment fields
@@ -132,6 +123,7 @@ namespace FirstInFirstAid.Controllers
                     }
                 }
                 db.SaveChanges();
+                logger.InfoFormat("Equipment modified, Name: {0}, Id: {1}", dbEquipment.EquipmentName, equipment.Id);
                 return RedirectToAction("Index");
             }
             return View(equipment);
@@ -142,11 +134,13 @@ namespace FirstInFirstAid.Controllers
         {
             if (id == null)
             {
+                logger.Warn("Received null Equipment Id to delete");
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Equipment equipment = db.Equipment.Find(id);
             if (equipment == null)
             {
+                logger.WarnFormat("Equipment not found to delete, Id: {0}", id);
                 return HttpNotFound();
             }
             return View(equipment);
@@ -160,6 +154,7 @@ namespace FirstInFirstAid.Controllers
             Equipment equipment = db.Equipment.Find(id);
             db.Equipment.Remove(equipment);
             db.SaveChanges();
+            logger.InfoFormat("Equipment deleted, Name: {0}, Id: {1}", equipment.EquipmentName, equipment.Id);
             return RedirectToAction("Index");
         }
 
