@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace FirstInFirstAid.Models
 {
@@ -11,13 +7,18 @@ namespace FirstInFirstAid.Models
     {
         [Key]
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Qualification name is missing")]
         public string QualificationName { get; set; }
 
+        [Required(ErrorMessage = "Date attained is missing")]
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime DateAttained { get; set; }
 
+        [Required(ErrorMessage = "Date of expiry is missing")]
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime ExpiryDate { get; set; }
+
         public Trainor Trainor { get; set; }
     }
 }

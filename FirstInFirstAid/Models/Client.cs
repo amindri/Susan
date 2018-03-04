@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace FirstInFirstAid.Models
 {
@@ -11,6 +7,8 @@ namespace FirstInFirstAid.Models
     {
         [Key]
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Client name is missing")]
         public string Name { get; set; }
         
         public Address Address { get; set; }

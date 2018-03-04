@@ -8,19 +8,19 @@ namespace FirstInFirstAid.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Street Number missing")]
+        [Required(ErrorMessage = "Street number is missing")]
         public string StreetNumber { get; set; }
 
-        [Required(ErrorMessage = "Street Name missing")]
+        [Required(ErrorMessage = "Street name is missing")]
         public string StreetName { get; set; }
 
-        [Required(ErrorMessage = "Suburb missing")]
+        [Required(ErrorMessage = "Suburb is missing")]
         public string Suburb { get; set; }
 
-        [Required(ErrorMessage = "Postcode missing")]
+        [Required(ErrorMessage = "Postcode is missing")]
         public string Postcode { get; set; }
 
-        [Required(ErrorMessage = "State missing")]
+        [Required(ErrorMessage = "State is missing")]
         public State? State { get; set; }
     }
 }

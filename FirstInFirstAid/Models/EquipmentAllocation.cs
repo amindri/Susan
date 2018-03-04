@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace FirstInFirstAid.Models
 {
@@ -11,9 +7,15 @@ namespace FirstInFirstAid.Models
     {
         [Key]
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Supplied date is missing")]
         public DateTime DateSupplied { get; set; }
+
         public DateTime DateReturned { get; set; }
+
+        [Required(ErrorMessage = "Trainer is missing")]
+        public Trainor Trainor { get; set; }
+
         public Equipment Equipment { get; set; }
-        public Trainor Trainor { get; set; }    
     }
 }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace FirstInFirstAid.Models
 {
@@ -15,13 +11,25 @@ namespace FirstInFirstAid.Models
     {
         [Key]
         public int Id { get; set; }
-        public string EventName { get; set; }        
+
+        [Required(ErrorMessage = "Event name is missing")]
+        public string EventName { get; set; }
+
+        [Required(ErrorMessage = "Invoice number is missing")]
         public string InvoiceNumber { get; set; }
+
+        [Required(ErrorMessage = "Hourly rate is missing")]
         public long HourlyRate { get; set; }
+
+        [Required(ErrorMessage = "Total fee is missing")]
         public long TotalFee { get; set; }
+
+        [Required(ErrorMessage = "Business id is missing")]
         public BusinessId BusinessId { get; set; }
 
+        [Required(ErrorMessage = "Event state is missing")]
         public EventState EventState { get; set; }
+
         public Client Client { get; set; }
 
         public ICollection<EventSegment> EventSegments { get; set; }

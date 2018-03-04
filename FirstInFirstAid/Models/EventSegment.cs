@@ -9,20 +9,20 @@ namespace FirstInFirstAid.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Event Segment Name missing")]
+        [Required(ErrorMessage = "Event segment name is missing")]
         public string Name { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm:ss}")]
-        [Required(ErrorMessage = "Start Time missing")]
+        [Required(ErrorMessage = "Start time is missing")]
         public DateTime StartTime { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm:ss}")]
-        [Required(ErrorMessage = "End Time missing")]
+        [Required(ErrorMessage = "End time is missing")]
         public DateTime EndTime { get; set; }
 
         public long Hours { get; set; }
 
-        [Required(ErrorMessage = "Number Of Staff missing")]
+        [Required(ErrorMessage = "Number off staff is missing")]
         public int RequiredNumberOfStaff { get; set; }
 
         public ICollection<TrainorAllocationForEventSeg> TrainorAllocations { get; set; }
