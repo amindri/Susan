@@ -70,6 +70,7 @@
                             var url = '@Url.Action("Edit", "EventSegments")' + '/' + responseSegment.Id;
                             $('#segments> tbody:last-child').append(
                                 "<tr id=" + i + ">" +
+                                "<td> " + responseSegment.Name + "</td > " +
                                 "<td> " + responseSegment.StartTime + "</td > " +
                                 "<td>" + responseSegment.EndTime + "</td>" +
                                 "<td>" + responseSegment.Hours + "</td>" +
@@ -93,6 +94,7 @@
 
                 } else {
                     var segmentId = $("#segmentId").val();
+                    $("#" + segmentId + " td:nth-child(1)").html($("#Name").val());
                     $("#" + segmentId + " td:nth-child(1)").html($("#StartTime").val());
                     $("#" + segmentId + " td:nth-child(2)").html($("#EndTime").val());
                     $("#" + segmentId + " td:nth-child(3)").html($("#Hours").val());
@@ -115,10 +117,11 @@
                     var rowId = button.data('id');
                     modal.find('.modal-footer button span').text(buttonName);
                     modal.find('.modal-footer button').attr("data-action", "change");
-                    modal.find('.modal-body input#StartTime').val($("tr#" + rowId + " td:nth-child(1)").html());
-                    modal.find('.modal-body input#EndTime').val($("tr#" + rowId + " td:nth-child(2)").html());
-                    modal.find('.modal-body input#Hours').val($("tr#" + rowId + " td:nth-child(3)").html());
-                    modal.find('.modal-body input#RequiredNumberOfStaff').val($("tr#" + rowId + " td:nth-child(4)").html());
+                    modal.find('.modal-body input#Name').val($("tr#" + rowId + " td:nth-child(1)").html());
+                    modal.find('.modal-body input#StartTime').val($("tr#" + rowId + " td:nth-child(2)").html());
+                    modal.find('.modal-body input#EndTime').val($("tr#" + rowId + " td:nth-child(3)").html());
+                    modal.find('.modal-body input#Hours').val($("tr#" + rowId + " td:nth-child(4)").html());
+                    modal.find('.modal-body input#RequiredNumberOfStaff').val($("tr#" + rowId + " td:nth-child(5)").html());
                     modal.find('.modal-body input#segmentId').val(button.data('id'));
                 } else {
                     modal.find('.modal-footer button span').text("Add");
@@ -136,11 +139,11 @@
 
             $('#segments > tbody > tr:not(:first)').each(function () {
                 var columns = $(this).find('td');
-
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].StartTime'" + " value='" + $(columns[0]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].EndTime'" + " value='" + $(columns[1]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].RequiredNumberOfStaff'" + " value='" + $(columns[2]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Hours'" + " value='" + $(columns[3]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Name'" + " value='" + $(columns[0]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].StartTime'" + " value='" + $(columns[1]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].EndTime'" + " value='" + $(columns[2]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].RequiredNumberOfStaff'" + " value='" + $(columns[3]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Hours'" + " value='" + $(columns[4]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");
                 count++;
             });
@@ -229,6 +232,7 @@
         <table class="table" id="segments" style="width:100%; padding-top:40px;">
             <tbody>
                 <tr>
+                    <th>Name</th>
                     <th>Start Date/Time</th>
                     <th>End Date/Time</th>
                     <th>Hours</th>
@@ -242,6 +246,7 @@
                     foreach (var segment in Model.EventSegments)
                     {
                         <tr id=@count data-dbId=@segment.Id>
+                            <td>@segment.Name</td>
                             <td>@segment.StartTime</td>
                             <td>@segment.EndTime</td>
                             <td>@segment.RequiredNumberOfStaff</td>
@@ -280,6 +285,13 @@
             <div class="modal-body">
                 <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Name:</label>
+                        <div class="col-md-10">
+                            @Html.Editor("Name", new { htmlAttributes = new { @id = "Name", @class = "form-control"} })
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label class="control-label col-md-2">Start Date/Time:</label>

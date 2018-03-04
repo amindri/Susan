@@ -27,9 +27,10 @@ namespace FirstInFirstAid.Controllers
                 Event evnt = db.Events.Include(c => c.EventSegments).Where(i => i.Id == eventId).First();
                 evnt.EventSegments.Add(eventSegment);
                 db.SaveChanges();
-                logger.InfoFormat("Event Segment Created, Name : {0}, Id: {1}", "TODO", eventSegment.Id);
+                logger.InfoFormat("Event Segment Created, Name : {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
                 return Json(new
                 {
+                    Name = eventSegment.Name.ToString(),
                     StartTime = eventSegment.StartTime.ToString(),
                     EndTime = eventSegment.EndTime.ToString(),
                     Hours = eventSegment.Hours,
@@ -62,14 +63,14 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,StartTime,EndTime,Hours,RequiredNumberOfstaff")] EventSegment eventSegment)
+        public ActionResult Edit([Bind(Include = "Id,Name,StartTime,EndTime,Hours,RequiredNumberOfstaff")] EventSegment eventSegment)
         {
             if (ModelState.IsValid)
             {
-                logger.DebugFormat("Modifying Event Segment of the Name: {0} and Id:{}", "TODO", eventSegment.Id);
+                logger.DebugFormat("Modifying Event Segment of the Name: {0} and Id:{}", eventSegment.Name, eventSegment.Id);
                 db.Entry(eventSegment).State = EntityState.Modified;
                 db.SaveChanges();
-                logger.InfoFormat("Event Segment modified, Name: {0}, Id: {1}", "TODO", eventSegment.Id);
+                logger.InfoFormat("Event Segment modified, Name: {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
                 return RedirectToAction("Index");
             }
            

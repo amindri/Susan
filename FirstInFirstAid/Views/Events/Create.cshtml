@@ -9,9 +9,7 @@
 
 @section Scripts {
 
-    <!-- New script to add jQuery datetimepicker by Anu-->
     @Scripts.Render("~/Scripts/jquery-ui-timepicker-addon.min.js")
-    <!--New script to add jQuery Combobox by Anu-->
     @Scripts.Render("~/Scripts/jquery-combobox.js")
 
     <script type="text/javascript">
@@ -32,6 +30,7 @@
             $("#addChild").click(function () {
                 $('#segments> tbody:last-child').append(
                     "<tr id=" + i + ">" +
+                    "<td> " + $("#Name").val() + "</td>" +
                     "<td> " + $("#StartTime").val() + "</td>" +
                     "<td>" + $("#EndTime").val() + "</td>" +
                     "<td>" + $("#RequiredNumberOfStaff").val() + "</td>" +
@@ -52,19 +51,17 @@
 
             $('#segments > tbody > tr:not(:first)').each(function () {
                 var columns = $(this).find('td');
-
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].StartTime'" + " value='" + $(columns[0]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].EndTime'" + " value='" + $(columns[1]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].RequiredNumberOfStaff'" + " value='" + $(columns[2]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Hours'" + " value='" + $(columns[3]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Name'" + " value='" + $(columns[0]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].StartTime'" + " value='" + $(columns[1]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].EndTime'" + " value='" + $(columns[2]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].RequiredNumberOfStaff'" + " value='" + $(columns[3]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Hours'" + " value='" + $(columns[4]).html().trim() + "'/>");
                 count++;
             });
         }
     </script>
-
-
-
 }
+
 <h2>Create</h2>
 
 @using (Html.BeginForm())
@@ -145,6 +142,7 @@
             <table class="table" id="segments" style="width:100%; padding-top:40px; ">
                 <tbody>
                     <tr>
+                        <th>Name</th>
                         <th>Start Date/Time</th>
                         <th>End Date/Time</th>
                         <th>Hours</th>
@@ -178,11 +176,16 @@
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                     <div class="form-group">
+                        <label class="control-label col-md-2">Name:</label>
+                        <div class="col-md-10">                            
+                            @Html.Editor("Name", new { htmlAttributes = new { @id = "Name", @class = "form-control"} })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="control-label col-md-2">Start Date/Time:</label>
                         <div class="col-md-10">
-                            <!-- Anu edits-->
                             @Html.Editor("StartTime", new { htmlAttributes = new { @id = "StartTime", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
-
                         </div>
                     </div>
 
