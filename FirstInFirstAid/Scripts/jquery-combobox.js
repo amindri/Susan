@@ -1,24 +1,4 @@
 ﻿$(function () {
-    // new code to call ajax and create dropdown
-    var clientm = $(".combobox");
-    clientm.empty().append($("<option selected='selected' value='' disabled='disabled'> Loading.... </option>"));
-    $.ajax({
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        url: "/Events/GetClients",
-        data: "{}",
-        dataType: "json",
-        success: function (clientList) {
-            clientm.empty().append($("<option selected='selected' value=''> Please Select </option>"));
-            $.each(clientList, function (index, client) {
-                clientm.append($("<option></option>").attr("value", client.Id).text(client.Name));
-            });
-        },
-        error: function () {
-            alert("Failed to load Clients");
-        }
-    });
-    // end of new code
 
     $.widget("custom.combobox", {
          _create: function () {
@@ -83,7 +63,7 @@
                 .addClass("custom-combobox-toggle ui-corner-right")
                 .on("mousedown", function () {
                     // new code to call ajax
-                    $.ajax({
+                    /*$.ajax({
                         type: "POST",
                         contentType: "application/json; charset=utf-8",
                         url: "/Events/GetClients",
@@ -98,13 +78,13 @@
                         error: function () {
                             alert("Failed to load Clients");
                         }
-                    });
+                    });*/
                     //end new code
                     wasOpen = input.autocomplete("widget").is(":visible");
                 })
                 .on("click", function () {
                     // new code to call ajax
-                    $.ajax({
+                    /*$.ajax({
                         type: "POST",
                         contentType: "application/json; charset=utf-8",
                         url: "/Events/GetClients",
@@ -119,7 +99,7 @@
                         error: function () {
                             alert("Failed to load Clients");
                         }
-                    });
+                    });*/
                     //end new code
                     input.trigger("focus");
 

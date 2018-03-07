@@ -29,11 +29,11 @@ a {
 }
 
 .custom-combobox-toggle {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin-left: -1px;
-    padding: 0;
+    position: absolute !important; 
+    top: 0 !important;
+    bottom: 0 !important;
+    margin-left: -1px !important;
+    padding: 0 !important;
 }
 
 .custom-combobox-input {
