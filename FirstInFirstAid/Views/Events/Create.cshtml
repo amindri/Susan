@@ -4,7 +4,7 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<!--Custom css file combobox styles by Anu-->
+
 @Styles.Render("~/Content/custom-styles.css")
 
 @section Scripts {
@@ -13,7 +13,79 @@
     @Scripts.Render("~/Scripts/jquery-combobox.js")
 
     <script type="text/javascript">
+
         $(document).ready(function () {
+            //extending the combobox widget
+            $.widget("custom.combobox", $.custom.combobox, {
+                _createShowAllButton: function () {
+                    var input = this.input,
+                        wasOpen = false;
+
+                    $("<a>")
+                        .attr("tabIndex", -1)
+                        .attr("title", "Show All Items")
+                        .tooltip()
+                        .appendTo(this.wrapper)
+                        .button({
+                            icons: {
+                                primary: "ui-icon-triangle-1-s"
+                            },
+                            text: false
+                        })
+                        .removeClass("ui-corner-all")
+                        .addClass("custom-combobox-toggle ui-corner-right")
+                        .on("mousedown", function () {
+                            $.ajax({
+                                type: "POST",
+                                url: "/Events/GetClients",
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (clientList) {
+                                    $('#Client').empty();
+                                    $('#Client').append($("<option selected='selected' value=''>Please Select</option>"));
+
+                                    $.each(clientList, function (index, client) {
+                                        $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
+                                    });
+                                },
+                                error: function () {
+                                    alert("Failed to load Clients");
+                                }
+                            });
+                            wasOpen = input.autocomplete("widget").is(":visible");
+                        })
+                        .on("click", function () {
+                            $.ajax({
+                                type: "POST",
+                                url: "/Events/GetClients",
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (clientList) {
+                                    $('#Client').empty();
+                                    $('#Client').append($("<option selected='selected' value=''>Please Select</option>"));
+
+                                    $.each(clientList, function (index, client) {
+                                        $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
+                                    });
+                                },
+                                error: function () {
+                                    alert("Failed to load Clients");
+                                }
+                            });
+                            input.trigger("focus");
+
+                            // Close if already visible
+                            if (wasOpen) {
+                                return;
+                            }
+
+                            // Pass empty string as value to search for, displaying all results
+                            input.autocomplete("search", "");
+
+                        });
+                },
+            });
+        
             $("input[type=datetime]").datetimepicker({
                 dateFormat: "dd.M.yy",
                 changeMonth: true,
@@ -22,9 +94,9 @@
                 controlType: "select",
                 timeFormat: "hh:mm TT",
                 "stepMinute": 15
-            });
-                  
-            $(".combobox").combobox();
+            });                         
+
+            $("#Client").combobox();
              
             var i = 0;
             $("#addChild").click(function () {
@@ -125,7 +197,7 @@
         <div class="form-group ui-widget">
             <label class="control-label col-md-2" for="Client">Client:</label>
             <div class="col-md-10">
-                <select class="form-control combobox"></select>  @Html.ActionLink("Create New", "Create", "Clients", null, new { target = "_blank" })
+                <select class="form-control combobox" id="Client"></select> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  @Html.ActionLink("Create New", "Create", "Clients", null, new {@id = "link", target = "_blank" })
             </div>
         </div>
 
