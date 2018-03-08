@@ -1,27 +1,214 @@
-﻿#jumb1 {
+﻿body {
+    padding-top: 50px;
+    color: #636363;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.row{
+    margin-top:20px;
+}
+
+.form-control{
+    border-radius:0;
+}
+/* Top Navigation */
+.navbar {
+    min-height: 50px;
+}
+
+.navbar-fixed-top {
+    border: 0;
+    background: #111;
+}
+
+.navbar-inverse .navbar-brand {
+    text-transform: uppercase;
+    font-size: 24px;
+    color: #fff;
+    padding: 16px 20px;
+}
+
+.navbar-toggle {
+    position: relative;
+    float: right;
+    background-image: none;
+    border: 1px solid transparent;
+}
+
+
+/*Sidebar */
+.sidebar {
+    width: 230px;
+    float: left;
+    display: block;
+    color: #eee;
+    position: relative;
+    background-color: #111;
+ }
+
+    .sidebar ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+
+        .sidebar ul li {
+            list-style-type: none;
+        }
+
+    .sidebar .sidebar-inner {
+        width: 100%;
+        margin: 0 auto;
+        position: absolute;
+        z-index: 60;
+        background: #303030;
+        height: auto;
+        min-height: 2000px;
+    }
+
+
+    .sidebar .nav-sidebar > li > a {
+        display: block;
+        padding: 16px;
+        font-size: 15px;
+        line-height: 25px;
+        color: #fff;
+        text-decoration: none;
+        border-bottom: 1px solid #404040;
+        background-color: #303030;
+    }
+
+        .sidebar .nav-sidebar > li > a:hover, .sidebar .nav-sidebar > li.open > a {
+            border-bottom: 1px solid #222;
+            background-color: #2e8c1b;
+            color: #fff;
+        }
+
+
+    .sidebar .nav-sidebar li ul {
+        display: none;
+        background: #181818;
+    }
+
+        .sidebar .nav-sidebar li ul li a {
+            display: block;
+            background: none;
+            padding: 10px 30px;
+            text-decoration: none;
+            color: #999;
+            border-bottom: 1px solid #222;
+        }
+
+            .sidebar .nav-sidebar li ul li .active, .sidebar .nav-sidebar li ul li a:hover {
+                background: #131313;
+                border-bottom: 1px solid #222;
+                color: #fff;
+            }
+
+    .sidebar .nav-sidebar > li.open > a,
+    .sidebar .nav-sidebar > li.current > a {
+        background: green !important;
+    }
+
+    .sidebar .nav-sidebar > li > a:hover {
+        background: red !important;
+    }
+
+
+    /*Mobile dropdown*/
+    /* Sidebar dropdown */
+
+
+    .sidebar .navbar-header {
+        margin: 0;
+    }
+
+    .sidebar .sidebar-dropdown {
+        text-decoration: none;
+    }
+
+    .sidebar .sidebar-dropdown {
+        display: none;
+    }
+
+        .sidebar .sidebar-dropdown a {
+            color: #fff;
+            background-color: #343434;
+            padding: 10px;
+            text-transform: uppercase;
+            text-align: center;
+            font-size: 18px;
+            text-decoration: none;
+            line-height: 20px;
+            display: block;
+            border-top: 1px solid #666;
+            border-bottom: 1px solid #333;
+            width: 100%;
+            margin: 10px 0 0 -10px;
+        }
+
+            .sidebar .sidebar-dropdown a:hover {
+                text-decoration: none;
+            }
+/*End of mobile drop down*/
+
+
+.navbar-collapse {
+    padding: 0px;
+}
+/* Sidebar dropdown */
+.main {
+    padding: 0 40px;
+    position: relative;
+    margin-left: 230px;
+    margin-right: 0px;
+    width: auto;
+    background: #fff;
+}
+
+.fa {
+    font-size: 15px;
+    display: inline-block;
+}
+
+/*Css for bootsrap panels*/
+
+.panel {
+    border-radius: 0px;
+}
+
+.panel-default > .panel-heading {
+    color: #fff;
+    font-size: 24px;
+}
+
+#event-p {
     background-color: #88c87b;
+    border-radius: 0;
 }
 
-#jumb2 {
+#client-p {
     background-color: #ff8454;
-}
-
-#jumb3 {
-    background-color: #f0cd3a;
+    border-radius: 0;
 }
 
 
-
-a {
-    font-size: 16px;
+#trainer-p {
+    background-color: #80c3d2;
+    border-radius: 0;
 }
 
-
-#dashboard h2 {
-    text-align: center;
+#imp-p {
+    background-color: #989898;
+    border-radius: 0;
 }
 
+#calendar-p {
+    background-color:  #f0cd3a;
+    border-radius: 0;
+}
 
+/*Combo box styles*/
 
 .custom-combobox {
     position: relative;
@@ -41,7 +228,36 @@ a {
     padding: 5px 10px;
 }
 
-.ui-button{
-    background:#fff;
-    border:none;
+.ui-button {
+    background: #fff;
+    border: none;
+}
+
+/*Responsive*/
+@media (max-width: 767px) {
+    .sidebar {
+        float: none;
+        width: 100%;
+    }
+
+        .sidebar .sidebar-dropdown {
+            display: block;
+        }
+
+        .sidebar .sidebar-inner {
+            /*display: none;*/
+            padding: 0;
+            background: #111;
+            /*margin-left: -1px;*/
+            height: auto;
+            /*min-height: 100px !important;*/
+        }
+
+    .main {
+        padding: 20px 80px;
+        position: relative;
+        margin: 0;
+        width: auto;
+        background: #fff;
+    }
 }
