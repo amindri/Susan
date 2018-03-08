@@ -7,48 +7,175 @@
 
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <!--Custom css file by Anu-->
+    @Styles.Render("~/Content/custom-styles.css")
+     <!--Font Aweson bundle-->
+    @Styles.Render("~/Content/fontawesome")
 
-    @Styles.Render("~/Content/jquery-ui-timepicker-addon.min.css")
-    <!--<link href="~/Content/jquery-ui-timepicker-addon.min.css" rel="stylesheet" />-->
-    
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
+    <!--Top Navigation-->
+    <div id="topbar" class="navbar navbar-inverse navbar-fixed-top" role="banner">
+        <div class="container-fluid">
+            <!--Mobile dropdown-->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "" }, new { @class = "navbar-brand" })
+                <a class="navbar-brand" href="#">FISFA | FIFAS</a>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Events", "Index", "Events")</li>
-                    <li>@Html.ActionLink("Clients", "Index", "Clients")</li>
-                    <li>@Html.ActionLink("Trainers", "Index", "Trainors")</li>
-                    <li>@Html.ActionLink("Venues", "Index", "Venues")</li>
+            <div id="navbar" class="navbar-collapse collapse" role="navigation">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#"> <i class="fa fa-user"></i> Hi, Administrator <b class="caret"></b> </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><i class="fa fa-key"></i> Change Password</a></li>
+                            <li><a href="#"><i class="fa fa-sign-out"></i> Logout</a></li>
+                        </ul>
+                    </li>
                 </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#">Dashboard</a>
+                    </li>
+                </ul>
+               <!-- <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#">Calender</a>
+                    </li>
+                </ul>-->
             </div>
         </div>
     </div>
-    <div class="container body-content">
+
+    <!--Sidebar-->
+    <div class="content">
+         <div class="sidebar">
+                <!--Sidebar mobile drop down-->
+                <div class="navbar-header">
+                    <div class="sidebar-dropdown">
+                        <a id="main-menu" href="#" class="navbar-toggle"  role="button" data-toggle="collapse" data-target=".navbar-collapse2">Main Menu</a>
+                    </div>
+                </div>
+                <nav class="sidebar-inner collapse navbar-collapse navbar-collapse2" role="navigation">
+                    <ul class="nav-sidebar">
+                        <li class="nred level1">
+                            <a href="http://localhost:49884/Dashboard/Index" class="fisfa-h"> <i class="fa fa-dashboard"></i> Dashboard </a>
+
+                        </li>
+                        <li class="nblue level1">
+                            <a href="#" class="fisfa-es"> <i class="fa fa-calendar"></i> Event Segments </a>
+
+                        </li>
+                        <li class="has_submenu nblue level1">
+
+                            <a class="fisfa-e"> <i class="fa fa-calendar"></i> Events<span class="pull-right"><i class="fa fa-sort-down"></i></span> </a>
+                            <ul>
+                                <li>  @Html.ActionLink("All Events", "Index", "Events") </li>
+                                <li>  @Html.ActionLink("Add New", "Create", "Events") </li>
+                            </ul>
+                        </li>
+                        <li class="has_submenu nblue level1">
+
+                            <a class="fisfa-c"> <i class="fa fa-user"></i> Clients<span class="pull-right"><i class="fa fa-sort-down"></i></span> </a>
+                            <ul>
+                                <li> @Html.ActionLink("All Clients", "Index", "Clients")  </li>
+                                <li> @Html.ActionLink("Add New", "Create", "Clients") </li>
+                            </ul>
+                        </li>
+
+                        <li class="has_submenu nblue level1">
+
+                            <a class="fisfa-t"> <i class="fa fa-group"></i> Trainers<span class="pull-right"><i class="fa fa-sort-down"></i></span></a>
+                            <ul>
+                                <li> @Html.ActionLink("All Trainers", "Index", "Trainors")  </li>
+                                <li> @Html.ActionLink("Add New", "Create", "Trainors") </li>
+                            </ul>
+                        </li>
+
+
+                        <li class="has_submenu nblue level1">
+
+                            <a class="fisfa-v"> <i class="fa fa-map-marker"></i> Venues<span class="pull-right"><i class="fa fa-sort-down"></i></span> </a>
+                            <ul>
+                                <li> @Html.ActionLink("All Venues", "Index", "Venues")  </li>
+                                <li> @Html.ActionLink("Add New", "Create", "Venues") </li>
+                            </ul>
+                        </li>
+
+                        <li class="has_submenu nblue level1">
+
+                            <a class="fisfa-eq"> <i class="fa fa-suitcase"> </i> Equipment<span class="pull-right"><i class="fa fa-sort-down"></i></span> </a>
+                            <ul>
+                                <li> @Html.ActionLink("Equipment Allocations", "Index", "Equipments")  </li>
+                                <li> @Html.ActionLink("Add New", "Create", "Equipments") </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+       </div>
+   <div class="main">
         @RenderBody()
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - First in Teams Pty Ltd</p>
         </footer>
     </div>
+  
 
+    @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
 
     <!-- Including the jquery-ui script and style bundles by Anu-->
     @Scripts.Render("~/bundles/jquery-ui")
-    @Styles.Render("~/Content/themes/base/css")
-      
+    @Styles.Render("~/Content/jquery-ui-timepicker-addon.min.css")
 
     @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            /*Add current class to current page*/
+            $(".level1").each(function () {
+                if (window.location.href.indexOf($(this).find('a:first').attr('href')) > -1) {
+                    $(this).addClass('current').siblings().removeClass('current');
+                }
+            });
+
+            $(".nav-sidebar > li> ul> li").each(function () {
+                if (window.location.href.indexOf($(this).find('a:first').attr('href')) > -1) {
+                    $(this).children('a').addClass('active').siblings().removeClass('active');
+
+                    $(this).parent().css("display", "block");
+                    $(this).parent().parent().addClass('current');
+                }
+               
+            });
+
+            $(".has_submenu > a").click(function (e) {
+                e.preventDefault();
+                var menu_li = $(this).parent("li");
+                var menu_ul = $(this).next("ul");
+
+                if (menu_li.hasClass("open")) {
+                    menu_ul.slideUp(350);
+                    menu_li.removeClass("open")
+                }
+                else {
+                    $(".nav-sidebar > li > ul").slideUp(350);
+                    $(".nav-sidebar > li").removeClass("open");
+                    menu_ul.slideDown(350);
+                    menu_li.addClass("open");
+                    menu_ul.css("display", "block");
+                }
+            })
+
+        });
+    </script>
+
 </body>
 </html>
