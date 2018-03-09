@@ -38,6 +38,7 @@ namespace FirstInFirstAid.Controllers
                     Id = eventSegment.Id
                 });
             }
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             return Json("Invalid Model State");         
         }
 
