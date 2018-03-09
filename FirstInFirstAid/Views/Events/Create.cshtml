@@ -34,54 +34,20 @@
                         })
                         .removeClass("ui-corner-all")
                         .addClass("custom-combobox-toggle ui-corner-right")
-                        .on("mousedown", function () {
-                            $.ajax({
-                                type: "POST",
-                                url: "/Events/GetClients",
-                                contentType: "application/json; charset=utf-8",
-                                dataType: "json",
-                                success: function (clientList) {
-                                    $('#Client').empty();
-                                    $('#Client').append($("<option selected='selected' value=''>Please Select</option>"));
-
-                                    $.each(clientList, function (index, client) {
-                                        $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
-                                    });
-                                },
-                                error: function () {
-                                    alert("Failed to load Clients");
-                                }
-                            });
+                        .on("mousedown", function () {    
+                            addClientsToList();
                             wasOpen = input.autocomplete("widget").is(":visible");
                         })
                         .on("click", function () {
-                            $.ajax({
-                                type: "POST",
-                                url: "/Events/GetClients",
-                                contentType: "application/json; charset=utf-8",
-                                dataType: "json",
-                                success: function (clientList) {
-                                    $('#Client').empty();
-                                    $('#Client').append($("<option selected='selected' value=''>Please Select</option>"));
-
-                                    $.each(clientList, function (index, client) {
-                                        $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
-                                    });
-                                },
-                                error: function () {
-                                    alert("Failed to load Clients");
-                                }
-                            });
+                            addClientsToList();
                             input.trigger("focus");
 
                             // Close if already visible
                             if (wasOpen) {
                                 return;
                             }
-
                             // Pass empty string as value to search for, displaying all results
                             input.autocomplete("search", "");
-
                         });
                 },
             });
@@ -114,12 +80,35 @@
             });
         });
 
+        function addClientsToList() {
+            $.ajax({
+                type: "POST",
+                url: "/Events/GetClients",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (clientList) {
+                    $('#Client').empty();
+                    $('#Client').append($("<option value=''>Please Select</option>"));
+
+                    $.each(clientList, function (index, client) {
+                        $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
+                    });
+                },
+                error: function () {
+                    alert("Failed to load Clients");
+                }
+            });
+        }
+
         function deleteSegment(id) {
             $("#" + id).remove();
         };
 
         function addASegmentsToForm() {
             var count = 0;
+            
+            $("#form").append("<input type='hidden' name='Client.Id'" + " value='" + $("#Client").val() + "'/>");
+            $("#form").append("<input type='hidden' name='Client.Name'" + " value='" + $("#Client option:selected").text() + "'/>");
 
             $('#segments > tbody > tr:not(:first)').each(function () {
                 var columns = $(this).find('td');

@@ -56,7 +56,7 @@ namespace FirstInFirstAid.Controllers
                 logger.Warn("Received null Event Id to modify");
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Event @event = db.Events.Include(s => s.EventSegments).Where(x => x.Id == id).First();
+            Event @event = db.Events.Include(s => s.EventSegments).Include(c => c.Client).Where(x => x.Id == id).First();
             if (@event == null)
             {
                 logger.Warn("Received null Event Id to modify");
@@ -84,19 +84,7 @@ namespace FirstInFirstAid.Controllers
                 dbEvent.HourlyRate = @event.HourlyRate;
                 dbEvent.InvoiceNumber = @event.InvoiceNumber;
                 dbEvent.TotalFee = @event.TotalFee;
-
-                if (@event.Client != null)
-                {
-                    if (@event.Client.Id > 0)
-                    {
-                        db.Entry(@event.Client).State = EntityState.Modified;
-                    }
-                    else
-                    {
-                        db.Entry(@event.Client).State = EntityState.Added;
-                    }
-
-                }
+                dbEvent.Client = @event.Client;                
 
                 //Deleting the deleted Segments
                 if (dbEvent.EventSegments != null)

@@ -14,8 +14,8 @@
          _createAutocomplete: function () {
             
             var selected = this.element.children(":selected"),
-                value = selected.val() ? selected.text() : "";
-
+                 value = selected.val() ? selected.text() : "";
+            
             this.input = $("<input>")
                 .appendTo(this.wrapper)
                 .val(value)
@@ -34,17 +34,17 @@
 
             this._on(this.input, {
                 autocompleteselect: function (event, ui) {
-                    ui.item.option.selected = true;
+                    ui.item.option.selected = true;                    
+                    this.element.val(ui.item.option.value);
                     this._trigger("select", event, {
                         item: ui.item.option
                     });
                 },
 
                 autocompletechange: "_removeIfInvalid"
-            });
-        },
+            });        
+         },
 
-        
         _source: function (request, response) {
             var matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
             response(this.element.children("option").map(function () {
@@ -56,8 +56,8 @@
                         option: this
                     };
             }));
-        },
-
+         },
+        
         _removeIfInvalid: function (event, ui) {
 
             // Selected an item, nothing to do
