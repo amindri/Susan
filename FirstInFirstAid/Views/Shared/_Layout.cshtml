@@ -9,9 +9,9 @@
     @Scripts.Render("~/bundles/modernizr")
     <!--Custom css file by Anu-->
     @Styles.Render("~/Content/custom-styles.css")
-     <!--Font Aweson bundle-->
+    <!--Font Aweson bundle-->
     @Styles.Render("~/Content/fontawesome")
-
+  
 </head>
 <body>
     <!--Top Navigation-->
@@ -42,90 +42,90 @@
                         <a href="#">Dashboard</a>
                     </li>
                 </ul>
-               <!-- <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="#">Calender</a>
-                    </li>
-                </ul>-->
+                <!-- <ul class="nav navbar-nav navbar-right">
+                     <li>
+                         <a href="#">Calender</a>
+                     </li>
+                 </ul>-->
             </div>
         </div>
     </div>
 
     <!--Sidebar-->
     <div class="content">
-         <div class="sidebar">
-                <!--Sidebar mobile drop down-->
-                <div class="navbar-header">
-                    <div class="sidebar-dropdown">
-                        <a id="main-menu" href="#" class="navbar-toggle"  role="button" data-toggle="collapse" data-target=".navbar-collapse2">Main Menu</a>
-                    </div>
+        <div class="sidebar">
+            <!--Sidebar mobile drop down-->
+            <div class="navbar-header">
+                <div class="sidebar-dropdown">
+                    <a id="main-menu" href="#" class="navbar-toggle" role="button" data-toggle="collapse" data-target=".navbar-collapse2">Main Menu</a>
                 </div>
-                <nav class="sidebar-inner collapse navbar-collapse navbar-collapse2" role="navigation">
-                    <ul class="nav-sidebar">
-                        <li class="nred level1">
-                            <a href="http://localhost:49884/Dashboard/Index" class="fisfa-h"> <i class="fa fa-dashboard"></i> Dashboard </a>
-
-                        </li>
-                        <li class="nblue level1">
-                            <a href="#" class="fisfa-es"> <i class="fa fa-calendar"></i> Event Segments </a>
-
-                        </li>
-                        <li class="has_submenu nblue level1">
-
-                            <a class="fisfa-e"> <i class="fa fa-calendar"></i> Events<span class="pull-right"><i class="fa fa-sort-down"></i></span> </a>
-                            <ul>
-                                <li>  @Html.ActionLink("All Events", "Index", "Events") </li>
-                                <li>  @Html.ActionLink("Add New", "Create", "Events") </li>
-                            </ul>
-                        </li>
-                        <li class="has_submenu nblue level1">
-
-                            <a class="fisfa-c"> <i class="fa fa-user"></i> Clients<span class="pull-right"><i class="fa fa-sort-down"></i></span> </a>
-                            <ul>
-                                <li> @Html.ActionLink("All Clients", "Index", "Clients")  </li>
-                                <li> @Html.ActionLink("Add New", "Create", "Clients") </li>
-                            </ul>
-                        </li>
-
-                        <li class="has_submenu nblue level1">
-
-                            <a class="fisfa-t"> <i class="fa fa-group"></i> Trainers<span class="pull-right"><i class="fa fa-sort-down"></i></span></a>
-                            <ul>
-                                <li> @Html.ActionLink("All Trainers", "Index", "Trainors")  </li>
-                                <li> @Html.ActionLink("Add New", "Create", "Trainors") </li>
-                            </ul>
-                        </li>
-
-
-                        <li class="has_submenu nblue level1">
-
-                            <a class="fisfa-v"> <i class="fa fa-map-marker"></i> Venues<span class="pull-right"><i class="fa fa-sort-down"></i></span> </a>
-                            <ul>
-                                <li> @Html.ActionLink("All Venues", "Index", "Venues")  </li>
-                                <li> @Html.ActionLink("Add New", "Create", "Venues") </li>
-                            </ul>
-                        </li>
-
-                        <li class="has_submenu nblue level1">
-
-                            <a class="fisfa-eq"> <i class="fa fa-suitcase"> </i> Equipment<span class="pull-right"><i class="fa fa-sort-down"></i></span> </a>
-                            <ul>
-                                <li> @Html.ActionLink("Equipment Allocations", "Index", "Equipments")  </li>
-                                <li> @Html.ActionLink("Add New", "Create", "Equipments") </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </nav>
             </div>
-       </div>
-   <div class="main">
+            <nav class="sidebar-inner collapse navbar-collapse navbar-collapse2" role="navigation">
+                <ul class="nav-sidebar">
+                    <li class="nred level1">
+                        <a href="http://localhost:49884/Dashboard/Index" class="fisfa-h"> <i class="fa fa-dashboard"></i> Dashboard </a>
+
+                    </li>
+                    <li class="nblue level1">
+                        <a href="" class="fisfa-es"> <i class="fa fa-calendar"></i> Event Segments </a>
+
+                    </li>
+                    <li class="has_submenu nblue level1">
+
+                        <a class="fisfa-e"> <i class="fa fa-calendar"></i> Events<span class="pull-right"><i class="fa fa-sort-down"></i></span> </a>
+                        <ul>
+                            <li>  @Html.ActionLink("All Events", "Index", "Events") </li>
+                            <li>  @Html.ActionLink("Add New", "Create", "Events") </li>
+                        </ul>
+                    </li>
+                    <li class="has_submenu nblue level1">
+
+                        <a class="fisfa-c"> <i class="fa fa-user"></i> Clients<span class="pull-right"><i class="fa fa-sort-down"></i></span> </a>
+                        <ul>
+                            <li> @Html.ActionLink("All Clients", "Index", "Clients")  </li>
+                            <li> @Html.ActionLink("Add New", "Create", "Clients") </li>
+                        </ul>
+                    </li>
+
+                    <li class="has_submenu nblue level1">
+
+                        <a class="fisfa-t"> <i class="fa fa-group"></i> Trainers<span class="pull-right"><i class="fa fa-sort-down"></i></span></a>
+                        <ul>
+                            <li> @Html.ActionLink("All Trainers", "Index", "Trainors")  </li>
+                            <li> @Html.ActionLink("Add New", "Create", "Trainors") </li>
+                        </ul>
+                    </li>
+
+
+                    <li class="has_submenu nblue level1">
+
+                        <a class="fisfa-v"> <i class="fa fa-map-marker"></i> Venues<span class="pull-right"><i class="fa fa-sort-down"></i></span> </a>
+                        <ul>
+                            <li> @Html.ActionLink("All Venues", "Index", "Venues")  </li>
+                            <li> @Html.ActionLink("Add New", "Create", "Venues") </li>
+                        </ul>
+                    </li>
+
+                    <li class="has_submenu nblue level1">
+
+                        <a class="fisfa-eq"> <i class="fa fa-suitcase"> </i> Equipment<span class="pull-right"><i class="fa fa-sort-down"></i></span> </a>
+                        <ul>
+                            <li> @Html.ActionLink("Equipment Allocations", "Index", "Equipments")  </li>
+                            <li> @Html.ActionLink("Add New", "Create", "Equipments") </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="main">
         @RenderBody()
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - First in Teams Pty Ltd</p>
         </footer>
     </div>
-  
+
 
     @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/jquery")
@@ -134,6 +134,13 @@
     <!-- Including the jquery-ui script and style bundles by Anu-->
     @Scripts.Render("~/bundles/jquery-ui")
     @Styles.Render("~/Content/jquery-ui-timepicker-addon.min.css")
+
+    <!--Include jquery data tables-->
+    <link href="~/Content/datatables.min.css" rel="stylesheet" />
+    <link href="~/Content/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/datatables.min.js"></script>
+    <script src="~/Scripts/dataTables.bootstrap4.min.js"></script>
 
     @RenderSection("scripts", required: false)
 
@@ -153,7 +160,7 @@
                     $(this).parent().css("display", "block");
                     $(this).parent().parent().addClass('current');
                 }
-               
+
             });
 
             $(".has_submenu > a").click(function (e) {
@@ -173,6 +180,9 @@
                     menu_ul.css("display", "block");
                 }
             })
+
+            $('.mdtable').dataTable({
+            });
 
         });
     </script>
