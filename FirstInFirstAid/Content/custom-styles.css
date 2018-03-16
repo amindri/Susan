@@ -233,6 +233,19 @@
     border: none;
 }
 
+table.dataTable.no-footer {
+    border-bottom:1px solid #ebebeb !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0;
+}
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: none;
+    }
+
+
 /*Responsive*/
 @media (max-width: 767px) {
     .sidebar {
