@@ -15,19 +15,19 @@
                     <div class="panel-body">
                         <h4>Number of upcoming events (7days): </h4> <br />
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
                                         <th>Start Date/Time</th>
                                         <th>Venue</th>
                                     </tr>
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
+                                    </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                                    
+                               
                             </table>
                         </div>
                     </div>
@@ -41,18 +41,18 @@
                             <table class="table">
                                 <tbody>
                                     <tr>
-                                        <td> @Html.ActionLink("Create Event", "Create", "Events") <br /></td>
+                                        <td> @Html.ActionLink("Add Event", "Create", "Events") <br /></td>
                                         <td>  @Html.ActionLink("View Events", "Index", "Events") <br /></td>
                                     </tr>
                                     <tr>
-                                        <td> @Html.ActionLink("Create Client", "Create", "Clients") <br /></td>
+                                        <td> @Html.ActionLink("Add Client", "Create", "Clients") <br /></td>
                                         <td>  @Html.ActionLink("View Clients", "Index", "Clients") <br /></td>
                                     </tr>
                                     <tr>
-                                        <td>  @Html.ActionLink("Create Trainer", "Create", "Trainors")<br /></td>
+                                        <td>  @Html.ActionLink("Add Trainer", "Create", "Trainors")<br /></td>
                                         <td>  @Html.ActionLink("View Trainers", "Index", "Trainors") <br /></td>
                                     </tr>
-                                 
+
                                 </tbody>
                             </table>
 
@@ -64,7 +64,7 @@
 
 
         </div>
-   
+
 
 
         <div class="row">
@@ -73,7 +73,7 @@
                     <div class="panel-heading" id="client-p">Clients</div>
                     <div class="panel-body">
                         <h4>Number of Clients: </h4> <br />
-                        @Html.ActionLink("Create Client", "Create", "Clients") <br />
+                        @Html.ActionLink("Add Client", "Create", "Clients") <br />
                         @Html.ActionLink("View Clients", "Index", "Clients") <br />
 
                     </div>
@@ -85,7 +85,7 @@
                     <div class="panel-heading" id="trainer-p">Trainers</div>
                     <div class="panel-body">
                         <h4>Number of Trainers: </h4> <br />
-                        @Html.ActionLink("Create Trainer", "Create", "Trainors") <br />
+                        @Html.ActionLink("Add Trainer", "Create", "Trainors") <br />
                         @Html.ActionLink("View Trainers", "Index", "Trainors") <br />
 
                     </div>
@@ -95,7 +95,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" id="calendar-p">Calendar</div>
                     <div class="panel-body">
-                       
+
 
                     </div>
                 </div>
