@@ -16,6 +16,14 @@ namespace FirstInFirstAid.Controllers
         private FirstInFirstAidDBContext db = new FirstInFirstAidDBContext();
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+
+        // GET: EventSegments
+        public ActionResult Index()
+        {
+            var eventSegments = db.EventSegments;
+            return View(eventSegments.ToList());
+        }
+
         // POST: EventSegments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -132,6 +140,7 @@ namespace FirstInFirstAid.Controllers
             Event evnt = db.Events.Include(x => x.Client).Where(z => z.Id == eventId).First();
             if (evnt.Client != null)
             {
+                var list = db.ClientContacts;
                 return Json(db.ClientContacts.Where(x => x.Client.Id == evnt.Client.Id), JsonRequestBehavior.AllowGet);
             } 
             else
