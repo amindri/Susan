@@ -155,15 +155,17 @@
     </script>
 }
 
-<h2>Edit</h2>
+<h3 class="page-header">Edit Event</h3>
+
+<div class="container-fluid">
+    <div class="row">
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
 <div class="form-horizontal" id="form">
-    <h4>Event</h4>
-    <hr />
+    
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.Id)
 
@@ -231,7 +233,7 @@
         </div>
     </div>
 
-    <h4 style="padding-top:30px;"> Event Segments</h4>
+    <h4 class="page-header"> Event Segments</h4>
     <div class="table-responsive">
         <table class="table" id="segments" style="width:100%; padding-top:40px;">
             <tbody>
@@ -278,6 +280,8 @@
     </div>
 </div>
 }
+        </div>
+    </div>
 <div id="modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->

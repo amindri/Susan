@@ -21,9 +21,9 @@
                         "<td>" + $("#phone").val() + "</td>" +
                         "<td>" + $("#email").val() + "</td>" +
                         "<td>" +
-                        "<button type= 'button' value= 'Delete' onclick= 'deleteContact(" + i + ")'>" +
+                        "<button type= 'button' class='btn btn-danger' value= 'Delete' onclick= 'deleteContact(" + i + ")'>" +
                         "Delete" +
-                        "</button>" +
+                        "</button>" + 
                         "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
                         "Edit" +
                         "</button>" +
@@ -90,25 +90,24 @@
 
     </script>
 }
-<h2>Edit</h2>
+<h3 class="page-header">Edit Client</h3>
+<div class="container-fluid">
+    <div class="row">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+            <div class="form-horizontal" id="form">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Id)
 
-    <div class="form-horizontal" id="form">
-        <h4>Client</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
-
-        <div class="form-group">
-            <label class="control-label col-md-2">Name:</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Name:</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
         <div class="form-group">
             <label class="control-label col-md-2" for="EventName">Address:</label>
@@ -122,127 +121,129 @@
                         @Html.ValidationMessageFor(model => model.Address.StreetNumber, "", new { @class = "text-danger" })
                     </div>
 
-                </div>
-                <div class="form-group ">
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Address.StreetName, new { htmlAttributes = new { @id = "Address.StreetName", @class = "form-control", @placeholder = "Street Name" } })
-                        @Html.ValidationMessageFor(model => model.Address.StreetName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group ">
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Address.StreetName, new { htmlAttributes = new { @id = "Address.StreetName", @class = "form-control", @placeholder = "Street Name" } })
+                                @Html.ValidationMessageFor(model => model.Address.StreetName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Address.Suburb, new { htmlAttributes = new { @id = "Address.Suburb", @class = "form-control", @placeholder = "Suburb" } })
+                                @Html.ValidationMessageFor(model => model.Address.Suburb, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.EnumDropDownListFor(model => model.Address.State, "- Please Select State -", new { @id = "Address.State", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Address.State, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Address.Postcode, new { htmlAttributes = new { @id = "Address.Postcode", @class = "form-control", @placeholder = "Postcode" } })
+                                @Html.ValidationMessageFor(model => model.Address.Postcode, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group ">
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Address.Suburb, new { htmlAttributes = new { @id = "Address.Suburb", @class = "form-control", @placeholder = "Suburb" } })
-                        @Html.ValidationMessageFor(model => model.Address.Suburb, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-10">
-                        @Html.EnumDropDownListFor(model => model.Address.State, "- Please Select State -", new { @id = "Address.State", @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.Address.State, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Address.Postcode, new { htmlAttributes = new { @id = "Address.Postcode", @class = "form-control", @placeholder = "Postcode" } })
-                        @Html.ValidationMessageFor(model => model.Address.Postcode, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="form-group">
-            <label class="control-label col-md-2">Add Client Contacts:</label>
-            <div class="col-md-10">
-                <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add  </button>
-            </div>
-        </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Add Client Contacts:</label>
+                    <div class="col-md-10">
+                        <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add  </button>
+                    </div>
+                </div>
 
-        <h4 style="padding-top:30px;"> Client Contacts</h4>
-        <div class="table-responsive">
-            <table id="contacts" style="width:100%; padding-top:40px;">
-                <tbody>
-                    <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                    </tr>
-                    @if (Model.ClientContacts != null)
-                    {
-                        var count = 0;
-                        foreach (var contact in Model.ClientContacts)
-                        {
-                            <tr id=@count data-dbId=@contact.Id>
-                                <td>@contact.ContactName</td>
-                                <td>@contact.ContactPosition</td>
-                                <td>@contact.ContactPhone</td>
-                                <td>@contact.ContactEmail</td>
-                                <td>
-                                    <button type="button" value="Delete" onclick="deleteContact(@count)">
-                                        Delete
-                                    </button>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal" data-id="@count" data-action="Change">
-                                        Edit
-                                    </button>
-                                </td>
+                <h4 class="page-header"> Client Contacts</h4>
+                <div class="table-responsive">
+                    <table id="contacts" style="width:100%; margin-bottom:60px;">
+                        <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Actions</th>
                             </tr>
-                            count++;
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
+                            @if (Model.ClientContacts != null)
+                            {
+                                var count = 0;
+                                foreach (var contact in Model.ClientContacts)
+                                {
+                                    <tr id=@count data-dbId=@contact.Id>
+                                        <td>@contact.ContactName</td>
+                                        <td>@contact.ContactPosition</td>
+                                        <td>@contact.ContactPhone</td>
+                                        <td>@contact.ContactEmail</td>
+                                        <td>
+                                            <button type="button" value="Delete" onclick="deleteContact(@count)">
+                                                Delete
+                                            </button>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal" data-id="@count" data-action="Change">
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    count++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
 
-        <div class="form-group">
-            <div class="col-md-2">
-                <input onclick="addAllContactsToForm();" type="submit" value="Save" class="btn btn-success" />
-            </div>
-        </div>
-    </div>
-}
-<div id="modal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Create Client Contact</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-horizontal">
-
-                    <div class="form-group">
-                        <label for="name" class="control-label col-md-2">Name:</label>
-                        <input type="text" class="form-control" id="name" placeholder="Name">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input onclick="addAllContactsToForm();" type="submit" value="Save" class="btn btn-success" />
                     </div>
-
-                    <div class="form-group">
-                        <label for="position" class="control-label col-md-2">Position:</label>
-                        <input type="text" class="form-control" id="position" placeholder="Position">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone" class="control-label col-md-2">Phone:</label>
-                        <input type="tel" class="form-control" id="phone" placeholder="Phone">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email" class="control-label col-md-2">Email:</label>
-                        <input type="email" class="form-control" id="email" placeholder="Email">
-                    </div>
-                    <input type="hidden" id="trId">
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="addContact" data-dismiss="modal">
-                    <span class="ui-button-text">Add</span>
-                </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
+        }
         </div>
     </div>
-</div>
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+        <div id="modal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add Client Contact</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-horizontal">
+
+                            <div class="form-group">
+                                <label for="name" class="control-label col-md-2">Name:</label>
+                                <input type="text" class="form-control" id="name" placeholder="Name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="position" class="control-label col-md-2">Position:</label>
+                                <input type="text" class="form-control" id="position" placeholder="Position">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone" class="control-label col-md-2">Phone:</label>
+                                <input type="tel" class="form-control" id="phone" placeholder="Phone">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="control-label col-md-2">Email:</label>
+                                <input type="email" class="form-control" id="email" placeholder="Email">
+                            </div>
+                            <input type="hidden" id="trId">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" id="addContact" data-dismiss="modal">
+                            <span class="ui-button-text">Add</span>
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
