@@ -113,7 +113,9 @@
         <div class="form-group">
             <label class="control-label col-md-2" for="EventName">Address:</label>
             <div class="col-md-10">
-                @Html.HiddenFor(model => model.Address.Id)
+                @if (Model.Address != null) {
+                    @Html.HiddenFor(model => model.Address.Id)
+                }
                 <div class="form-group">
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.Address.StreetNumber, new { htmlAttributes = new { @id = "Address.StreetNumber", @class = "form-control", @placeholder = "Street Number" } })

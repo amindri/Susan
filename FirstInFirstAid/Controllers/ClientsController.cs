@@ -79,8 +79,19 @@ namespace FirstInFirstAid.Controllers
                 //updating the simple Client fields
                 dbClient.Name = client.Name;
 
-                //updating the address
-                db.Entry(client.Address).State = EntityState.Modified;
+                //updating or adding the address
+                if (client.Address != null)
+                {
+                    if (client.Address.Id > 0)
+                    {
+                        db.Entry(client.Address).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        dbClient.Address = client.Address;                        
+                    }
+                }
+                
 
                 //Deleting the deleted Client Contacts
                 if (dbClient.ClientContacts != null)
@@ -154,7 +165,9 @@ namespace FirstInFirstAid.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Client client = db.Clients.Find(id);
+            Client client = db.Clients.Include(a => a.Address).Include(c => c.ClientContacts).Where(i => i.Id == id).First();
+            db.Addresses.Remove(client.Address);
+            db.ClientContacts.RemoveRange(client.ClientContacts);
             db.Clients.Remove(client);
             db.SaveChanges();
             logger.InfoFormat("Client deleted, Name: {0}, Id: {1}", client.Name, client.Id);
