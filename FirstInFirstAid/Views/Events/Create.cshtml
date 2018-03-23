@@ -15,43 +15,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            //extending the combobox widget
-            $.widget("custom.combobox", $.custom.combobox, {
-                _createShowAllButton: function () {
-                    var input = this.input,
-                        wasOpen = false;
-
-                    $("<a>")
-                        .attr("tabIndex", -1)
-                        .attr("title", "Show All Items")
-                        .tooltip()
-                        .appendTo(this.wrapper)
-                        .button({
-                            icons: {
-                                primary: "ui-icon-triangle-1-s"
-                            },
-                            text: false
-                        })
-                        .removeClass("ui-corner-all")
-                        .addClass("custom-combobox-toggle ui-corner-right")
-                        .on("mousedown", function () {    
-                            addClientsToList();
-                            wasOpen = input.autocomplete("widget").is(":visible");
-                        })
-                        .on("click", function () {
-                            addClientsToList();
-                            input.trigger("focus");
-
-                            // Close if already visible
-                            if (wasOpen) {
-                                return;
-                            }
-                            // Pass empty string as value to search for, displaying all results
-                            input.autocomplete("search", "");
-                        });
-                },
-            });
-        
+       
             $("input[type=datetime]").datetimepicker({
                 dateFormat: "dd.M.yy",
                 changeMonth: true,
@@ -62,7 +26,7 @@
                 "stepMinute": 15
             });                         
 
-            $("#Client").combobox();
+            $("#Client").combobox({ getdata: addClientsToList});
              
             var i = 0;
             $("#addChild").click(function () {

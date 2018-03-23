@@ -8,25 +8,34 @@
 @section Scripts {
 
     @Scripts.Render("~/Scripts/jquery-ui-timepicker-addon.min.js")
+    @Scripts.Render("~/Scripts/jquery-combobox.js")
 
     <script type="text/javascript">
         $(document).ready(function () {
 
-            //Generated the Client Contact list
-            $('#ClientContact').click(function () {
-                $.ajax({
-                    type: "POST",
-                    url: "/EventSegments/getClientContacts",
-                    contentType: "application/json; charset=utf-8",
-                    data: "{'clientId' : '" + @Model.Event.Id + "'}",
-                    dataType: "json",
-                    success: function (clientContactList) {
-                        //add the client contacts to the  dropdown
-                                           },
-                    error: function () {
-                        alert("Failed to load Clients");
-                    }
-                })
+
+            //Generated the Client Contact combobox
+            $('#ClientContact').combobox({
+                getdata : function() {
+                    $.ajax({
+                        type: "POST",
+                        url: "/EventSegments/getClientContacts",
+                        contentType: "application/json; charset=utf-8",
+                        data: "{'eventId' : '" + @Model.Event.Id + "'}",
+                        dataType: "json",
+                        success: function (clientContactList) {
+                            $('#ClientContact').empty();
+                            $('#ClientContact').append($("<option value=''>Please Select</option>"));
+                            console.log(clientContactList);
+                            $.each(clientContactList, function (index, client) {
+                                $('#ClientContact').append($("<option></option>").attr("value", client.Id).text(client.Name));
+                            });
+                        },
+                        error: function () {
+                            alert("Failed to load Clients");
+                        }
+                    });
+                }
             });
 
             //generates the venues list
@@ -92,6 +101,7 @@
                     '</div>');
             });
         });
+
 
         function getTrainers() {
             $.ajax({

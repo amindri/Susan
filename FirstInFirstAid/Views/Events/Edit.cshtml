@@ -12,39 +12,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $.widget("custom.combobox", $.custom.combobox, {
-                _createShowAllButton: function () {
-                    var input = this.input,
-                        wasOpen = false;
-
-                    $("<a>")
-                        .attr("tabIndex", -1)
-                        .attr("title", "Show All Items")
-                        .tooltip()
-                        .appendTo(this.wrapper)
-                        .button({
-                            icons: {
-                                primary: "ui-icon-triangle-1-s"
-                            },
-                            text: false
-                        })
-                        .removeClass("ui-corner-all")
-                        .addClass("custom-combobox-toggle ui-corner-right")
-                        .on("mousedown", function () {                            
-                            wasOpen = input.autocomplete("widget").is(":visible");
-                        })
-                        .on("click", function () {                            
-                            input.trigger("focus");
-
-                            // Close if already visible
-                            if (wasOpen) {
-                                return;
-                            }
-                            // Pass empty string as value to search for, displaying all results
-                            input.autocomplete("search", "");
-                        });
-                },
-            });
 
             $("input[type=datetime]").datetimepicker({
                 dateFormat: "dd.M.yy",
@@ -58,30 +25,35 @@
 
 
             //Create the combobox
-            $.ajax({
-                type: "POST",
-                url: "/Events/GetClients",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (clientList) {
-                  
-                    $.each(clientList, function (index, client) {
-                        $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
+            $("#Client").val(@Model.Client.Id);
+            $('#Client').combobox({
+                getdata: function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Events/GetClients",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (clientList) {
+
+                            $.each(clientList, function (index, client) {
+                                $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
+                            });
+
+
+                        },
+                        error: function () {
+                            alert("Failed to load Clients");
+                        }
                     });
-                    $("#Client").val(@Model.Client.Id);
-                    $('#Client').combobox();      
-                },
-                error: function () {
-                    alert("Failed to load Clients");
                 }
             });
-                  
-
+            
             var i = $("#segments td").closest("tr").length;
             $("#addSegment").click(function () {
                 if ($(this).attr('data-action') == "add") {
                     var segment = {
                         eventSegment: {
+                            Name: $.trim($("#Name").val()),
                             StartTime: $.trim($("#StartTime").val()),
                             EndTime: $.trim($('#EndTime').val()),
                             Hours: $.trim($('#Hours').val()),
