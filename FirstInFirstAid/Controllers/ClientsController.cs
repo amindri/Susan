@@ -82,16 +82,17 @@ namespace FirstInFirstAid.Controllers
                 //updating or adding the address
                 if (client.Address != null)
                 {
-                    if (client.Address.Id > 0)
+                    var dbAddress = db.Addresses.Find(client.Address.Id);
+                    if (dbAddress != null)
                     {
-                        db.Entry(client.Address).State = EntityState.Modified;
+                        db.Entry(dbAddress).CurrentValues.SetValues(client.Address);
+                        db.Entry(dbAddress).State = EntityState.Modified;
                     }
                     else
                     {
                         dbClient.Address = client.Address;                        
                     }
-                }
-                
+                }                 
 
                 //Deleting the deleted Client Contacts
                 if (dbClient.ClientContacts != null)

@@ -84,15 +84,18 @@ namespace FirstInFirstAid.Controllers
                 dbTrainer.Email = trainer.Email;
                 dbTrainer.DOB = trainer.DOB;
 
-                if (trainer.Address != null)
+                
+                if (trainer.Address != null)                    
                 {
-                    if (trainer.Address.Id > 0)
+                    var dbAddress = db.Addresses.Find(trainer.Address.Id);
+                    if (dbAddress != null)
                     {
-                        db.Entry(trainer.Address).State = EntityState.Modified;
+                        db.Entry(dbAddress).CurrentValues.SetValues(trainer.Address);
+                        db.Entry(dbAddress).State = EntityState.Modified;
                     }
                     else
                     {
-                        db.Entry(trainer.Address).State = EntityState.Added;
+                        dbTrainer.Address = trainer.Address;                        
                     }
                 } else if (dbTrainer.Address != null)
                 {
@@ -169,7 +172,9 @@ namespace FirstInFirstAid.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Trainor trainor = db.Trainors.Find(id);
+            Trainor trainor = db.Trainors.Include(q => q.Qualifications).Include(a => a.Address).Where(t => t.Id == id).First();
+            db.Qualifications.RemoveRange(trainor.Qualifications);
+            db.Addresses.Remove(trainor.Address);
             db.Trainors.Remove(trainor);
             db.SaveChanges();
             logger.InfoFormat("Trainer deleted, Name: {0}, Id: {1}", trainor.FirstName, trainor.Id);
