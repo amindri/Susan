@@ -147,32 +147,49 @@ namespace FirstInFirstAid.Controllers
         // GET: Clients/Delete/5
         public ActionResult Delete(int? id)
         {
+
             if (id == null)
             {
                 logger.Warn("Received null Client Id to delete");
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                return Content("{\"Type\":\"Warn\", \"Message\":\"Received null Client Id to delete\"}");
+
             }
-            Client client = db.Clients.Find(id);
-            if (client == null)
+            else
             {
-                logger.WarnFormat("Client not found to delete, Id: {0}", id);
-                return HttpNotFound();
+
+                Client client = db.Clients.Include(e => e.Events).Where(i => i.Id == id).First();
+                if (client == null)
+                {
+                    logger.WarnFormat("Client not found to delete, Id: {0}", id);
+                    return Content("{\"Type\":\"Warn\", \"Message\":\"Client not found to delete with the Id:" + id + "\"}");
+                }
+                else if (client.Events.Count() > 0)
+                {
+                    return Content("{\"Type\":\"Warn\", \"Message\":\"The Client is associated with Events. Please delete the related Events or assign another Client to those Events\"}");
+                }
+                else
+                {
+                    return Content("{\"Type\":\"Confirm\", \"Message\":\"Are you sure you want to delete the Client: " + client.Name + "\", \"Id\": \" " + client.Id + "\"}");
+                }
             }
-            return View(client);
+            
         }
 
         // POST: Clients/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpPost]
+        public JsonResult DeleteConfirmed(int id)
         {
             Client client = db.Clients.Include(a => a.Address).Include(c => c.ClientContacts).Where(i => i.Id == id).First();
-            db.Addresses.Remove(client.Address);
+            if (client.Address != null)
+            {
+                db.Addresses.Remove(client.Address);
+            }            
             db.ClientContacts.RemoveRange(client.ClientContacts);
             db.Clients.Remove(client);
             db.SaveChanges();
             logger.InfoFormat("Client deleted, Name: {0}, Id: {1}", client.Name, client.Id);
-            return RedirectToAction("Index");
+            return Json("Successfully deleted the client: " + client.Name);
         }
 
         protected override void Dispose(bool disposing)

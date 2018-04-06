@@ -4,6 +4,49 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section Scripts {
+    <script type="text/javascript">        
+
+        function deleteClient(id) {
+            $.ajax({
+                type: "GET",
+                url: "/Clients/Delete/" + id,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (obj) {
+                    if (obj.Type == 'Warn') {
+                        $("#warnModalBody").text(obj.Message);
+                        $('#warnModal').modal('show');
+                    } else {
+                        $("#delButton").attr("onclick", "deleteConfirmed(" + obj.Id + ")");
+                        $("#confirmModalBody").text(obj.Message);
+                        $('#confirmModal').modal('show');
+                    }
+                },
+                error: function (obj) {
+                    console.log(obj)
+                    alert("Failed to load Clients");
+                }
+            });
+        };
+
+        function deleteConfirmed(id) {
+            $.ajax({
+                type: "POST",
+                url: "/Clients/DeleteConfirmed/" + id,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    $("#successModalBody").text(msg);
+                    $('#successModal').modal('show');                    
+                },
+                error: function (obj) {
+                    alert("Error while deleting");
+                }
+            });
+        }
+    </script>
+}
 
 <h3 class="page-header">Clients</h3>
 
@@ -34,9 +77,9 @@
                             @Html.DisplayFor(modelItem => item.Name)
                         </td>
                         <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) |
-                            <!-- @Html.ActionLink("Details", "Details", new { id = item.Id }) |-->
-                            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class="btn btn-danger"})
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) 
+                            
+                            <button class='btn btn-danger' type='button' value='Delete' onclick='deleteClient(@item.Id)'>Delete</button>
                         </td>
                     </tr>
                 }
@@ -45,3 +88,55 @@
             </table>
         </div>
     </div>
+<div id="warnModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Warning</h4>
+            </div>
+            <div id="warnModalBody" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Info</h4>
+            </div>
+            <div id="confirmModalBody" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button id="delButton" type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="successModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Success</h4>
+            </div>
+            <div id="successModalBody" class="modal-body">
+            </div>
+            <div class="modal-footer" id="confirmFooter">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="location.reload()">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
