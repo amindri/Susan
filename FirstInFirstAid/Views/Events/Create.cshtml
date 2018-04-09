@@ -26,6 +26,7 @@
                 "stepMinute": 15
             });                         
 
+            $('#Client').append($("<option selected value='Please Select'>Please Select</option>"));
             $("#Client").combobox({ getdata: addClientsToList});
              
             var i = 0;
@@ -51,8 +52,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (clientList) {
-                    $('#Client').empty();
-                    $('#Client').append($("<option value=''>Please Select</option>"));
+                    $('#Client option').remove();
 
                     $.each(clientList, function (index, client) {
                         $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
@@ -71,8 +71,8 @@
         function addASegmentsToForm() {
             var count = 0;
             
-            $("#form").append("<input type='hidden' name='Client.Id'" + " value='" + $("#Client").val() + "'/>");
-            $("#form").append("<input type='hidden' name='Client.Name'" + " value='" + $("#Client option:selected").text() + "'/>");
+            $("#form").append("<input type='hidden' name='clientId'" + " value='" + $("#Client").val() + "'/>");
+           // $("#form").append("<input type='hidden' name='Client.Name'" + " value='" + $("#Client option:selected").text() + "'/>");
 
             $('#segments > tbody > tr:not(:first)').each(function () {
                 var columns = $(this).find('td');

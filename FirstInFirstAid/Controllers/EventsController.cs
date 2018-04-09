@@ -36,11 +36,12 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,BusinessId,EventState,Client,EventSegments")]Event ev3nt)
+        public ActionResult Create([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,BusinessId,EventState,EventSegments")]Event ev3nt, int clientId)
         {
             if (ModelState.IsValid)
             {
-                Event newEvent = db.Events.Add(ev3nt);
+                Client client = db.Clients.Include(e => e.Events).Where(i => i.Id == clientId).First();
+                client.Events.Add(ev3nt);
                 db.SaveChanges();
                 logger.InfoFormat("Event Created, Name : {0}, Id: {1}", ev3nt.EventName, ev3nt.Id);
                 return RedirectToAction("Edit", new { id = ev3nt.Id });
@@ -70,12 +71,26 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,BusinessId,EventState,Client,EventSegments")] Event @event)
+        public ActionResult Edit([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,BusinessId,EventState,EventSegments")] Event @event, int clientId)
         {
             if (ModelState.IsValid)
             {
                 logger.DebugFormat("Modifying Event of the Name: {0} and Id:{}", @event.EventName, @event.Id);
-                Event dbEvent = db.Events.Include(c => c.EventSegments).Where(i => i.Id == @event.Id).First();
+                Event dbEvent = db.Events.Include(c => c.EventSegments).Include(x => x.Client).Where(i => i.Id == @event.Id).First();
+
+                Client existingClient = dbEvent.Client;
+
+                if (existingClient != null) { 
+                    if (clientId > 0 && clientId != existingClient.Id) {
+                        Client newClient = db.Clients.Include(e => e.Events).Where(i => i.Id == clientId).First();
+                        existingClient.Events.Remove(dbEvent);
+                        newClient.Events.Add(dbEvent);
+                    } 
+                } else if (clientId > 0) 
+                {
+                    Client newClient = db.Clients.Include(e => e.Events).Where(i => i.Id == clientId).First();
+                    newClient.Events.Add(dbEvent);
+                }
 
                 //updating the Event fields
                 dbEvent.EventName = @event.EventName;
@@ -84,7 +99,6 @@ namespace FirstInFirstAid.Controllers
                 dbEvent.HourlyRate = @event.HourlyRate;
                 dbEvent.InvoiceNumber = @event.InvoiceNumber;
                 dbEvent.TotalFee = @event.TotalFee;
-                dbEvent.Client = @event.Client;                
 
                 //Deleting the deleted Segments
                 if (dbEvent.EventSegments != null)

@@ -1,7 +1,7 @@
 ﻿$(function () {
 
     $.widget("custom.combobox", {
-         _create: function (funcToExecute) {
+         _create: function () {
             this.wrapper = $("<span>")
                 .addClass("custom-combobox")
                 .insertAfter(this.element);
@@ -12,10 +12,10 @@
         },
 
          _createAutocomplete: function () {
-            
-            var selected = this.element.children(":selected"),
+
+             var selected = this.element.children(":selected"),
                  value = selected.val() ? selected.text() : "";
-            
+
             this.input = $("<input>")
                 .appendTo(this.wrapper)
                 .val(value)
@@ -48,7 +48,7 @@
          _createShowAllButton: function () {
              var input = this.input,
                  wasOpen = false;
-             var callback = ;
+             var callback = this.options.getdata;
              $("<a>")
                  .attr("tabIndex", -1)
                  .attr("title", "Show All Items")
@@ -63,11 +63,15 @@
                  .removeClass("ui-corner-all")
                  .addClass("custom-combobox-toggle ui-corner-right")
                  .on("mousedown", function () {
-                     this.options.getdata();
+                     if (callback != null) {
+                         callback();
+                     }
                      wasOpen = input.autocomplete("widget").is(":visible");
                  })
                  .on("click", function () {
-                     this.options.getdata();
+                     if (callback != null) {
+                         callback();
+                     }
                      input.trigger("focus");
 
                      // Close if already visible

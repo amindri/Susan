@@ -11,6 +11,7 @@
     @Scripts.Render("~/Scripts/jquery-combobox.js")
 
     <script type="text/javascript">
+
         $(document).ready(function () {
 
             $("input[type=datetime]").datetimepicker({
@@ -21,33 +22,32 @@
                 controlType: "select",
                 timeFormat: "hh:mm TT",
                 "stepMinute": 15
-            });
+           });
 
-
-            //Create the combobox
-            $("#Client").val(@Model.Client.Id);
-            $('#Client').combobox({
-                getdata: function () {
-                    $.ajax({
-                        type: "POST",
-                        url: "/Events/GetClients",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (clientList) {
-
-                            $.each(clientList, function (index, client) {
-                                $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
-                            });
-
-
-                        },
-                        error: function () {
-                            alert("Failed to load Clients");
+            $.ajax({
+                type: "POST",
+                url: "/Events/GetClients",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (clientList) {
+                    var clientId = @(Model.Client == null ? -1 : Model.Client.Id);
+                    if (clientId == -1) {
+                        $('#Client').append($("<option selected value='Please Select'>Please Select</option>"));
+                    }
+                    $.each(clientList, function (index, client) {                   
+                        if ( clientId == client.Id) {
+                            $('#Client').append($("<option selected></option>").attr("value", client.Id).text(client.Name));
+                        } else {
+                            $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
                         }
+
                     });
+                },
+                error: function () {
+                    alert("Failed to load Clients");
                 }
             });
-            
+
             var i = $("#segments td").closest("tr").length;
             $("#addSegment").click(function () {
                 if ($(this).attr('data-action') == "add") {
@@ -130,6 +130,13 @@
                     modal.find('.modal-footer button').attr("data-action", "add");
                 }
             });
+
+            //initialising the combobox at the very end in document.ready
+            $(function () {
+                window.setTimeout(function () {
+                    $('#Client').combobox();
+                }, 0);
+            });
         });
 
         function deleteSegment(id) {
@@ -137,8 +144,8 @@
         };
 
         function addAllSegmentsToForm() {
-            $("#form").append("<input type='hidden' name='Client.Id'" + " value='" + $("#Client").val() + "'/>");
-            $("#form").append("<input type='hidden' name='Client.Name'" + " value='" + $("#Client option:selected").text() + "'/>");
+            $("#form").append("<input type='hidden' name='clientId'" + " value='" + $("#Client").val() + "'/>");
+            //$("#form").append("<input type='hidden' name='Client.Name'" + " value='" + $("#Client option:selected").text() + "'/>");
 
             var count = 0;
             $('#segments > tbody > tr:not(:first)').each(function () {
