@@ -58,7 +58,7 @@ namespace FirstInFirstAid.Controllers
                 logger.Warn("Received null Event Segment Id to modify");
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            EventSegment eventSegment = db.EventSegments.Include(c => c.Event).Where(x => x.Id == id).First();
+            EventSegment eventSegment = db.EventSegments.Include(e => e.Event).Include(c => c.ClientContact).Include(v => v.Venue).Where(x => x.Id == id).First();
             if (eventSegment == null)
             {
                 logger.Warn("Received null Event Segement Id to modify");
@@ -72,14 +72,57 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,StartTime,EndTime,Hours,RequiredNumberOfstaff")] EventSegment eventSegment)
+        public ActionResult Edit([Bind(Include = "Id,Name,StartTime,EndTime,Hours,RequiredNumberOfstaff")] EventSegment eventSegment, 
+            int venueId, int clientContactId)
         {
             if (ModelState.IsValid)
             {
                 logger.DebugFormat("Modifying Event Segment of the Name: {0} and Id:{}", eventSegment.Name, eventSegment.Id);
-                db.Entry(eventSegment).State = EntityState.Modified;
+                EventSegment dbEventSegment = db.EventSegments.Include(v => v.Venue).Include(c => c.ClientContact).Where(i => i.Id == eventSegment.Id).First();
+
+                //Updating the Event Segment fields
+                dbEventSegment.Name = eventSegment.Name;
+                dbEventSegment.Hours = eventSegment.Hours;
+                dbEventSegment.StartTime = eventSegment.StartTime;
+                dbEventSegment.EndTime = eventSegment.EndTime;
+                dbEventSegment.RequiredNumberOfStaff = eventSegment.RequiredNumberOfStaff;
+
+                //Updating the Client Contact
+                ClientContact existingClientContact = dbEventSegment.ClientContact;
+                if (existingClientContact != null)
+                {
+                    if (clientContactId > 0 && clientContactId != existingClientContact.Id) // A new client contact is assigned
+                    {
+                        ClientContact newClientContact = db.ClientContacts.Include(e => e.EventSegments).Where(i => i.Id == clientContactId).First();
+                        existingClientContact.EventSegments.Remove(dbEventSegment);
+                        newClientContact.EventSegments.Add(dbEventSegment);
+                    }
+                }
+                else if (clientContactId > 0) //When the event segment is not assigned a client contact before
+                {
+                    ClientContact newClientContact = db.ClientContacts.Include(e => e.EventSegments).Where(i => i.Id == clientContactId).First();
+                    newClientContact.EventSegments.Add(dbEventSegment);
+                }
+
+                //Updating the Venue
+                Venue existingVenue = dbEventSegment.Venue;
+                if (existingVenue != null)
+                {
+                    if (venueId > 0 && venueId != existingVenue.Id) // A new venue contact is assigned
+                    {
+                        Venue newVenue = db.Venues.Include(e => e.EventSegments).Where(i => i.Id == venueId).First();
+                        existingVenue.EventSegments.Remove(dbEventSegment);
+                        newVenue.EventSegments.Add(dbEventSegment);
+                    }
+                }
+                else if (venueId > 0) //When the event segment is not assigned a venue before
+                {
+                    Venue newVenue = db.Venues.Include(e => e.EventSegments).Where(i => i.Id == venueId).First();
+                    newVenue.EventSegments.Add(dbEventSegment);
+                }
+                
                 db.SaveChanges();
-                logger.InfoFormat("Event Segment modified, Name: {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
+                logger.InfoFormat("Event Segment modified successfully, Name: {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
                 return RedirectToAction("Index");
             }
            
@@ -141,7 +184,7 @@ namespace FirstInFirstAid.Controllers
             if (evnt.Client != null)
             {
                 var list = db.ClientContacts;
-                return Json(db.ClientContacts.Where(x => x.Client.Id == evnt.Client.Id), JsonRequestBehavior.AllowGet);
+                return Json(db.ClientContacts.Where(x => x.Client.Id == evnt.Client.Id).Select(i => new { i.ContactName, i.Id}), JsonRequestBehavior.AllowGet);
             } 
             else
             {
@@ -151,7 +194,7 @@ namespace FirstInFirstAid.Controllers
 
         public JsonResult getVenues()
         {
-            return Json(db.Venues, JsonRequestBehavior.AllowGet);
+            return Json(db.Venues.Select(i => new {i.Id, i.VenueName}), JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

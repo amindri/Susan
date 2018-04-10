@@ -78,8 +78,8 @@ namespace FirstInFirstAid.Controllers
                 logger.DebugFormat("Modifying Event of the Name: {0} and Id:{}", @event.EventName, @event.Id);
                 Event dbEvent = db.Events.Include(c => c.EventSegments).Include(x => x.Client).Where(i => i.Id == @event.Id).First();
 
+                //Updating the client
                 Client existingClient = dbEvent.Client;
-
                 if (existingClient != null) { 
                     if (clientId > 0 && clientId != existingClient.Id) {
                         Client newClient = db.Clients.Include(e => e.Events).Where(i => i.Id == clientId).First();
@@ -144,7 +144,7 @@ namespace FirstInFirstAid.Controllers
                     }
                 }
                 db.SaveChanges();
-                logger.InfoFormat("Event modified, Name: {0}, Id: {1}", dbEvent.EventName, @event.Id);
+                logger.InfoFormat("Event successfully modified, Name: {0}, Id: {1}", dbEvent.EventName, @event.Id);
                 return RedirectToAction("Index");
             }
             return View(@event);

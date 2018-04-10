@@ -11,52 +11,9 @@
     @Scripts.Render("~/Scripts/jquery-combobox.js")
 
     <script type="text/javascript">
-        $(document).ready(function () {
-
-
-            //Generated the Client Contact combobox
-            $('#ClientContact').combobox({
-                getdata : function() {
-                    $.ajax({
-                        type: "POST",
-                        url: "/EventSegments/getClientContacts",
-                        contentType: "application/json; charset=utf-8",
-                        data: "{'eventId' : '" + @Model.Event.Id + "'}",
-                        dataType: "json",
-                        success: function (clientContactList) {
-                            $('#ClientContact').empty();
-                            $('#ClientContact').append($("<option value=''>Please Select</option>"));
-                            console.log(clientContactList);
-                            $.each(clientContactList, function (index, client) {
-                                $('#ClientContact').append($("<option></option>").attr("value", client.Id).text(client.Name));
-                            });
-                        },
-                        error: function () {
-                            alert("Failed to load Clients");
-                        }
-                    });
-                }
-            });
-
-            //generates the venues list
-            $('#Venue').click(function () {
-                    $.ajax({
-                    type: "POST",
-                    url: "/EventSegments/getVenues",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (venues) {
-                        //add the venues to the drop down
-                     },
-                    error: function () {
-                        alert("Failed to load Clients");
-                    }
-                })
-            });
+        $(document).ready(function () {            
 
             //generates available trainer list
-
-
             $("#addAllocation").click(function () {
                 $("#allocations")
                     .append('<div class="panel panel-default col-md-12">' +
@@ -100,8 +57,83 @@
                     '<button type="button" value="Send Email" class="btn btn-default" />' +
                     '</div>');
             });
+
+            var clinetContactId = @(Model.ClientContact == null ? -1 : Model.ClientContact.Id);
+            if (clinetContactId == -1) {
+                $('#ClientContact').append($("<option selected value='Please Select'>Please Select</option>"));
+            } else {
+                appendClientContacts(clinetContactId);                            
+            }
+
+            var venueId = @(Model.Venue == null ? -1 : Model.Venue.Id);
+            if (venueId == -1) {
+                $('#Venue').append($("<option selected value='Please Select'>Please Select</option>"));
+            } else {
+                appendVenues(venueId);
+            }
+            
+            $(function () {
+                window.setTimeout(function () {
+                    $('#ClientContact').combobox({ getdata: appendClientContacts });
+                    $('#Venue').combobox({ getdata: appendVenues });
+                }, 0);
+            });
         });
 
+
+        function appendVenues(select) {
+            $.ajax({
+                type: "POST",
+                url: "/EventSegments/getVenues",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (venues) {
+                    $('#Venue').empty();
+                    if (venues.length == 0) {
+                        $('#Venue').append($("<option></option>").text("No Venues created. Please create the venue"));
+                    } else {
+                        $.each(venues, function (index, venue) {
+                            if (venue.Id == select) {
+                                $('#Venue').append($("<option selected></option>").attr("value", venue.Id).text(venue.VenueName));
+                            } else {
+                                $('#Venue').append($("<option></option>").attr("value", venue.Id).text(venue.VenueName));
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    alert("Failed to load venues");
+                }
+            });
+
+        }
+        function appendClientContacts(select) {
+            $.ajax({
+                type: "POST",
+                url: "/EventSegments/getClientContacts",
+                contentType: "application/json; charset=utf-8",
+                data: "{'eventId' : '" + @Model.Event.Id + "'}",
+                dataType: "json",
+                success: function (clientContactList) {
+                    $('#ClientContact').empty();
+
+                    if (clientContactList.length == 0) {
+                        $('#ClientContact').append($("<option></option>").text("No Client Contacts assigned to the client"));
+                    } else {
+                        $.each(clientContactList, function (index, client) {
+                            if (client.Id == select) {
+                                $('#ClientContact').append($("<option selected></option>").attr("value", client.Id).text(client.ContactName));
+                            } else {
+                                $('#ClientContact').append($("<option></option>").attr("value", client.Id).text(client.ContactName));
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    alert("Failed to load Client Contacts");
+                }
+            });
+        };
 
         function getTrainers() {
             $.ajax({
@@ -118,6 +150,12 @@
                 }
             });
         };
+
+        function completeForm() {
+            $("#form").append("<input type='hidden' name='clientContactId'" + " value='" + $("#ClientContact").val() + "'/>");
+            $("#form").append("<input type='hidden' name='venueId'" + " value='" + $("#Venue").val() + "'/>");
+
+        };
     </script>
 }
 <h2>Edit</h2>
@@ -126,7 +164,7 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
+    <div class="form-horizontal" id="form">
         <h4>Event Segment</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -246,7 +284,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save"  onclick="completeForm();" class="btn btn-default" />
             </div>
         </div>
     </div>

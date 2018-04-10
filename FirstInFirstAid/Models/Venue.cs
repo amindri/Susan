@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FirstInFirstAid.Models
@@ -11,5 +12,7 @@ namespace FirstInFirstAid.Models
         public String VenueName { get; set; }
 
         public Address Address { get; set; }
+
+        public ICollection<EventSegment> EventSegments { get; set; }
     }
 }
