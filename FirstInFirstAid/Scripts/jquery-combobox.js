@@ -49,6 +49,8 @@
              var input = this.input,
                  wasOpen = false;
              var callback = this.options.getdata;
+             var param = this.options.param;
+
              $("<a>")
                  .attr("tabIndex", -1)
                  .attr("title", "Show All Items")
@@ -64,13 +66,13 @@
                  .addClass("custom-combobox-toggle ui-corner-right")
                  .on("mousedown", function () {
                      if (callback != null) {
-                         callback();
+                         callback(param);
                      }
                      wasOpen = input.autocomplete("widget").is(":visible");
                  })
                  .on("click", function () {
                      if (callback != null) {
-                         callback();
+                         callback(param);
                      }
                      input.trigger("focus");
 

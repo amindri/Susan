@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FirstInFirstAid.Models
 {
-    public enum DutyType {COVERAGE, TBC_COVERAGE, TRAINING, SUSAN_COVERAGE, ADMIN, PERSONAL}
+    public enum DutyType {COVERAGE = 1, TBC_COVERAGE = 2, TRAINING = 3, SUSAN_COVERAGE = 4, ADMIN = 5, PERSONAL = 6}
 
     public class TrainorAllocationForEventSeg
     {
