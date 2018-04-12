@@ -11,67 +11,76 @@
     @Scripts.Render("~/Scripts/jquery-combobox.js")
 
     <script type="text/javascript">
-        $(document).ready(function () {            
+        $(document).ready(function () {
+            var dutyTypes = @Html.Raw(ViewBag.DutyTypeEnum);
 
-            //generates available trainer list
+            var i = 0;
             $("#addAllocation").click(function () {
+                i++;
                 $("#allocations")
-                    .append('<div class="panel panel-default col-md-12">' +
-                    '<p>' +
-                    '<label class="control-label col-md-2">Name</label>' +
-                    '<div class="col-md-10">' +
-                    '<input id=\"Name\" type="\dropdown\" class=\"form-control\" onclick="getTrainers">' + //drop down here
-                    '</div>' +
-                    '</p>' +
-                    '<p>' +
-                    '<label class="control-label col-md-2">Duty Type</label>' +
-                    '<div class="col-md-10">' +
-                    '<input id=\"DutyType\" type="\text\" class=\"form-control\">' +
-                    '</div>' +
-                    '</p>' +
-                    '<p>' +
-                    '<label class="control-label col-md-2">Hours</label>' +
-                    '<div class="col-md-10">' +
-                    '<input id=\"Hours\" type="\text\" class=\"form-control\">' +
-                    '</div>' +
-                    '</p>' +
-                    '<p>' +
-                    '<label class="control-label col-md-2">Paid</label>' +
-                    '<div class="col-md-10">' +
-                    '<input id=\"Paid\" type="\text\" class=\"form-control\">' +
-                    '</div>' +
-                    '</p>' +
-                    '<p>' +
-                    '<label class="control-label col-md-2">PresenceConfirmation</label>' +
-                    '<div class="col-md-10">' +
-                    '<input id=\"Confirmation\" type="\text\" class=\"form-control\">' +
-                    '</div>' +
-                    '</p>' +
-                    '<p>' +
-                    '<label class="control-label col-md-2">PaymentNote</label>' +
-                    '<div class="col-md-10">' +
-                    '<input id=\"PaymentNote\" type="\text\" class=\"form-control\">' +
-                    '</div>' +
-                    '</p>' +
-                    '<button type="button" value="Delete" class="btn btn-default" onclick="$(this).parent().remove();" />' +
-                    '<button type="button" value="Send Email" class="btn btn-default" />' +
+                    .append(
+                    '<div class="panel panel-default col-md-12" id=\"NS' + i + '\">' +
+                        '<p>' +
+                            '<label class="control-label col-md-2">Trainer</label>' +
+                            '<div class="col-md-10">' +
+                                '<select class=\"form-control combobox\" id=\"Name\"></select>' +
+                            '</div>' +
+                        '</p>' +
+                        '<p>' +
+                            '<label class="control-label col-md-2">Duty Type</label>' +
+                            '<div class="col-md-10">' +
+                                '<select id=\"DutyType\" class=\"form-control combobox\"></select>' +
+                            '</div>' +
+                        '</p>' +
+                        '<p>' +
+                            '<label class="control-label col-md-2">Hours</label>' +
+                            '<div class="col-md-10">' +
+                                '<input id=\"Hours\" type="\text\" class=\"form-control\">' +
+                            '</div>' +
+                        '</p>' +
+                        '<p>' +
+                            '<label class="control-label col-md-2">Paid</label>' +
+                            '<div class="col-md-10">' +
+                                '<select id=\"Paid\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
+                            '</div>' +
+                        '</p>' +
+                        '<p>' +
+                            '<label class="control-label col-md-2">PresenceConfirmation</label>' +
+                            '<div class="col-md-10">' +
+                                '<select id=\"Confirmation\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
+                            '</div>' +
+                        '</p>' +
+                        '<p>' +
+                            '<label class="control-label col-md-2">PaymentNote</label>' +
+                            '<div class="col-md-10">' +
+                                '<input id=\"PaymentNote\" type="\text\" class=\"form-control\">' +
+                            '</div>' +
+                        '</p>' +
+                        '<button type="button" value="Delete" class="btn btn-default" onclick="$(this).parent().remove();">Delete</button>' +
+                        '<button type="button" value="Send Email" class="btn btn-default">Send Email</button>' +
                     '</div>');
+
+                $("#NS" + i + " select#Name").combobox({ getdata: getAvailableTrainers, param: "NS" + i });
+                $("#NS" + i + " select#DutyType").append($("<option>Please Select</option>"));
+                $.each(dutyTypes, function (index, dutyType) {
+                    $("#NS" + i + " select#DutyType").append($("<option></option>").attr("value", dutyType.Value).text(dutyType.Text));
+                });
             });
 
             var clinetContactId = @(Model.ClientContact == null ? -1 : Model.ClientContact.Id);
             if (clinetContactId == -1) {
                 $('#ClientContact').append($("<option selected value='Please Select'>Please Select</option>"));
             } else {
-                appendClientContacts(clinetContactId);                            
+                appendClientContacts(clinetContactId);
             }
 
             var venueId = @(Model.Venue == null ? -1 : Model.Venue.Id);
             if (venueId == -1) {
                 $('#Venue').append($("<option selected value='Please Select'>Please Select</option>"));
             } else {
-                appendVenues(venueId);
+               // appendVenues(venueId);
             }
-            
+
             $(function () {
                 window.setTimeout(function () {
                     $('#ClientContact').combobox({ getdata: appendClientContacts });
@@ -79,7 +88,6 @@
                 }, 0);
             });
         });
-
 
         function appendVenues(select) {
             $.ajax({
@@ -135,15 +143,28 @@
             });
         };
 
-        function getTrainers() {
+        function getAvailableTrainers(divId) {
             $.ajax({
                 type: 'POST',
                 url: '/EventSegments/getAvailableTrainers',
                 data: "{'segmentId' : '" + @Model.Id + "'}",
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
-                success: function (jsonData) {
-                    console.log(jsonData);
+                success: function (trainerList) {
+
+                    $("#" + divId + " select#Name").empty();
+
+                    if (trainerList.length == 0) {
+                        $("#" + divId + " select#Name").append($("<option></option>").text("No Available Trainers for this time"));
+                    } else {
+                        $.each(trainerList, function (index, trainer) {
+                           // if (client.Id == select) {
+                             //   $('#ClientContact').append($("<option selected></option>").attr("value", client.Id).text(client.ContactName));
+                            //} else {
+                            $("#" + divId + " select#Name").append($("<option></option>").attr("value", trainer.Id).text(trainer.FirstName + " " + trainer.Lastname));
+                            //}
+                        });
+                    }
                 },
                 error: function (msg) {
                     console.log(msg);
@@ -214,17 +235,16 @@
             <!--@Html.LabelFor(model => model.ClientContact, htmlAttributes: new { @class = "control-label col-md-2" })-->
             <label class="control-label col-md-2" for="ClientContact">Client Contact:</label>
             <div class="col-md-10">
-                <!-- create drop down skeleton with the Id #ClientContact-->
-                <select class="form-control" id="ClientContact"></select>
+                @Html.DropDownListFor(m => m.ClientContact.Id, (SelectList)ViewBag?.ClientContact, new { id = "ClientContact" })
                 </div>
         </div>
 
             <div class="form-group">
                 <!--@Html.LabelFor(model => model.Venue, htmlAttributes: new { @class = "control-label col-md-2" })-->
                 <label class="control-label col-md-2" for="Venue">Venue:</label>
-                <!-- create drop down skeleton with the Id #Venue-->
-                <div class="col-md-10"> <select class="form-control" id="Venue"></select></div>
-                
+                <div class="col-md-10">
+                    @Html.DropDownListFor(m => m.Venue.Id, (SelectList)ViewBag?.Venues, new {id = "Venue"})
+                </div>                
             </div>
 
 

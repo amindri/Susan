@@ -8,6 +8,8 @@ using FirstInFirstAid.DAL;
 using FirstInFirstAid.Models;
 using log4net;
 using System.Reflection;
+using System;
+using Newtonsoft.Json;
 
 namespace FirstInFirstAid.Controllers
 {
@@ -51,7 +53,7 @@ namespace FirstInFirstAid.Controllers
         }
 
         // GET: EventSegments/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int id)
         {
             if (id == null)
             {
@@ -64,6 +66,34 @@ namespace FirstInFirstAid.Controllers
                 logger.Warn("Received null Event Segement Id to modify");
                 return HttpNotFound();
             }
+
+            //Select List for duty type
+            var dutyType = from DutyType d in Enum.GetValues(typeof(DutyType))
+                           select new { ID = (int)d, Name = d.ToString() };
+            ViewBag.DutyTypeEnum = JsonConvert.SerializeObject(new SelectList(dutyType, "ID", "Name"));
+
+            var trainerList = from Trainor t in getAvailabletrainerList(id)
+                              select new { ID = t.Id, Name = t.FirstName + " " + t.Lastname };
+
+            //Select List for venues
+            var venuelist = from Venue v in db.Venues select new { ID = v.Id, Name = v.VenueName };
+            ViewBag.Venues = new SelectList(venuelist, "ID", "Name", eventSegment.Venue?.Id);
+            
+            //Select List for Client Contacts
+            Event evnt = db.Events.Include(x => x.Client).Where(z => z.Id == eventSegment.Event.Id).First();
+            
+            if (evnt.Client != null)
+            {
+                var clientContactList = from ClientContact cc in db.ClientContacts.Where(x => x.Client.Id == evnt.Client.Id)
+                                        select new { ID = cc.Id, Name = cc.ContactName };
+                ViewBag.ClientContact = new SelectList(clientContactList, "ID", "Name", eventSegment.ClientContact?.Id);
+            }
+            else
+            {
+
+                ViewBag.ClientContact = Enumerable.Empty<SelectListItem>();
+            }
+
             return View(eventSegment);
         }
 
@@ -159,7 +189,7 @@ namespace FirstInFirstAid.Controllers
         }
 
         public JsonResult getAvailableTrainers(int segmentId)
-        { 
+        {
             EventSegment segment = db.EventSegments.Find(segmentId);
 
             List<EventSegment> overlappingSegs = db.EventSegments.Include(seg => seg.TrainorAllocations.Select(allo => allo.Trainor)).
@@ -171,10 +201,10 @@ namespace FirstInFirstAid.Controllers
                 foreach (var allocation in eventSegment.TrainorAllocations)
                 {
                     allocatedTrainers.Add(allocation.Trainor);
-                }                
+                }
             }
 
-            List<Trainor> availableTrainors = db.Trainors.ToList().Except(allocatedTrainers).ToList(); 
+            List<Trainor> availableTrainors = db.Trainors.ToList().Except(allocatedTrainers).ToList();
             return Json(availableTrainors, JsonRequestBehavior.AllowGet);
         }
 
@@ -183,7 +213,6 @@ namespace FirstInFirstAid.Controllers
             Event evnt = db.Events.Include(x => x.Client).Where(z => z.Id == eventId).First();
             if (evnt.Client != null)
             {
-                var list = db.ClientContacts;
                 return Json(db.ClientContacts.Where(x => x.Client.Id == evnt.Client.Id).Select(i => new { i.ContactName, i.Id}), JsonRequestBehavior.AllowGet);
             } 
             else
