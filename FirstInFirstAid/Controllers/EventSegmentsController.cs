@@ -70,18 +70,14 @@ namespace FirstInFirstAid.Controllers
             //Select List for duty type
             var dutyType = from DutyType d in Enum.GetValues(typeof(DutyType))
                            select new { ID = (int)d, Name = d.ToString() };
-            ViewBag.DutyTypeEnum = JsonConvert.SerializeObject(new SelectList(dutyType, "ID", "Name"));
-
-            var trainerList = from Trainor t in getAvailabletrainerList(id)
-                              select new { ID = t.Id, Name = t.FirstName + " " + t.Lastname };
+            ViewBag.DutyTypeEnum = JsonConvert.SerializeObject(new SelectList(dutyType, "ID", "Name"));                     
 
             //Select List for venues
             var venuelist = from Venue v in db.Venues select new { ID = v.Id, Name = v.VenueName };
             ViewBag.Venues = new SelectList(venuelist, "ID", "Name", eventSegment.Venue?.Id);
             
             //Select List for Client Contacts
-            Event evnt = db.Events.Include(x => x.Client).Where(z => z.Id == eventSegment.Event.Id).First();
-            
+            Event evnt = db.Events.Include(x => x.Client).Where(z => z.Id == eventSegment.Event.Id).First();            
             if (evnt.Client != null)
             {
                 var clientContactList = from ClientContact cc in db.ClientContacts.Where(x => x.Client.Id == evnt.Client.Id)
@@ -90,7 +86,6 @@ namespace FirstInFirstAid.Controllers
             }
             else
             {
-
                 ViewBag.ClientContact = Enumerable.Empty<SelectListItem>();
             }
 
