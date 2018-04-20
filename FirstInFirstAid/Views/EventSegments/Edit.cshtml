@@ -12,82 +12,100 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $("input[type=datetime]").datetimepicker({
+                dateFormat: "dd.M.yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-100:+5",
+                controlType: "select",
+                timeFormat: "hh:mm TT",
+                "stepMinute": 15
+            });
+
             var dutyTypes = @Html.Raw(ViewBag.DutyTypeEnum);
 
             var i = 0;
             $("#addAllocation").click(function () {
                 i++;
-                $("#allocations")
-                    .append(
-                    '<div class="panel panel-default col-md-12" id=\"NS' + i + '\">' +
-                        '<p>' +
-                            '<label class="control-label col-md-2">Trainer</label>' +
-                            '<div class="col-md-10">' +
-                                '<select class=\"form-control combobox\" id=\"Name\"></select>' +
-                            '</div>' +
-                        '</p>' +
-                        '<p>' +
-                            '<label class="control-label col-md-2">Duty Type</label>' +
-                            '<div class="col-md-10">' +
-                                '<select id=\"DutyType\" class=\"form-control combobox\"></select>' +
-                            '</div>' +
-                        '</p>' +
-                        '<p>' +
-                            '<label class="control-label col-md-2">Hours</label>' +
-                            '<div class="col-md-10">' +
-                                '<input id=\"Hours\" type="\text\" class=\"form-control\">' +
-                            '</div>' +
-                        '</p>' +
-                        '<p>' +
-                            '<label class="control-label col-md-2">Paid</label>' +
-                            '<div class="col-md-10">' +
-                                '<select id=\"Paid\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
-                            '</div>' +
-                        '</p>' +
-                        '<p>' +
-                            '<label class="control-label col-md-2">PresenceConfirmation</label>' +
-                            '<div class="col-md-10">' +
-                                '<select id=\"Confirmation\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
-                            '</div>' +
-                        '</p>' +
-                        '<p>' +
-                            '<label class="control-label col-md-2">PaymentNote</label>' +
-                            '<div class="col-md-10">' +
-                                '<input id=\"PaymentNote\" type="\text\" class=\"form-control\">' +
-                            '</div>' +
-                        '</p>' +
-                        '<button type="button" value="Delete" class="btn btn-default" onclick="$(this).parent().remove();">Delete</button>' +
-                        '<button type="button" value="Send Email" class="btn btn-default">Send Email</button>' +
-                    '</div>');
+                    
+                $('<div class="panel panel-default col-md-12" id=\"NS' + i + '\">' +
+                    '<div class="form-group">' +
+                        '<label class="control-label col-md-2">Trainer</label>' +
+                        '<div class="col-md-10">' +
+                            '<select class=\"form-control combobox\" id=\"Name\"></select>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label col-md-2">Duty Type</label>' +
+                        '<div class="col-md-10">' +
+                            '<select id=\"DutyType\" class=\"form-control combobox\"></select>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label col-md-2">Hours</label>' +
+                        '<div class="col-md-10">' +
+                            '<input id=\"Hours\" type="\text\" class=\"form-control\">' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label col-md-2">Paid</label>' +
+                        '<div class="col-md-10">' +
+                            '<select id=\"Paid\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label col-md-2">PresenceConfirmation</label>' +
+                        '<div class="col-md-10">' +
+                            '<select id=\"Confirmation\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label col-md-2">PaymentNote</label>' +
+                        '<div class="col-md-10">' +
+                            '<input id=\"PaymentNote\" type="\text\" class=\"form-control\">' +
+                        '</div>' +
+                    '</div>' +
+
+                    '<button type="button" value="Create" class="btn btn-success" onclick="createAllocation(' + i + ');">Create</button>' +
+                    '<button type="button" value="Delete" class="btn btn-danger" onclick="$(this).parent().remove();">Delete</button>' +
+                '</div>').insertAfter("#addAllocation");
 
                 $("#NS" + i + " select#Name").combobox({ getdata: getAvailableTrainers, param: "NS" + i });
                 $("#NS" + i + " select#DutyType").append($("<option>Please Select</option>"));
                 $.each(dutyTypes, function (index, dutyType) {
-                    $("#NS" + i + " select#DutyType").append($("<option></option>").attr("value", dutyType.Value).text(dutyType.Text));
+                    $("#NS" + i + " select#DutyType").append($("<option></option>").attr("value", dutyType.ID).text(dutyType.Name));
                 });
             });
 
             var clinetContactId = @(Model.ClientContact == null ? -1 : Model.ClientContact.Id);
             if (clinetContactId == -1) {
                 $('#ClientContact').append($("<option selected value='Please Select'>Please Select</option>"));
-            } else {
-                appendClientContacts(clinetContactId);
             }
 
             var venueId = @(Model.Venue == null ? -1 : Model.Venue.Id);
             if (venueId == -1) {
                 $('#Venue').append($("<option selected value='Please Select'>Please Select</option>"));
-            } else {
-               // appendVenues(venueId);
             }
 
             $(function () {
                 window.setTimeout(function () {
                     $('#ClientContact').combobox({ getdata: appendClientContacts });
                     $('#Venue').combobox({ getdata: appendVenues });
+
+                    $('#allocations > div > div > div > select#Name').each(function () {
+                        var id = $(this).parent().parent().parent().attr("id");
+                        $(this).combobox({ getdata: getAvailableTrainers, param: id });
+                    });
                 }, 0);
             });
         });
+
+        function gettoken() {
+            var token = '@Html.AntiForgeryToken()';
+            token = $(token).val();
+            return token;
+        };
 
         function appendVenues(select) {
             $.ajax({
@@ -158,11 +176,7 @@
                         $("#" + divId + " select#Name").append($("<option></option>").text("No Available Trainers for this time"));
                     } else {
                         $.each(trainerList, function (index, trainer) {
-                           // if (client.Id == select) {
-                             //   $('#ClientContact').append($("<option selected></option>").attr("value", client.Id).text(client.ContactName));
-                            //} else {
                             $("#" + divId + " select#Name").append($("<option></option>").attr("value", trainer.Id).text(trainer.FirstName + " " + trainer.Lastname));
-                            //}
                         });
                     }
                 },
@@ -175,7 +189,98 @@
         function completeForm() {
             $("#form").append("<input type='hidden' name='clientContactId'" + " value='" + $("#ClientContact").val() + "'/>");
             $("#form").append("<input type='hidden' name='venueId'" + " value='" + $("#Venue").val() + "'/>");
+        };
 
+        function createAllocation(nsId) {
+
+            var allocation = {
+                trainorAllocation: {
+                    DutyType: $.trim($("#NS" + nsId + ' #DutyType').val()),
+                    PresenceConfirmation: $.trim($("#NS" + nsId + ' #Confirmation').val()),
+                    PaymentNote: $.trim($("#NS" + nsId + ' #PaymentNote').val()),
+                    Hours: $.trim($("#NS" + nsId + ' #Hours').val()),
+                    Paid: $.trim($("#NS" + nsId + ' #Paid').val())
+                },
+                eventSegmentId: '@Model.Id',
+                trainerId: $.trim($("#NS" + nsId + ' #Name').val())
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Create", "TrainorAllocationForEventSegs")',
+                data: JSON.stringify(allocation),
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    alert("successfully created the trainer allocation with the trainer ");[value = " + value + "]
+                    location.reload();
+                },
+                error: function (message) { }
+            });
+        };
+
+        function updateAllocation(dbId) {
+
+            var allocation = {
+                trainorAllocation: {
+                    DutyType: $.trim($("#saved_" + dbId + ' #DutyType').val()),
+                    PresenceConfirmation: $.trim($("#saved_" + dbId + ' #Confirmation').val()),
+                    PaymentNote: $.trim($("#saved_" + dbId + ' #PaymentNote').val()),
+                    Hours: $.trim($("#saved_" + dbId + ' #Hours').val()),
+                    Paid: $.trim($("#saved_" + dbId + ' #Paid').val()),
+                    Id: dbId
+                },
+                trainerId: $.trim($("#saved_" + dbId + ' #Name').val())
+            };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Edit", "TrainorAllocationForEventSegs")',
+                data: JSON.stringify(allocation),
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (response) { alert("successfully updated the trainer allocation; (Please make me pretty with bootstrap modals)"); },
+                error: function (message) { alert("Error while updating the trainer allocation " + message);}
+            });
+        };
+
+        function deleteAllocation(dbId) {
+
+            $.ajax({
+                type: "GET",
+                url: "/TrainorAllocationForEventSegs/Delete/" + dbId,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (obj) {
+                    if (obj.Type == 'Warn') {
+                        $("#warnModalBody").text(obj.Message);
+                        $('#warnModal').modal('show');
+                    } else {
+                        $("#delButton").attr("onclick", "deleteConfirmed(" + dbId + ")");
+                        $("#confirmModalBody").text(obj.Message);
+                        $('#confirmModal').modal('show');
+                    }
+                },
+                error: function (obj) {
+                    alert("Failed to delete the trainer allocation " + obj);
+                }
+            });
+        };
+
+        function deleteConfirmed(dbId) {
+            $.ajax({
+                type: "POST",
+                url: "/TrainorAllocationForEventSegs/DeleteConfirmed/" + dbId,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    $("#successModalBody").text(msg);
+                    $('#successModal').modal('show');
+                    $('#saved_' + dbId).remove();
+                },
+                error: function (obj) {
+                    alert("Error while deleting trianer allocation" + obj);
+                }
+            });
         };
     </script>
 }
@@ -202,7 +307,7 @@
         <div class="form-group">
             <label class="control-label col-md-2" for="StartTime">Start Time:</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                 @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -210,7 +315,7 @@
         <div class="form-group">
             <label class="control-label col-md-2" for="EndTime">End Time:</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                 @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -232,84 +337,85 @@
         </div>
 
         <div class="form-group">
+
             <!--@Html.LabelFor(model => model.ClientContact, htmlAttributes: new { @class = "control-label col-md-2" })-->
             <label class="control-label col-md-2" for="ClientContact">Client Contact:</label>
             <div class="col-md-10">
                 @Html.DropDownListFor(m => m.ClientContact.Id, (SelectList)ViewBag?.ClientContact, new { id = "ClientContact" })
-                </div>
+            </div>
         </div>
 
-            <div class="form-group">
-                <!--@Html.LabelFor(model => model.Venue, htmlAttributes: new { @class = "control-label col-md-2" })-->
-                <label class="control-label col-md-2" for="Venue">Venue:</label>
-                <div class="col-md-10">
-                    @Html.DropDownListFor(m => m.Venue.Id, (SelectList)ViewBag?.Venues, new {id = "Venue"})
-                </div>                
+        <div class="form-group">
+
+            <!--@Html.LabelFor(model => model.Venue, htmlAttributes: new { @class = "control-label col-md-2" })-->
+            <label class="control-label col-md-2" for="Venue">Venue:</label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.Venue.Id, (SelectList)ViewBag?.Venues, new { id = "Venue" })
             </div>
-
-
-            <div class="form-group">
-            <label class="control-label col-md-2">Trainer Allocations</label>
-            <div id="allocations" class="panel panel-default panel-body col-md-8">
-                <button id="addAllocation" data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
-                   @if (Model.TrainorAllocations != null)
-                   {
-                       foreach (var allocation in Model.TrainorAllocations)
-                       {
-                        <div class="panel panel-default panel-collapse">
-                            <p>
-                                <label class="control-label col-md-2">Name</label>
-                                <div class="col-md-10">
-                                             <!-- create drop down skeleton with the Id #Trainers fire the function getTrainers-->
-                                </div>
-                            </p>
-                            <p>
-                                <label class="control-label col-md-2">Duty Type</label>
-                                <div class="col-md-10">
-                                    @Html.Editor(allocation.DutyType.ToString(), new { htmlAttributes = new { @id = "DutyType", @class = "form-control" } })
-                                </div>
-                            </p>
-                            <p>
-                                <label class="control-label col-md-2">Hours</label>
-                                <div class="col-md-10">
-                                    @Html.Editor(allocation.Hours.ToString(), new { htmlAttributes = new { @id = "Hours", @class = "form-control" } })
-                                </div>
-                            </p>
-                            <p>
-                                <label class="control-label col-md-2">Paid</label>
-                                <div class="col-md-10">
-                                    @Html.Editor(allocation.Paid.ToString(), new { htmlAttributes = new { @id = "StartTime", @class = "form-control" } })
-                                </div>
-                            </p>
-                            <p>
-                                <label class="control-label col-md-2">PresenceConfirmation</label>
-                                <div class="col-md-10">
-                                    @Html.Editor(allocation.PresenceConfirmation.ToString(), new { htmlAttributes = new { @id = "StartTime", @class = "form-control" } })
-                                </div>
-                            </p>
-                            <p>
-                                <label class="control-label col-md-2">PresenceConfirmation</label>
-                                <div class="col-md-10">
-                                    @Html.TextBox(allocation.PaymentNote, new { htmlAttributes = new { @id = "StartTime", @class = "form-control" } })
-                                </div>
-                            </p>
-
-                            <button type="button" value="Delete" class="btn btn-default" onclick="$(this).parent().remove();" />
-                            <button type="button" value="Send Email" class="btn btn-default" />
-                        </div>
-                       }
-                   }                        
-            </div>            
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save"  onclick="completeForm();" class="btn btn-default" />
+                <input type="submit" value="Save" onclick="completeForm();" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
+<div class="form-group">
+    <label class="control-label col-md-2">Trainer Allocations</label>
+    <div id="allocations" class="panel panel-default panel-body col-md-8">
+        <button id="addAllocation" data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
+        @if (Model.TrainorAllocations != null)
+        {
+            for(var i = 0; i < Model.TrainorAllocations.Count(); i++)
+            {
+                <div class="panel panel-default saved" id='saved_@Model.TrainorAllocations[i].Id'>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Name</label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.TrainorAllocations[i].Trainor, new SelectList(ViewBag.Trainers, "ID", "Name", Model.TrainorAllocations[i].Trainor.Id), new { id = "Name" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Duty Type</label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(m => m.TrainorAllocations[i].DutyType, new SelectList(ViewBag.DutyTypeSelectList, "ID", "Name", (int)Model.TrainorAllocations[i].DutyType), new { id = "DutyType", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Hours</label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(m => m.TrainorAllocations[i].Hours, new { htmlAttributes = new { @id = "Hours", @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Paid</label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(m => m.TrainorAllocations[i].Paid, new SelectList(ViewBag.BoolList, "Value", "Text", Model.TrainorAllocations[i].Paid),  new { @id = "Paid", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">PresenceConfirmation</label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(m => m.TrainorAllocations[i].PresenceConfirmation, new SelectList(ViewBag.BoolList, "Value", "Text", Model.TrainorAllocations[i].PresenceConfirmation), new { @id = "Confirmation", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Payment Note</label>
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(m => m.TrainorAllocations[i].PaymentNote,  new { @id = "PaymentNote",  @class = "form-control" } )
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-success" onclick="updateAllocation(@Model.TrainorAllocations[i].Id)">Save Edits</button>
+                    <button type="button" value="Delete" class="btn btn-danger" onclick="deleteAllocation(@Model.TrainorAllocations[i].Id)">Delete</button>
+                    <button type="button" value="Send Email" class="btn btn-primary">Send Email</button>
+                </div>
+            }
+        }
+    </div>
+</div>
 
 <div>
     @Html.ActionLink("Back to List", "Index")

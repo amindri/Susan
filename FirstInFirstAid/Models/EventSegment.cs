@@ -25,7 +25,7 @@ namespace FirstInFirstAid.Models
         [Required(ErrorMessage = "Number off staff is missing")]
         public int RequiredNumberOfStaff { get; set; }
 
-        public ICollection<TrainorAllocationForEventSeg> TrainorAllocations { get; set; }
+        public List<TrainorAllocationForEventSeg> TrainorAllocations { get; set; }
         
         public Venue Venue { get; set; }      
 
