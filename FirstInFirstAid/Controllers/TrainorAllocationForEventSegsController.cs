@@ -12,7 +12,6 @@ namespace FirstInFirstAid.Controllers
     {
         private FirstInFirstAidDBContext db = new FirstInFirstAidDBContext();
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        
 
         // POST: TrainorAllocationForEventSegs/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 

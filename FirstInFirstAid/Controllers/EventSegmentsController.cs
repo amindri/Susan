@@ -10,6 +10,9 @@ using log4net;
 using System.Reflection;
 using System;
 using Newtonsoft.Json;
+using System.Net.Mail;
+using System.Threading.Tasks;
+using System.Configuration;
 
 namespace FirstInFirstAid.Controllers
 {
@@ -17,7 +20,8 @@ namespace FirstInFirstAid.Controllers
     {
         private FirstInFirstAidDBContext db = new FirstInFirstAidDBContext();
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
+        private static readonly string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmailAddress"];
+        private static readonly string senderName = ConfigurationManager.AppSettings["SenderName"];
 
         // GET: EventSegments
         public ActionResult Index()
@@ -194,10 +198,33 @@ namespace FirstInFirstAid.Controllers
             EventSegment eventSegment = db.EventSegments.Find(id);
             db.EventSegments.Remove(eventSegment);
             db.SaveChanges();
-            logger.InfoFormat("Event Segment deleted, Name: {0}, Id: {1}", "TODO", eventSegment.Id);
+            logger.InfoFormat("Event Segment deleted, Name: {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public async Task<ActionResult> SendMail(int trainerId, string subject, string messageBody)
+        {
+            Trainor trainer = db.Trainors.Find(trainerId);
+            if (trainer != null && trainer.Email != null) {
+                var body = "<p>Email From: {0} ({1})</p><p>Message:</p><p>{2}</p>";
+                var message = new MailMessage();
+                message.To.Add(new MailAddress(trainer.Email));
+                message.Subject = subject;
+                message.Body = string.Format(body, senderName, senderEmailAddress, messageBody);
+                message.IsBodyHtml = true;
+                using (var smtp = new SmtpClient())
+                {
+                    await smtp.SendMailAsync(message);
+                    var successMessage = "Email Successfully sent to " + trainer.FirstName;
+                    logger.InfoFormat("Email Successfully sent to {0} {1}", trainer.FirstName, trainer.Lastname);
+                    return Content("{\"Type\":\"Success\", \"Message\":\"" + successMessage + "\"}");
+                }
+            }
+            var errorMessage = (trainer == null ? "Specified trainer was not found" : "Specified trainer doesn't have an assigned email address");
+            return Content("{\"Type\":\"Warn\", \"Message\":\"" + errorMessage + "\"}");
+             
+        }
 
         public JsonResult getAvailableTrainers(int segmentId)
         {

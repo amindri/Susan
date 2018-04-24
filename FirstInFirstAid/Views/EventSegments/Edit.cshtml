@@ -12,6 +12,13 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            
+            $('#emailModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var trainerId = button.data('trainerid') // Extract
+                var modal = $(this);
+                modal.find('.modal-body input#trainerId').val(trainerId);
+            });
 
             $("input[type=datetime]").datetimepicker({
                 dateFormat: "dd.M.yy",
@@ -28,7 +35,7 @@
             var i = 0;
             $("#addAllocation").click(function () {
                 i++;
-                    
+
                 $('<div class="panel panel-default col-md-12" id=\"NS' + i + '\">' +
                     '<div class="form-group">' +
                         '<label class="control-label col-md-2">Trainer</label>' +
@@ -63,7 +70,7 @@
                     '<div class="form-group">' +
                         '<label class="control-label col-md-2">PaymentNote</label>' +
                         '<div class="col-md-10">' +
-                            '<input id=\"PaymentNote\" type="\text\" class=\"form-control\">' +
+                            '<textarea id=\"PaymentNote\" type="\text\" class=\"form-control\"></textarea>' +
                         '</div>' +
                     '</div>' +
 
@@ -282,6 +289,35 @@
                 }
             });
         };
+
+        function sendEmail() {
+            var mail = {
+                trainerId: $.trim($("#trainerId").val()),
+                messageBody: $.trim($("#messageBody").val()),
+                subject: $.trim($("#subject").val())
+            };
+            
+            $.ajax({
+                type: "POST",
+                url: '/EventSegments/SendMail',
+                data: JSON.stringify(mail),
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    if (response.Type == "Success") {
+                        $("#successModalBody").text(response.Message);
+                        $('#successModal').modal('show');
+                    } else {
+                        $("#warnModalBody").text(response.Message);
+                        $('#warnModal').modal('show');
+                    }
+                },
+                error: function (xhr, status, error) {                    
+                    $("#warnModalBody").text(error);
+                    $('#warnModal').modal('show');
+                }
+            });
+        };
     </script>
 }
 <h2>Edit</h2>
@@ -410,7 +446,7 @@
 
                     <button type="button" class="btn btn-success" onclick="updateAllocation(@Model.TrainorAllocations[i].Id)">Save Edits</button>
                     <button type="button" value="Delete" class="btn btn-danger" onclick="deleteAllocation(@Model.TrainorAllocations[i].Id)">Delete</button>
-                    <button type="button" value="Send Email" class="btn btn-primary">Send Email</button>
+                    <button data-target="#emailModal" data-toggle="modal" id="sendEmail" data-trainerId="@Model.TrainorAllocations[i].Trainor.Id"  type="button" class="btn btn-primary"> Send Email </button>
                 </div>
             }
         }
@@ -419,4 +455,39 @@
 
 <div>
     @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+<div id="emailModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Send Email</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <input type="hidden" id="trainerId"/>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Subject</label>
+                        <div class="col-md-10">
+                            <input type="text" id="subject"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Message</label>
+                        <div class="col-md-10">
+                            <textarea id="messageBody"></textarea>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="sendEmail()" data-dismiss="modal">Send</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>
