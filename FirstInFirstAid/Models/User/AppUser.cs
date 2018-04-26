@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace FirstInFirstAid.Models.User
 {
-    public class LoginUser
-
+    public class AppUser : IdentityUser
     {
         public int Id { get; set; }
         public String UserName { get; set; }
