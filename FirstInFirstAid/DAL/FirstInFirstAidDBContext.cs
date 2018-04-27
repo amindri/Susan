@@ -1,12 +1,15 @@
 ﻿using FirstInFirstAid.Models;
 using FirstInFirstAid.Models.User;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
+using System.Web;
 
 namespace FirstInFirstAid.DAL
 {
-    public class FirstInFirstAidDBContext : IdentityDbContext<AppUser>
+    public class FirstInFirstAidDBContext : DbContext
     {
         public FirstInFirstAidDBContext() : base("FirstInFirstAidDBContext")
         {
@@ -22,14 +25,13 @@ namespace FirstInFirstAid.DAL
         public DbSet<Trainor> Trainors { get; set; }
         public DbSet<TrainorAllocationForEventSeg> TrainorEventSegAllocations { get; set; }
         public DbSet<Venue> Venues { get; set; }
-        public DbSet<AppUser> LoginUsers { get; set; }
-        public DbSet<ClientContact> ClientContacts { get; set; }
+        public DbSet<LoginUser> LoginUsers { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
 
-        
+        public System.Data.Entity.DbSet<FirstInFirstAid.Models.ClientContact> ClientContacts { get; set; }
     }
 }
