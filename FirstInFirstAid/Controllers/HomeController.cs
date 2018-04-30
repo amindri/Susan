@@ -1,4 +1,4 @@
-﻿using FirstInFirstAid.Models.User;
+﻿using FirstInFirstAid.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace FirstInFirstAid.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginUser user)
+        public ActionResult Login(ApplicationUser user)
         {
             if (ModelState.IsValid)
             {
