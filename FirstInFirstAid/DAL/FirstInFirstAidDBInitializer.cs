@@ -1,5 +1,4 @@
-﻿using FirstInFirstAid.Models.User;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -12,9 +11,7 @@ namespace FirstInFirstAid.DAL
         protected override void Seed(FirstInFirstAidDBContext context)
         {
             base.Seed(context);
-            var loginUser = new LoginUser { UserName="admin", Password="admin"};
-            context.LoginUsers.Add(loginUser);
-            context.SaveChanges();
+            
             
         }
     }

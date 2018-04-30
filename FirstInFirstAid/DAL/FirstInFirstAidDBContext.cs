@@ -1,5 +1,6 @@
 ﻿using FirstInFirstAid.Models;
-using FirstInFirstAid.Models.User;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,11 +10,19 @@ using System.Web;
 
 namespace FirstInFirstAid.DAL
 {
-    public class FirstInFirstAidDBContext : DbContext
+    public class FirstInFirstAidDBContext : IdentityDbContext<ApplicationUser>
     {
-        public FirstInFirstAidDBContext() : base("FirstInFirstAidDBContext")
+        public FirstInFirstAidDBContext() : base("FirstInFirstAidDBContext", throwIfV1Schema: false)
         {
+            //Database.SetInitializer<FirstInFirstAidDBContext>(null); // Remove default initializer
+            //Configuration.LazyLoadingEnabled = false;
+            //Configuration.ProxyCreationEnabled = false;
         }
+
+       /* public static FirstInFirstAidDBContext Create()
+        {
+            return new FirstInFirstAidDBContext();
+        }*/
 
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Client> Clients { get; set; }
@@ -25,12 +34,19 @@ namespace FirstInFirstAid.DAL
         public DbSet<Trainor> Trainors { get; set; }
         public DbSet<TrainorAllocationForEventSeg> TrainorEventSegAllocations { get; set; }
         public DbSet<Venue> Venues { get; set; }
-        public DbSet<LoginUser> LoginUsers { get; set; }
+     //   public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+            // IMPORTANT: we are mapping the entity User to the same table as the entity ApplicationUser
+            //modelBuilder.Entity<User>().ToTable("User");
         }
+
+        
 
         public System.Data.Entity.DbSet<FirstInFirstAid.Models.ClientContact> ClientContacts { get; set; }
     }
