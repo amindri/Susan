@@ -64,6 +64,8 @@ namespace FirstInFirstAid.Controllers
                 logger.Warn("Received null Event Id to modify");
                 return HttpNotFound();
             }
+            var clientList = from Client v in db.Clients select new { ID = v.Id, Name = v.Name };
+            ViewBag.Clients = new SelectList(clientList, "ID", "Name", @event.Client.Id);
             return View(@event);
         }
 

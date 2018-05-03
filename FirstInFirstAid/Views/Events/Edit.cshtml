@@ -227,7 +227,7 @@
     <div class="form-group">
         <label class="control-label col-md-2" for="Client">Client:</label>
         <div class="col-md-10">
-            <select class="form-control" id="Client"></select>
+            @Html.DropDownListFor(m => m.Client.Id, (SelectList)ViewBag?.Clients, new { id = "Client" })
         </div>
     </div>
 
