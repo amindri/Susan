@@ -19,10 +19,10 @@ namespace FirstInFirstAid.DAL
             //Configuration.ProxyCreationEnabled = false;
         }
 
-       /* public static FirstInFirstAidDBContext Create()
+        public static FirstInFirstAidDBContext Create()
         {
             return new FirstInFirstAidDBContext();
-        }*/
+        }
 
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Client> Clients { get; set; }

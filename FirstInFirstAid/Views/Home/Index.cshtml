@@ -1,14 +1,11 @@
-﻿@using FirstInFirstAid.Models.User
-@model LoginUser
-
-@{
+﻿@{
     Layout = null;
 }
 
 @section JavaScript
 {
     <script type="text/javascript" src="@Url.Content("/Scripts/bootstrap.min.js")"></script>
-    <script type="text/javascript" src="@Url.Content("/Scripts/jquery-1.10.2.min.js")"></script>    
+    <script type="text/javascript" src="@Url.Content("/Scripts/jquery-1.10.2.min.js")"></script>
 }
 
 <!DOCTYPE html>
@@ -26,12 +23,13 @@
         <div class="modal-dialog">
             <div class="loginmodal-container">
                 <h1>Login to Your Account</h1><br>
-                @using (Html.BeginForm("Login", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+                @using (Html.BeginForm("ExternalLogin", "Accounts"))
                 {
                     @Html.AntiForgeryToken()
-                    @Html.TextBoxFor(m => m.UserName, new {@placeholder = "User Name" })
-                    @Html.PasswordFor(m => m.Password, new {@placeholder = "Password" })
-                    <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+                    <button type="submit" class="btn btn-default" id="Google" name="provider" value="Google"
+                            title="Log in using your Google account">
+                        Google
+                    </button>
                 }
 
                 <div class="login-help">
@@ -42,3 +40,6 @@
     </div>
 </body>
 </html>
+
+
+

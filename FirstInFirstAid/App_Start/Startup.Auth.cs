@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using FirstInFirstAid.DAL;
+using FirstInFirstAid.Models;
 
 namespace FirstInFirstAid
 {
@@ -15,14 +16,14 @@ namespace FirstInFirstAid
         public void ConfigureAuth(IAppBuilder app)
         {
             // Configure the db context, user manager and signin manager to use a single instance per request
-            //app.CreatePerOwinContext(FirstInFirstAidDBContext.Create);
-            //app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
-            //app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
+            app.CreatePerOwinContext(FirstInFirstAidDBContext.Create);
+            app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
+            app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             // Configure the sign in cookie
-            /*app.UseCookieAuthentication(new CookieAuthenticationOptions
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
@@ -34,8 +35,8 @@ namespace FirstInFirstAid
                         validateInterval: TimeSpan.FromMinutes(30),
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
-            });    */        
-           // app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+            });            
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
           //  app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(5));
@@ -61,7 +62,18 @@ namespace FirstInFirstAid
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
                 ClientId = "738871467730-rcdniueprnk7gghqva64biu5q6gltlt5.apps.googleusercontent.com",
-                ClientSecret = "1-OjchpZfrappJDDSvuenvA2"
+                ClientSecret = "1-OjchpZfrappJDDSvuenvA2",
+                Provider = new GoogleOAuth2AuthenticationProvider()
+                {
+                    OnApplyRedirect = delegate (GoogleOAuth2ApplyRedirectContext context) {
+
+                        string redirect = context.RedirectUri;
+                        redirect += "&prompt=select_account";
+
+                        context.Response.Redirect(redirect);
+                    }
+
+                }
             });
         }
     }

@@ -16,6 +16,7 @@ using System.Configuration;
 
 namespace FirstInFirstAid.Controllers
 {
+    [Authorize]
     public class EventSegmentsController : Controller
     {
         private FirstInFirstAidDBContext db = new FirstInFirstAidDBContext();

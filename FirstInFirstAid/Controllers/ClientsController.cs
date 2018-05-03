@@ -11,6 +11,7 @@ using System.Reflection;
 
 namespace FirstInFirstAid.Controllers
 {
+    [Authorize]
     public class ClientsController : Controller
     {
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

@@ -11,6 +11,7 @@ using log4net;
 
 namespace FirstInFirstAid.Controllers
 {
+    [Authorize]
     public class EventsController : Controller
     {
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

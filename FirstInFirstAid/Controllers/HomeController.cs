@@ -14,20 +14,5 @@ namespace FirstInFirstAid.Controllers
             return View();
         }
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Login(ApplicationUser user)
-        {
-            if (ModelState.IsValid)
-            {
-
-            }
-
-            System.Console.WriteLine("Hello World");
-
-
-            return View("Dashoard");
-        }
     }
 }
