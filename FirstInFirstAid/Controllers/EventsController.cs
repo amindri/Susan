@@ -45,8 +45,9 @@ namespace FirstInFirstAid.Controllers
                 client.Events.Add(ev3nt);
                 db.SaveChanges();
                 logger.InfoFormat("Event Created, Name : {0}, Id: {1}", ev3nt.EventName, ev3nt.Id);
-                return RedirectToAction("Edit", new { id = ev3nt.Id });
-            }                        
+                return RedirectToAction("Index");
+
+            }
             return View(ev3nt);
         }
 

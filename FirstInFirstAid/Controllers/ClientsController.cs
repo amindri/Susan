@@ -42,7 +42,8 @@ namespace FirstInFirstAid.Controllers
                 db.Clients.Add(client);
                 db.SaveChanges();
                 logger.InfoFormat("Client Created, Name : {0}, Id: {1}", client.Name, client.Id);
-                return RedirectToAction("Edit", new { id = client.Id });
+                return RedirectToAction("Index");
+
             }
 
             return View(client);
