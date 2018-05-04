@@ -27,7 +27,7 @@ namespace FirstInFirstAid.Controllers
         // GET: EventSegments
         public ActionResult Index()
         {
-            var eventSegments = db.EventSegments;
+            var eventSegments = db.EventSegments.Include(c => c.ClientContact).Include(e => e.Event).Include(v => v.Venue);
             return View(eventSegments.ToList());
         }
 
