@@ -15,7 +15,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-       
+
             $("input[type=datetime]").datetimepicker({
                 dateFormat: "dd.M.yy",
                 changeMonth: true,
@@ -24,11 +24,11 @@
                 controlType: "select",
                 timeFormat: "hh:mm TT",
                 "stepMinute": 15
-            });                         
+            });
 
             $('#Client').append($("<option selected value='Please Select'>Please Select</option>"));
             $("#Client").combobox({ getdata: addClientsToList});
-             
+
             var i = 0;
             $("#addChild").click(function () {
                 $('#segments> tbody:last-child').append(
@@ -37,7 +37,6 @@
                     "<td> " + $("#StartTime").val() + "</td>" +
                     "<td>" + $("#EndTime").val() + "</td>" +
                     "<td>" + $("#RequiredNumberOfStaff").val() + "</td>" +
-                    "<td>" + $("#Hours").val() + "</td>" +
                     "<td><input type='button' value='Delete' onclick='deleteSegment(" + i + ")'/></td>" +
                     "</tr >");
                 i++;
@@ -70,17 +69,19 @@
 
         function addASegmentsToForm() {
             var count = 0;
-            
+
             $("#form").append("<input type='hidden' name='clientId'" + " value='" + $("#Client").val() + "'/>");
-           // $("#form").append("<input type='hidden' name='Client.Name'" + " value='" + $("#Client option:selected").text() + "'/>");
 
             $('#segments > tbody > tr:not(:first)').each(function () {
                 var columns = $(this).find('td');
+                var start = new Date($(columns[1]).html().trim());
+                var end = new Date($(columns[2]).html().trim());
+                var timeDiff = Math.abs(end - start) / 36e5;
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Name'" + " value='" + $(columns[0]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].StartTime'" + " value='" + $(columns[1]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].EndTime'" + " value='" + $(columns[2]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].RequiredNumberOfStaff'" + " value='" + $(columns[3]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Hours'" + " value='" + $(columns[4]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Hours'" + " value='" + timeDiff + "'/>");
                 count++;
             });
         }
@@ -171,7 +172,6 @@
                         <th>Name</th>
                         <th>Start Date/Time</th>
                         <th>End Date/Time</th>
-                        <th>Hours</th>
                         <th>Required Number Of Staff</th>
                         <th>Actions</th>
                     </tr>
@@ -221,13 +221,6 @@
                         <label class="control-label col-md-2">End Date/Time:</label>
                         <div class="col-md-10">
                             @Html.Editor("EndTime", new { htmlAttributes = new { @id = "EndTime", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2">Hours:</label>
-                        <div class="col-md-10">
-                            @Html.Editor("Hours", new { htmlAttributes = new { @id = "Hours", @class = "form-control" } })
                         </div>
                     </div>
 
