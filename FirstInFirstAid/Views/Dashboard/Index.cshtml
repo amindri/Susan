@@ -2,7 +2,26 @@
     ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@section Scripts {
+    
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#upcoming').DataTable( {
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "/EventSegments/getupComingEventSegments",
+                "type": "GET"
+            },
+            "columns": [
+                { "data" : "Name" },
+                { "data" : "Start" },
+                { "data" : "Venue" }
+            ]
+        } );
+    } );
+</script>
+}
 
 <h2 class="page-header">BUSINESS MANAGEMENT SYSTEM</h2>
 
@@ -15,7 +34,7 @@
                     <div class="panel-body">
                         <h4>Number of upcoming events (7days): </h4> <br />
                         <div class="table-responsive">
-                            <table class="table" cellspacing="0">
+                            <table id="upcoming" class="table" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
@@ -24,10 +43,10 @@
                                     </tr>
                                     </thead>
                                 <tbody>
-                                    
+
                                 </tbody>
-                                    
-                               
+
+
                             </table>
                         </div>
                     </div>

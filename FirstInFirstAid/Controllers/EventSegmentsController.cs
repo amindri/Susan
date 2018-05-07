@@ -52,8 +52,8 @@ namespace FirstInFirstAid.Controllers
                     RequiredNumberOfStaff = eventSegment.RequiredNumberOfStaff,
                     Id = eventSegment.Id
                 });
-            }            
-            return Json("Invalid Model State");         
+            }
+            return Json("Invalid Model State");
         }
 
         // GET: EventSegments/Edit/5
@@ -91,9 +91,9 @@ namespace FirstInFirstAid.Controllers
             //Select List for venues
             var venuelist = from Venue v in db.Venues select new { ID = v.Id, Name = v.VenueName };
             ViewBag.Venues = new SelectList(venuelist, "ID", "Name", eventSegment.Venue?.Id);
-            
+
             //Select List for Client Contacts
-            Event evnt = db.Events.Include(x => x.Client).Where(z => z.Id == eventSegment.Event.Id).First();            
+            Event evnt = db.Events.Include(x => x.Client).Where(z => z.Id == eventSegment.Event.Id).First();
             if (evnt.Client != null)
             {
                 var clientContactList = from ClientContact cc in db.ClientContacts.Where(x => x.Client.Id == evnt.Client.Id)
@@ -117,8 +117,8 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,StartTime,EndTime,Hours,RequiredNumberOfstaff")] EventSegment eventSegment, 
-            int venueId, int clientContactId)
+        public ActionResult Edit([Bind(Include = "Id,Name,StartTime,EndTime,Hours,RequiredNumberOfstaff")] EventSegment eventSegment,
+            int? venueId, int? clientContactId)
         {
             if (ModelState.IsValid)
             {
@@ -133,44 +133,50 @@ namespace FirstInFirstAid.Controllers
                 dbEventSegment.RequiredNumberOfStaff = eventSegment.RequiredNumberOfStaff;
 
                 //Updating the Client Contact
-                ClientContact existingClientContact = dbEventSegment.ClientContact;
-                if (existingClientContact != null)
-                {
-                    if (clientContactId > 0 && clientContactId != existingClientContact.Id) // A new client contact is assigned
+                if (clientContactId != null) { 
+                    ClientContact existingClientContact = dbEventSegment.ClientContact;
+                    if (existingClientContact != null)
+                    {
+                        if (clientContactId > 0 && clientContactId != existingClientContact.Id) // A new client contact is assigned
+                        {
+                            ClientContact newClientContact = db.ClientContacts.Include(e => e.EventSegments).Where(i => i.Id == clientContactId).First();
+                            existingClientContact.EventSegments.Remove(dbEventSegment);
+                            newClientContact.EventSegments.Add(dbEventSegment);
+                        }
+                    }
+                    else  //When the event segment is not assigned a client contact before
                     {
                         ClientContact newClientContact = db.ClientContacts.Include(e => e.EventSegments).Where(i => i.Id == clientContactId).First();
-                        existingClientContact.EventSegments.Remove(dbEventSegment);
                         newClientContact.EventSegments.Add(dbEventSegment);
                     }
                 }
-                else  //When the event segment is not assigned a client contact before
-                {
-                    ClientContact newClientContact = db.ClientContacts.Include(e => e.EventSegments).Where(i => i.Id == clientContactId).First();
-                    newClientContact.EventSegments.Add(dbEventSegment);
-                }
 
                 //Updating the Venue
-                Venue existingVenue = dbEventSegment.Venue;
-                if (existingVenue != null)
+                if (venueId != null)
                 {
-                    if (venueId > 0 && venueId != existingVenue.Id) // A new venue is assigned
+                    Venue existingVenue = dbEventSegment.Venue;
+                    if (existingVenue != null)
+                    {
+                        if (venueId > 0 && venueId != existingVenue.Id) // A new venue is assigned
+                        {
+                            Venue newVenue = db.Venues.Include(e => e.EventSegments).Where(i => i.Id == venueId).First();
+                            existingVenue.EventSegments.Remove(dbEventSegment);
+                            newVenue.EventSegments.Add(dbEventSegment);
+                        }
+                    }
+
+                    else if (venueId > 0) //When the event segment is not assigned a venue before
                     {
                         Venue newVenue = db.Venues.Include(e => e.EventSegments).Where(i => i.Id == venueId).First();
-                        existingVenue.EventSegments.Remove(dbEventSegment);
                         newVenue.EventSegments.Add(dbEventSegment);
                     }
                 }
-                else if (venueId > 0) //When the event segment is not assigned a venue before
-                {
-                    Venue newVenue = db.Venues.Include(e => e.EventSegments).Where(i => i.Id == venueId).First();
-                    newVenue.EventSegments.Add(dbEventSegment);
-                }
-                
+
                 db.SaveChanges();
                 logger.InfoFormat("Event Segment modified successfully, Name: {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
                 return RedirectToAction("Index");
             }
-           
+
             return View(eventSegment);
         }
 
@@ -224,7 +230,7 @@ namespace FirstInFirstAid.Controllers
             }
             var errorMessage = (trainer == null ? "Specified trainer was not found" : "Specified trainer doesn't have an assigned email address");
             return Content("{\"Type\":\"Warn\", \"Message\":\"" + errorMessage + "\"}");
-             
+
         }
 
         public JsonResult getAvailableTrainers(int segmentId)
@@ -251,13 +257,13 @@ namespace FirstInFirstAid.Controllers
             return db.Trainors.ToList().Except(allocatedTrainers).ToList();
         }
 
-        public JsonResult getClientContacts(int eventId) 
+        public JsonResult getClientContacts(int eventId)
         {
             Event evnt = db.Events.Include(x => x.Client).Where(z => z.Id == eventId).First();
             if (evnt.Client != null)
             {
-                return Json(db.ClientContacts.Where(x => x.Client.Id == evnt.Client.Id).Select(i => new { i.ContactName, i.Id}), JsonRequestBehavior.AllowGet);
-            } 
+                return Json(db.ClientContacts.Where(x => x.Client.Id == evnt.Client.Id).Select(i => new { i.ContactName, i.Id }), JsonRequestBehavior.AllowGet);
+            }
             else
             {
                 return Json("A client Is not assigned to the event");
@@ -266,7 +272,15 @@ namespace FirstInFirstAid.Controllers
 
         public JsonResult getVenues()
         {
-            return Json(db.Venues.Select(i => new {i.Id, i.VenueName}), JsonRequestBehavior.AllowGet);
+            return Json(db.Venues.Select(i => new { i.Id, i.VenueName }), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult getupComingEventSegments() {
+            DateTime sevenDays = DateTime.Today.AddDays(7);
+            var upcoming = from EventSegment e in db.EventSegments.Where(s => s.StartTime < sevenDays) select new { Name = e.Name, Start = e.StartTime, Venue = e.Venue.VenueName };
+            var json = new { data = upcoming };
+            return Json(json, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)
