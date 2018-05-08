@@ -178,6 +178,12 @@ namespace FirstInFirstAid.Controllers
             
         }
 
+        [HttpGet]
+        public JsonResult getNumberOfClients()
+        {
+            return Json(db.Clients.Count(), JsonRequestBehavior.AllowGet);
+        }
+
         // POST: Clients/Delete/5
         [HttpPost]
         public JsonResult DeleteConfirmed(int id)

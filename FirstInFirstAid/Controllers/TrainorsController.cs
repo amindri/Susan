@@ -151,6 +151,12 @@ namespace FirstInFirstAid.Controllers
             return View(trainer);
         }
 
+        [HttpGet]
+        public JsonResult getNumberOfTrainers()
+        {
+            return Json(db.Trainors.Count(), JsonRequestBehavior.AllowGet);
+        }
+
         // GET: Trainors/Delete/5
         public ActionResult Delete(int? id)
         {
