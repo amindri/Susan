@@ -240,10 +240,12 @@ namespace FirstInFirstAid.Controllers
 
         public List<Trainor> getAvailableTrainersList(int segmentId)
         {
-            EventSegment segment = db.EventSegments.Find(segmentId);
+            EventSegment segment = db.EventSegments.Include(seg => seg.TrainorAllocations.Select(allo => allo.Trainor)).Where(s => s.Id == segmentId).First();
 
             List<EventSegment> overlappingSegs = db.EventSegments.Include(seg => seg.TrainorAllocations.Select(allo => allo.Trainor)).
-                    Where(s => s.StartTime > segment.StartTime && s.EndTime < segment.EndTime).ToList();
+                    Where(s => s.EndTime >= segment.StartTime && s.StartTime <= segment.EndTime).ToList();
+
+            overlappingSegs.Add(segment);
 
             List<Trainor> allocatedTrainers = new List<Trainor>();
             foreach (var eventSegment in overlappingSegs)
