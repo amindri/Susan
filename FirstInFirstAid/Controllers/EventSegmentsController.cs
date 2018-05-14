@@ -40,6 +40,7 @@ namespace FirstInFirstAid.Controllers
             if (ModelState.IsValid)
             {
                 Event evnt = db.Events.Include(c => c.EventSegments).Where(i => i.Id == eventId).First();
+                eventSegment.Hours = (eventSegment.EndTime - eventSegment.StartTime).Hours;
                 evnt.EventSegments.Add(eventSegment);
                 db.SaveChanges();
                 logger.InfoFormat("Event Segment Created, Name : {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
@@ -127,7 +128,7 @@ namespace FirstInFirstAid.Controllers
 
                 //Updating the Event Segment fields
                 dbEventSegment.Name = eventSegment.Name;
-                dbEventSegment.Hours = eventSegment.Hours;
+                dbEventSegment.Hours = (eventSegment.EndTime - eventSegment.StartTime).Hours;
                 dbEventSegment.StartTime = eventSegment.StartTime;
                 dbEventSegment.EndTime = eventSegment.EndTime;
                 dbEventSegment.RequiredNumberOfStaff = eventSegment.RequiredNumberOfStaff;

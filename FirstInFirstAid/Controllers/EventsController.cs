@@ -43,6 +43,10 @@ namespace FirstInFirstAid.Controllers
             {
                 Client client = db.Clients.Include(e => e.Events).Where(i => i.Id == clientId).First();
                 client.Events.Add(ev3nt);
+                foreach (EventSegment segment in ev3nt.EventSegments)
+                {
+                    segment.Hours = (segment.EndTime - segment.StartTime).Hours;
+                }
                 db.SaveChanges();
                 logger.InfoFormat("Event Created, Name : {0}, Id: {1}", ev3nt.EventName, ev3nt.Id);
                 return RedirectToAction("Index");
