@@ -20,13 +20,34 @@
                 "stepMinute": 15
             });
 
+            $("#modal").on('hidden.bs.modal', function () {
+                $(".modal-body input").val("");
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "/Equipments/GetTrainers",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (trainerList) {
+                    $('#Trainer').append($("<option selected value='Please Select'>Please Select</option>"));
+                   
+                    $.each(trainerList, function (index, trainer) {
+                        $('#Trainer').append($("<option></option>").attr("value", trainer.Id).text(trainer.FirstName + " " + trainer.Lastname));
+                    });
+                },
+                error: function () {
+                    alert("Failed to load Trainers");
+                }
+            });
+
             var i = 0;
             $("#addAllocation").click(function () {
                 $('#allocations> tbody:last-child').append(
                     "<tr id=" + i + ">" +
                     "<td> " + $("#DateSupplied").val() + "</td>" +
                     "<td>" + $("#DateReturned").val() + "</td>" +
-                    "<td>" + $("#Trainer").val() + "</td>" +
+                    "<td data-id=\"" + $("#Trainer").val() + "\">" + $("#Trainer option:selected").text() + "</td>" +
                     "<td><input type='button' value='Delete' onclick='deleteAllocation(" + i + ")'/></td>" +
                     "</tr >");
                 i++;
@@ -43,10 +64,9 @@
 
             $('#allocations > tbody > tr:not(:first)').each(function () {
                 var columns = $(this).find('td');
-
-                $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].DateSupplied'" + " value='" + $(columns[0]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].DateSupplied'" + " value='" + $(columns[0]).html().trim()+ "'/>");
                 $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].DateReturned'" + " value='" + $(columns[1]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].Trainor'" + " value='" + $(columns[2]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].Trainor.Id'" + " value='" + $(columns[2]).attr("data-id") + "'/>");
                 count++;
             });
         }
@@ -132,7 +152,7 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">Trainer</label>
                         <div class="col-md-10">
-                            @Html.Editor("Trainer", new { htmlAttributes = new { @id = "Trainer", @class = "form-control" } })
+                            <select id="Trainer" class="form-control"></select>
                         </div>
                     </div>
                 </div>

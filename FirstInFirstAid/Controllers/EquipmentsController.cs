@@ -11,6 +11,7 @@ using System.Reflection;
 
 namespace FirstInFirstAid.Controllers
 {
+    [Authorize]
     public class EquipmentsController : Controller
     {
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -34,17 +35,27 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,EquipmentName,EquipmentAllocations")] Equipment equipment)
+        public ActionResult Create(Equipment equipment)
         {
-            if (ModelState.IsValid)
+
+            List<EquipmentAllocation> allocations = new List<EquipmentAllocation>();
+            allocations.AddRange(equipment.EquipmentAllocations);
+            equipment.EquipmentAllocations.Clear();
+            db.Equipment.Add(equipment);
+
+            foreach (EquipmentAllocation allocation in allocations)
             {
-                db.Equipment.Add(equipment);
-                db.SaveChanges();
-                logger.InfoFormat("Equipment Created, Name : {0}, Id: {1}", equipment.EquipmentName, equipment.Id);
-                return RedirectToAction("Index");
+                Trainor trainer = db.Trainors.Find(allocation.Trainor.Id);
+                if (trainer != null)
+                {
+                    allocation.Trainor = trainer;
+                }
+                equipment.EquipmentAllocations.Add(allocation);
             }
 
-            return View(equipment);
+            db.SaveChanges();
+            logger.InfoFormat("Equipment Created, Name : {0}, Id: {1}", equipment.EquipmentName, equipment.Id);
+            return RedirectToAction("Index");
         }
 
         // GET: Equipments/Edit/5
@@ -127,6 +138,11 @@ namespace FirstInFirstAid.Controllers
                 return RedirectToAction("Index");
             }
             return View(equipment);
+        }
+
+        public JsonResult GetTrainers()
+        {
+            return Json(db.Trainors.Select(i => new { i.Id, i.FirstName, i.Lastname}), JsonRequestBehavior.AllowGet);
         }
 
         // GET: Equipments/Delete/5
