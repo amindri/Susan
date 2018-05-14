@@ -48,6 +48,7 @@ namespace FirstInFirstAid.Controllers
                 return RedirectToAction("Index");
 
             }
+            ViewBag.Id = new SelectList(db.Clients, "Id", "Name");
             return View(ev3nt);
         }
 

@@ -22,30 +22,6 @@
                 controlType: "select",
                 timeFormat: "hh:mm TT",
                 "stepMinute": 15
-           });
-
-            $.ajax({
-                type: "POST",
-                url: "/Events/GetClients",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (clientList) {
-                    var clientId = @(Model.Client == null ? -1 : Model.Client.Id);
-                    if (clientId == -1) {
-                        $('#Client').append($("<option selected value='Please Select'>Please Select</option>"));
-                    }
-                    $.each(clientList, function (index, client) {                   
-                        if ( clientId == client.Id) {
-                            $('#Client').append($("<option selected></option>").attr("value", client.Id).text(client.Name));
-                        } else {
-                            $('#Client').append($("<option></option>").attr("value", client.Id).text(client.Name));
-                        }
-
-                    });
-                },
-                error: function () {
-                    alert("Failed to load Clients");
-                }
             });
 
             var i = $("#segments td").closest("tr").length;
