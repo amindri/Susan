@@ -122,14 +122,11 @@
             var count = 0;
             $('#segments > tbody > tr:not(:first)').each(function () {
                 var columns = $(this).find('td');
-                var start = new Date($(columns[1]).html().trim());
-                var end = new Date($(columns[2]).html().trim());
-                var timeDiff = Math.abs(end - start) / 36e5;           
+               
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Name'" + " value='" + $(columns[0]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].StartTime'" + " value='" + $(columns[1]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].EndTime'" + " value='" + $(columns[2]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].RequiredNumberOfStaff'" + " value='" + $(columns[3]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Hours'" + " value='" + timeDiff + "'/>");
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");
                 count++;
             });
