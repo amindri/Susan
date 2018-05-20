@@ -37,6 +37,10 @@ namespace FirstInFirstAid.Controllers
         [HttpPost]
         public JsonResult Create(EventSegment eventSegment, int eventId)
         {
+            if (ModelState.ContainsKey("eventSegment.Event"))
+            {
+                ModelState["eventSegment.Event"].Errors.Clear();
+            }
             if (ModelState.IsValid)
             {
                 Event evnt = db.Events.Include(c => c.EventSegments).Where(i => i.Id == eventId).First();
