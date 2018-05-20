@@ -51,12 +51,16 @@ namespace FirstInFirstAid.Controllers
         [HttpPost]
         public ActionResult Edit([Bind(Include = "Id,DutyType,PresenceConfirmation,PaymentNote,Hours,Paid")] TrainorAllocationForEventSeg trainorAllocation, int trainerId)
         {
+            if (ModelState.ContainsKey("trainorAllocation.EventSegment"))
+            {
+                ModelState["trainorAllocation.EventSegment"].Errors.Clear();
+            }
             if (ModelState.IsValid)
             {
                 logger.DebugFormat("Modifying TrainerAllocationforEventSegment with the Trainer First Name: {0} {1},  and Id:{2}", 
                     trainorAllocation.Trainor?.FirstName, trainorAllocation.Trainor?.Lastname, trainorAllocation.Id);
 
-                TrainorAllocationForEventSeg dbTrainerAllocation = db.TrainorEventSegAllocations.Include(t => t.Trainor).Where(i => i.Id == trainorAllocation.Id).First();
+                TrainorAllocationForEventSeg dbTrainerAllocation = db.TrainorEventSegAllocations.Include(s => s.EventSegment).Include(t => t.Trainor).Where(i => i.Id == trainorAllocation.Id).First();
 
                 dbTrainerAllocation.Paid = trainorAllocation.Paid;
                 dbTrainerAllocation.PaymentNote = trainorAllocation.PaymentNote;

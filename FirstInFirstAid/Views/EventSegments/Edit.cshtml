@@ -237,7 +237,7 @@
                     Paid: $.trim($("#saved_" + dbId + ' #Paid').val()),
                     Id: dbId
                 },
-                trainerId: $.trim($("#saved_" + dbId + ' #Name').val())
+                trainerId: $.trim($("#saved_" + dbId + ' #Name').attr("data-trainerId"))
             };
             $.ajax({
                 type: "POST",
@@ -410,7 +410,7 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">Trainer Name</label>
                         <div class="col-md-10">
-                            <input type="text" class="form-control col-md-10" id="Name" readonly value="@Model.TrainorAllocations[i].Trainor.FirstName @Model.TrainorAllocations[i].Trainor.Lastname">
+                            <input type="text" class="form-control col-md-10" id="Name" readonly data-trainerId="@Model.TrainorAllocations[i].Trainor.Id" value="@Model.TrainorAllocations[i].Trainor.FirstName @Model.TrainorAllocations[i].Trainor.Lastname">
                         </div>
                     </div>
                     <div class="form-group">
