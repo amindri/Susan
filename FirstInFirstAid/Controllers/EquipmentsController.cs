@@ -37,10 +37,14 @@ namespace FirstInFirstAid.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Equipment equipment)
         {
-
+            
             List<EquipmentAllocation> allocations = new List<EquipmentAllocation>();
-            allocations.AddRange(equipment.EquipmentAllocations);
-            equipment.EquipmentAllocations.Clear();
+            if (equipment.EquipmentAllocations != null)
+            {
+                allocations.AddRange(equipment.EquipmentAllocations);
+                equipment.EquipmentAllocations.Clear();
+            }
+
             db.Equipment.Add(equipment);
 
             foreach (EquipmentAllocation allocation in allocations)
