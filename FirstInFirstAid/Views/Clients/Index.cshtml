@@ -24,7 +24,8 @@
                     }
                 },
                 error: function (obj) {
-                    alert("Failed to delete the Client " + obj);
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
                 }
             });
         };

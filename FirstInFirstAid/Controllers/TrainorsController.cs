@@ -163,20 +163,38 @@ namespace FirstInFirstAid.Controllers
             if (id == null)
             {
                 logger.Warn("Received null Trainer Id to delete");
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                return Content("{\"Type\":\"Warn\", \"Message\":\"Received null Trainer Id to delete\"}");
+
             }
-            Trainor trainor = db.Trainors.Find(id);
-            if (trainor == null)
+            else
             {
-                logger.WarnFormat("Trainer not found to delete, Id: {0}", id);
-                return HttpNotFound();
+
+                Trainor trainer = db.Trainors.Find(id);
+                
+                if (trainer == null)
+                {
+                    logger.WarnFormat("Trainer not found to delete, Id: {0}", id);
+                    return Content("{\"Type\":\"Warn\", \"Message\":\"Trainer not found to delete with the Id:" + id + "\"}");
+                }
+                else 
+                {
+                    List<TrainorAllocationForEventSeg> allocations = db.TrainorEventSegAllocations.Where(e => e.Trainor.Id == id).ToList();
+                    if (allocations.Count() > 0)
+                    {
+                        return Content("{\"Type\":\"Warn\", \"Message\":\"The trainer is associated with one or more Event Segment Allocation. Please delete the related Trainer Allocations first\"}");
+                    }
+                    else
+                    {
+                        return Content("{\"Type\":\"Confirm\", \"Message\":\"Are you sure you want to delete the Trainer: " + trainer.FirstName + " " + trainer.Lastname +"\", \"Id\": \" " + trainer.Id + "\"}");
+                    }
+                }
+                
             }
-            return View(trainor);
         }
 
         // POST: Trainors/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult DeleteConfirmed(int id)
         {
             Trainor trainor = db.Trainors.Include(q => q.Qualifications).Include(a => a.Address).Where(t => t.Id == id).First();
