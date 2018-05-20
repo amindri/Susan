@@ -195,7 +195,7 @@ namespace FirstInFirstAid.Controllers
 
         // POST: Trainors/Delete/5
         [HttpPost]
-        public ActionResult DeleteConfirmed(int id)
+        public JsonResult DeleteConfirmed(int id)
         {
             Trainor trainor = db.Trainors.Include(q => q.Qualifications).Include(a => a.Address).Where(t => t.Id == id).First();
             db.Qualifications.RemoveRange(trainor.Qualifications);
@@ -203,7 +203,7 @@ namespace FirstInFirstAid.Controllers
             db.Trainors.Remove(trainor);
             db.SaveChanges();
             logger.InfoFormat("Trainer deleted, Name: {0}, Id: {1}", trainor.FirstName, trainor.Id);
-            return RedirectToAction("Index");
+            return Json("Successfully deleted the trainer: " + trainor.FirstName + " " + trainor.Lastname);
         }
 
         protected override void Dispose(bool disposing)

@@ -4,6 +4,51 @@
     ViewBag.Title = "Venues";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section Scripts {
+    <script type="text/javascript">
+        function deleteVenue(id) {
+            $.ajax({
+                type: "GET",
+                url: "/Venues/Delete/" + id,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (obj) {
+                    if (obj.Type == 'Warn') {
+                        $("#warnModalBody").text(obj.Message);
+                        $('#warnModal').modal('show');
+                    } else {
+                        $("#delButton").attr("onclick", "deleteConfirmed(" + obj.Id + ")");
+                        $("#confirmModalBody").text(obj.Message);
+                        $('#confirmModal').modal('show');
+                    }
+                },
+                error: function (obj) {
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
+                }
+            });
+        };
+
+        function deleteConfirmed(id) {
+            $.ajax({
+                type: "POST",
+                url: "/Venues/DeleteConfirmed/" + id,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    location.reload();
+                    $("#successModalBody").text(msg);
+                    $('#successModal').modal('show');
+
+                },
+                error: function (obj) {
+                    alert("Error while deleting " + obj);
+                }
+            });
+        }
+    </script>
+}
+
 
 <h3 class="page-header" >Venues</h3>
 
@@ -33,8 +78,8 @@
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) |
-                    <!--@Html.ActionLink("Details", "Details", new { id=item.Id }) |-->
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                    
+                    <button class='btn btn-danger' type='button' value='Delete' onclick='deleteVenue(@item.Id)'>Delete</button>
                 </td>
             </tr>
 }

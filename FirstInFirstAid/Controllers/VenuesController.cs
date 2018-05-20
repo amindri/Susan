@@ -100,27 +100,39 @@ namespace FirstInFirstAid.Controllers
             if (id == null)
             {
                 logger.Warn("Received null Venue Id to delete");
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                return Content("{\"Type\":\"Warn\", \"Message\":\"Received null Venue Id to delete\"}");
+
             }
-            Venue venue = db.Venues.Find(id);
-            if (venue == null)
+            else
             {
-                logger.WarnFormat("Venue not found to delete, Id: {0}", id);
-                return HttpNotFound();
+
+                Venue venue = db.Venues.Include(e => e.EventSegments).Where(i => i.Id == id).First();
+                if (venue == null)
+                {
+                    logger.WarnFormat("Venue not found to delete, Id: {0}", id);
+                    return Content("{\"Type\":\"Warn\", \"Message\":\"Venue not found to delete with the Id:" + id + "\"}");
+                }
+                else if (venue.EventSegments.Count() > 0)
+                {
+                    return Content("{\"Type\":\"Warn\", \"Message\":\"The Venue is associated with one or more Event Segments. Please delete the related Event Segments or assign another Venue to those Event Segments\"}");
+                }
+                else
+                {
+                    return Content("{\"Type\":\"Confirm\", \"Message\":\"Are you sure you want to delete the Venue: " + venue.VenueName + "\", \"Id\": \" " + venue.Id + "\"}");
+                }
             }
-            return View(venue);
         }
 
         // POST: Venues/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpPost]
+        public JsonResult DeleteConfirmed(int id)
         {
             Venue venue = db.Venues.Find(id);
             db.Venues.Remove(venue);
             db.SaveChanges();
             logger.InfoFormat("Venue deleted, Name: {0}, Id: {1}", venue.VenueName, venue.Id);
-            return RedirectToAction("Index");
+            return Json("Successfully deleted the venue: " + venue.VenueName);
         }
 
         protected override void Dispose(bool disposing)

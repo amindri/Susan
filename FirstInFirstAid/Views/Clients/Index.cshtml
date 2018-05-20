@@ -42,7 +42,8 @@
                     location.reload();
                 },
                 error: function (obj) {
-                    alert("Error while deleting " + obj);
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
                 }
             });
         }
