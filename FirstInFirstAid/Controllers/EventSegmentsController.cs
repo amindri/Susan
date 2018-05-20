@@ -105,7 +105,7 @@ namespace FirstInFirstAid.Controllers
             }
 
             //select list for true false values
-            var list = new[] { new { Text = "True", Value = "true" }, new { Text = "False", Value = "false" } };
+            var list = new[] { new { Text = "Yes", Value = "true" }, new { Text = "No", Value = "false" } };
             ViewBag.BoolList = new SelectList(list, "Value", "Text");
 
             return View(eventSegment);
