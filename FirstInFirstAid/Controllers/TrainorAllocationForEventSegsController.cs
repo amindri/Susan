@@ -19,6 +19,10 @@ namespace FirstInFirstAid.Controllers
         [HttpPost]
         public ActionResult Create(TrainorAllocationForEventSeg trainorAllocation, int eventSegmentId, int trainerId)
         {
+            if (ModelState.ContainsKey("trainorAllocation.EventSegment"))
+            {
+                ModelState["trainorAllocation.EventSegment"].Errors.Clear();
+            }
             if (ModelState.IsValid)
             {
                 EventSegment evntSegment = db.EventSegments.Include(c => c.TrainorAllocations).Where(i => i.Id == eventSegmentId).First();

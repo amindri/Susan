@@ -27,8 +27,9 @@ namespace FirstInFirstAid.Models
 
         public List<TrainorAllocationForEventSeg> TrainorAllocations { get; set; }
         
-        public Venue Venue { get; set; }      
+        public Venue Venue { get; set; }
 
+        [Required]
         public Event Event { get; set; }
 
         public ClientContact ClientContact { get; set; }

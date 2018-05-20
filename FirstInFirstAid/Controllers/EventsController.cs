@@ -48,6 +48,7 @@ namespace FirstInFirstAid.Controllers
                     foreach (EventSegment segment in ev3nt.EventSegments)
                     {
                         segment.Hours = (segment.EndTime - segment.StartTime).Hours;
+                        segment.Event = ev3nt;
                     }
                 }
                 db.SaveChanges();
@@ -184,7 +185,7 @@ namespace FirstInFirstAid.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Event eventVar = db.Events.Find(id);
+            Event eventVar = db.Events.Find(id);            
             db.Events.Remove(eventVar);
             db.SaveChanges();
             logger.InfoFormat("Event deleted, Name: {0}, Id: {1}", eventVar.EventName, eventVar.Id);

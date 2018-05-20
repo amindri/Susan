@@ -70,9 +70,7 @@ namespace FirstInFirstAid.Controllers
                 Include(v => v.Venue).
                 Include(a => a.TrainorAllocations.Select(t => t.Trainor)).
                 Where(x => x.Id == id).First();
-
-            EventSegment eventSegment1 = db.EventSegments.Include("TrainorAllocations.Trainor").
-                Where(x => x.Id == id).First();
+          
             if (eventSegment == null)
             {
                 logger.Warn("Received null Event Segement Id to modify");
@@ -121,6 +119,10 @@ namespace FirstInFirstAid.Controllers
         public ActionResult Edit([Bind(Include = "Id,Name,StartTime,EndTime,Hours,RequiredNumberOfstaff")] EventSegment eventSegment,
             int? venueId, int? clientContactId)
         {
+            if (ModelState.ContainsKey("Event"))
+            {
+                ModelState["Event"].Errors.Clear();
+            }
             if (ModelState.IsValid)
             {
                 logger.DebugFormat("Modifying Event Segment of the Name: {0} and Id:{}", eventSegment.Name, eventSegment.Id);

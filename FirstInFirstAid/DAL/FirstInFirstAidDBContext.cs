@@ -41,13 +41,11 @@ namespace FirstInFirstAid.DAL
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-
-            // IMPORTANT: we are mapping the entity User to the same table as the entity ApplicationUser
-            //modelBuilder.Entity<User>().ToTable("User");
         }
 
-        
+
 
         public System.Data.Entity.DbSet<FirstInFirstAid.Models.ClientContact> ClientContacts { get; set; }
     }
 }
+ 

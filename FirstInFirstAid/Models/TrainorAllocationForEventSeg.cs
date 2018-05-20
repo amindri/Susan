@@ -24,7 +24,9 @@ namespace FirstInFirstAid.Models
 
         public Boolean Paid { get; set; }
 
+        [Required]
         public EventSegment EventSegment { get; set; }
+
         public Trainor Trainor { get; set; }
 
     }

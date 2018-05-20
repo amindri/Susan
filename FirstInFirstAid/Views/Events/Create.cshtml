@@ -81,7 +81,12 @@
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].StartTime'" + " value='" + $(columns[1]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].EndTime'" + " value='" + $(columns[2]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='EventSegments[" + count + "].RequiredNumberOfStaff'" + " value='" + $(columns[3]).html().trim() + "'/>");
-               // $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Hours'" + " value='" + timeDiff + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Event.EventName'" + " value='" + $('#EventName').val() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Event.InvoiceNumber'" + " value='" + $('#InvoiceNumber').val() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Event.BusinessId'" + " value='" + $('#BusinessId').val() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Event.EventState'" + " value='" + $('#EventState').val() + "'/>");
+                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Event.EventState'" + " value='" + $('#EventState').val() + "'/>");
+
                 count++;
             });
         }
