@@ -2,11 +2,33 @@
     ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    div.dataTables_wrapper div.dataTables_info {
+        display: none;
+
+    }
+
+    table.dataTable thead th {
+        border-bottom: 1px solid #ebebeb !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 1px !important;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: none !important;
+        }
+
+
+</style>
 @section Scripts {
     
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#upcoming').DataTable( {
+        $('#upcoming').DataTable({
+            "lengthChange": false,
+            "searching": false,
             "processing": true,
             "serverSide": true,
             "ajax": {
@@ -18,8 +40,36 @@
                 { "data" : "Start" },
                 { "data" : "Venue" }
             ]
-        } );
-    } );
+        });
+
+        $.ajax({
+            "url": "/Clients/getNumberOfClients",
+            "type": "GET",
+            data: {},
+            dataType: "json",
+            success: function (data) {
+                $('#mclients').html(data);
+            },
+            error: function (data) {
+                alert("Internal Server Error:\n" + data);
+            },
+
+        });
+
+        $.ajax({
+            "url": "/Trainors/getNumberOfTrainers",
+            "type": "GET",
+            data: {},
+            dataType: "json",
+            success: function (data) {
+                $('#mtrainers').html(data);
+            },
+            error: function (data) {
+                alert("Internal Server Error:\n" + data);
+            },
+
+        });
+ } );
 </script>
 }
 
@@ -30,18 +80,18 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="panel panel-default">
-                    <div class="panel-heading" id="event-p">Upcoming Event Segments</div>
+                    <div class="panel-heading" id="event-p">Upcoming Event Segments (7 days)</div>
                     <div class="panel-body">
-                        <h4>Number of upcoming events (7days): </h4> <br />
+                        <!--<h4>Number of upcoming events (7days): </h4> <br />-->
                         <div class="table-responsive">
-                            <table id="upcoming" class="table" cellspacing="0">
+                            <table id="upcoming" class="table table-bordered dt-responsive nowrap" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
                                         <th>Start Date/Time</th>
                                         <th>Venue</th>
-                                    </tr>
-                                    </thead>
+                                                                                </tr>
+                                </thead>
                                 <tbody>
 
                                 </tbody>
@@ -49,6 +99,10 @@
 
                             </table>
                         </div>
+                    </div>
+                    <div class="panel-footer">
+                        @Html.ActionLink("View all Event Segments", "Index", "Eventsegments")
+
                     </div>
                 </div>
             </div>
@@ -61,15 +115,23 @@
                                 <tbody>
                                     <tr>
                                         <td> @Html.ActionLink("Add Event", "Create", "Events") <br /></td>
-                                        <td>  @Html.ActionLink("View Events", "Index", "Events") <br /></td>
+                                        <td> @Html.ActionLink("View Events", "Index", "Events") <br /></td>
                                     </tr>
                                     <tr>
                                         <td> @Html.ActionLink("Add Client", "Create", "Clients") <br /></td>
-                                        <td>  @Html.ActionLink("View Clients", "Index", "Clients") <br /></td>
+                                        <td> @Html.ActionLink("View Clients", "Index", "Clients") <br /></td>
                                     </tr>
                                     <tr>
-                                        <td>  @Html.ActionLink("Add Trainer", "Create", "Trainors")<br /></td>
-                                        <td>  @Html.ActionLink("View Trainers", "Index", "Trainors") <br /></td>
+                                        <td> @Html.ActionLink("Add Trainer", "Create", "Trainors")<br /></td>
+                                        <td> @Html.ActionLink("View Trainers", "Index", "Trainors") <br /></td>
+                                    </tr>
+                                    <tr>
+                                        <td> @Html.ActionLink("Add Venue", "Create", "Venues")<br /></td>
+                                        <td> @Html.ActionLink("View Venues", "Index", "Venues") <br /></td>
+                                    </tr>
+                                    <tr>
+                                        <td> @Html.ActionLink("Add Equipment", "Create", "Equipments")<br /></td>
+                                        <td> @Html.ActionLink("View Equipment", "Index", "Equipments") <br /></td>
                                     </tr>
 
                                 </tbody>
@@ -91,7 +153,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" id="client-p">Clients</div>
                     <div class="panel-body">
-                        <h4>Number of Clients: </h4><!-- call (Clients/getNumberOfClients controller method in ajax )--> <br />
+                        <h4>Number of Clients: <span id="mclients"> </span></h4>  <!-- call (Clients/getNumberOfClients controller method in ajax )--> <br />
                         @Html.ActionLink("Add Client", "Create", "Clients") <br />
                         @Html.ActionLink("View Clients", "Index", "Clients") <br />
 
@@ -103,7 +165,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" id="trainer-p">Trainers</div>
                     <div class="panel-body">
-                        <h4>Number of Trainers: </h4><!-- call (Trainors/getNumberOfTrainers controller method in ajax )--> <br />
+                        <h4>Number of Trainers: <span id="mtrainers"> </span> </h4><!-- call (Trainors/getNumberOfTrainers controller method in ajax )--> <br />
                         @Html.ActionLink("Add Trainer", "Create", "Trainors") <br />
                         @Html.ActionLink("View Trainers", "Index", "Trainors") <br />
 
