@@ -171,7 +171,7 @@
     display: inline-block;
 }
 
-/*Css for bootsrap panels*/
+/*CSS for bootsrap panels*/
 
 .panel {
     border-radius: 0px;
@@ -180,6 +180,11 @@
 .panel-default > .panel-heading {
     color: #fff;
     font-size: 24px;
+}
+
+.panel-t{
+    padding:20px;
+    margin:2px;
 }
 
 #event-p {
@@ -237,13 +242,10 @@ table.dataTable.no-footer {
     border-bottom:1px solid #ebebeb !important;
 }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    padding: 0;
-}
 
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-        background: none;
-    }
+
+
+
 
 
 /*Responsive*/
