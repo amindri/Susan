@@ -6,9 +6,6 @@
 }
 
 @section Scripts {
-    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
-    @Scripts.Render("~/Scripts/bootstrap.min.js")
-
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -43,7 +40,7 @@
                 count++;
             });
         }
-    </script>
+            </script>
 }
 
 <h3 class="page-header">Add New Client</h3>
@@ -58,7 +55,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-2" for="Name">Name:</label>
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Client Name" } })
                         @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -129,49 +126,49 @@
                 </div>
             </div>
         }
-        </div>
+    </div>
 </div>
 
-        <div id="modal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Create Client Contact</h4>
+<div id="modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create Client Contact</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+
+                    <div class="form-group">
+                        <label for="name" class="control-label col-md-2">Name:</label>
+                        <input type="text" class="form-control col-md-10" id="name" placeholder="Name">
                     </div>
-                    <div class="modal-body">
-                        <div class="form-horizontal">
 
-                            <div class="form-group">
-                                <label for="name" class="control-label col-md-2">Name:</label>
-                                <input type="text" class="form-control col-md-10" id="name" placeholder="Name">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="position" class="control-label col-md-2">Position:</label>
-                                <input type="text" class="form-control col-md-10" id="position" placeholder="Position">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="phone" class="control-label col-md-2">Phone:</label>
-                                <input type="tel" class="form-control col-md-10" id="phone" placeholder="Phone">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="email" class="control-label col-md-2">Email:</label>
-                                <input type="email" class="form-control col-md-10" id="email" placeholder="Email">
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="position" class="control-label col-md-2">Position:</label>
+                        <input type="text" class="form-control col-md-10" id="position" placeholder="Position">
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" id="addContat" data-dismiss="modal">Add</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                    <div class="form-group">
+                        <label for="phone" class="control-label col-md-2">Phone:</label>
+                        <input type="tel" class="form-control col-md-10" id="phone" placeholder="Phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="control-label col-md-2">Email:</label>
+                        <input type="email" class="form-control col-md-10" id="email" placeholder="Email">
                     </div>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="addContat" data-dismiss="modal">Add</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
+    </div>
+</div>
 
-        <div>
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
