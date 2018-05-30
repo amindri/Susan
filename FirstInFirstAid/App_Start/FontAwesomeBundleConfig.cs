@@ -1,6 +1,6 @@
 using System.Web.Optimization;
 
-//[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(FirstInFirstAid.App_Start.FontAwesomeBundleConfig), "RegisterBundles")]
+[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(FirstInFirstAid.App_Start.FontAwesomeBundleConfig), "RegisterBundles")]
 
 namespace FirstInFirstAid.App_Start
 {
