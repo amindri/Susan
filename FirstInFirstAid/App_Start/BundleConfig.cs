@@ -12,7 +12,7 @@ namespace FirstInFirstAid
                         "~/Scripts/jquery-1.12.4.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate.min.js"));
+                        "~/Scripts/jquery.validate.min.js", "~/Scripts/jquery.validate.unobtrusive.min.js"));
 
             // Add the jquery-ui script bundle
             bundles.Add(new ScriptBundle("~/bundles/jquery-ui").Include(
