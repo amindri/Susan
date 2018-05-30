@@ -16,6 +16,7 @@ namespace FirstInFirstAid.Models
         public string Lastname { get; set; }
 
         [Required(ErrorMessage = "Phone number is missing")]
+        [RegularExpression("(\\d{10})", ErrorMessage = "Please enter a valid 10 digit phone number")]
         public string PhoneNumber { get; set; }
 
         [EmailAddress(ErrorMessage = "Invalid email address. Please use \'yourname@example.com\' format")]

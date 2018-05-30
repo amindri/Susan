@@ -62,14 +62,17 @@
                         "<td><input class='btn btn-danger' type='button' value='Delete' onclick='deleteContact(" + i + ")'/></td>" +
                         "</tr >");
                     i++;
+                    
                     $('#modal').modal('hide'); 
-                    $(".modal-body input").val("");
-                    $(".modal-body p").val("");
-                } else {
+                                    
+                   } else {
                     $('#modal').modal('show');
 
                 }           
-                });            
+            });    
+            $("#modal").on('hidden.bs.modal', function () {
+                 $(".modal-body input p").val("");
+            });
         });
 
         function deleteContact(id) {

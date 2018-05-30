@@ -18,6 +18,7 @@ namespace FirstInFirstAid.Models
         public string Suburb { get; set; }
 
         [Required(ErrorMessage = "Postcode is missing")]
+        [RegularExpression("(\\d{4})", ErrorMessage = "Please enter a valid Postcode")]
         public string Postcode { get; set; }
 
         [Required(ErrorMessage = "State is missing")]

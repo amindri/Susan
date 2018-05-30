@@ -171,6 +171,11 @@
     display: inline-block;
 }
 
+.c-val{
+    color:red;
+
+}
+
 /*CSS for bootsrap panels*/
 
 .panel {
