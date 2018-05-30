@@ -108,7 +108,7 @@
                                 @Html.DisplayFor(modelItem => item.TaxFileNo)
                             </td>
                             <td>
-                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) |
+                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) &nbsp;
                                 
                                 <button class='btn btn-danger' type='button' value='Delete' onclick='deleteTrainer(@item.Id)'>Delete</button>
                             </td>
