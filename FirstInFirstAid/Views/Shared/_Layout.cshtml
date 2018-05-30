@@ -130,6 +130,9 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
 
+    <!--Including jquery client side validation by Anu-->
+    @Scripts.Render("~/bundles/jqueryval")
+
     <!-- Including the jquery-ui script and style bundles by Anu-->
     @Scripts.Render("~/bundles/jquery-ui")
     @Styles.Render("~/Content/jquery-ui-timepicker-addon.min.css")
@@ -183,6 +186,12 @@
             $('.mdtable').dataTable({
             });
 
+        });
+        // function to fix DOB issue in Firefox browser
+        $(function () {
+            $.validator.methods.date = function (value, element) {
+                return this.optional(element) || moment(value, "L", true).isValid();
+            }
         });
     </script>
 
