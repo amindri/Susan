@@ -10,15 +10,13 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $("input[type=datetime]").datetimepicker({
+            $(".mydatepick").datepicker({
                 dateFormat: "dd.M.yy",
                 changeMonth: true,
                 changeYear: true,
-                yearRange: "-100:+5",
+                yearRange: "-50:+50",
                 controlType: "select",
-                timeFormat: "hh:mm TT",
-                "stepMinute": 15
-            });
+            });   
 
             $("#modal").on('hidden.bs.modal', function () {
                 $(".modal-body input").val("");
@@ -48,7 +46,7 @@
                     "<td> " + $("#DateSupplied").val() + "</td>" +
                     "<td>" + $("#DateReturned").val() + "</td>" +
                     "<td data-id=\"" + $("#Trainer").val() + "\">" + $("#Trainer option:selected").text() + "</td>" +
-                    "<td><input type='button' value='Delete' onclick='deleteAllocation(" + i + ")'/></td>" +
+                    "<td><input type='button' class='btn btn-danger' value='Delete' onclick='deleteAllocation(" + i + ")'/></td>" +
                     "</tr >");
                 i++;
                 $('#modal').modal('hide');
@@ -73,52 +71,59 @@
     </script>
 }
 
-<h2>Create</h2>
+<h3 class="page-header">Add Equipment Allocation</h3>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<div class="container-fluid">
+    <div class="row">
+        @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-    <div class="form-horizontal" id="form">
-        <h4>Equipment</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.EquipmentName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EquipmentName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EquipmentName, "", new { @class = "text-danger" })
+        <div class="form-horizontal" id="form">
+           
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <label class="control-label col-md-2" for="EquipmentName">Equipment Name:</label>
+               
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.EquipmentName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.EquipmentName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Add Equipment Alloctions:</label>
+                <div class="col-md-10">
+                    <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
+                </div>
+            </div>
+
+
+            <h4 class="page-header"> Equipment Allocations </h4>
+            <div class="table-responsive">
+                <table class="table" id="allocations" style="width:100%; padding-top:40px; ">
+                    <tbody>
+                        <tr>
+                            <th>Supplied Date</th>
+                            <th>Retuned Date</th>
+                            <th>Trainer</th>
+                            <th> Actions</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-2">
+                    <input onclick="addAllocationsToForm();" type="submit" value="Add Equipment Allocation" class="btn-lg btn-success" />
+                </div>
             </div>
         </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2">Add Equipment Alloctions:</label>
-            <div class="col-md-10">
-                <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
-            </div>
-        </div>
-
-
-        <h4 style="padding-top:30px;"> Equipment Allocations </h4>
-        <div class="table-responsive">
-            <table class="table" id="allocations" style="width:100%; padding-top:40px; ">
-                <tbody>
-                    <tr>
-                        <th>Supplied Date</th>
-                        <th>Retuned Date</th>
-                        <th>Trainer</th>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input onclick="addAllocationsToForm();" type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
 }
+    </div>
+</div>
+
+
 
 
 <div id="modal" class="modal fade" role="dialog">
@@ -134,16 +139,14 @@
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                     <div class="form-group">
-                        <label class="control-label col-md-2">Date Supplied:</label>
-                        <div class="col-md-10">
-                            <!-- Anu edits-->
-                            @Html.Editor("DateSupplied", new { htmlAttributes = new { @id = "DateSupplied", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
-
-                        </div>
+                        <label class="control-label col-md-3">Date Supplied:</label>
+                        <input type="text" onkeydown = "return false" onpaste = "return false" id="DateSupplied" class="form-control col-md-9 mydatepick" />
+                        <p id="dsempty" class="c-val" hidden> Date supplied is missing</p>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label col-md-2">Date Returned</label>
+                        <input type="text" onkeydown = "return false" onpaste = "return false" id="DateReturned" class="form-control col-md-9 mydatepick" />
                         <div class="col-md-10">
                             @Html.Editor("DateReturned", new { htmlAttributes = new { @id = "DateReturned", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                         </div>
