@@ -20,13 +20,12 @@
                         "<td>" + $("#position").val() + "</td>" +
                         "<td>" + $("#phone").val() + "</td>" +
                         "<td>" + $("#email").val() + "</td>" +
-                        "<td>" +
+                        "<td>" + "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
+                        "Edit" +
+                        "</button>" + "&nbsp;&nbsp;&nbsp;" +
                         "<button type= 'button' class='btn btn-danger' value= 'Delete' onclick= 'deleteContact(" + i + ")'>" +
                         "Delete" +
                         "</button>" + 
-                        "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
-                        "Edit" +
-                        "</button>" +
                         "</td>" +
                         "</tr >");
                     i++;
@@ -178,11 +177,12 @@
                                         <td>@contact.ContactPhone</td>
                                         <td>@contact.ContactEmail</td>
                                         <td>
-                                            <button type="button" value="Delete" onclick="deleteContact(@count)">
-                                                Delete
-                                            </button>
+
                                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal" data-id="@count" data-action="Change">
                                                 Edit
+                                            </button> &nbsp;
+                                            <button type="button" class="btn btn-danger"  value="Delete" onclick="deleteContact(@count)">
+                                                Delete
                                             </button>
                                         </td>
                                     </tr>
@@ -195,7 +195,7 @@
 
                 <div class="form-group">
                     <div class="col-md-2">
-                        <input onclick="addAllContactsToForm();" type="submit" value="Save" class="btn btn-success" />
+                        <input onclick="addAllContactsToForm();" type="submit" value="Save Client" class="btn-lg btn-success" />
                     </div>
                 </div>
             </div>
