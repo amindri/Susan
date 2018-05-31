@@ -52,11 +52,11 @@
                                 "<td>" + responseSegment.EndTime + "</td>" +
                                 "<td>" + responseSegment.RequiredNumberOfStaff + "</td>" +
                                 "<td>" +
+                               "<button class='btn btn-primary' onclick='window.open(\" " + url + " \")\' type='button' class='btn btn-primary' data-id=" + i + " data-action='Change'>" +
+                                "Edit" +
+                                "</button>" + "&nbsp;&nbsp;&nbsp;" +
                                 "<button class='btn btn-danger' type= 'button' value= 'Delete' onclick= 'deleteSegment(" + i + ")'>" +
                                 "Delete" +
-                                "</button>" +
-                                "<button class='btn btn-primary' onclick='window.open(\" " + url + " \")\' type='button' class='btn btn-primary' data-id=" + i + " data-action='Change'>" +
-                                "Edit" +
                                 "</button>" +
                                 "</td>" +
                                 "</tr >");
@@ -235,11 +235,11 @@
                             <td>@segment.EndTime</td>
                             <td>@segment.RequiredNumberOfStaff</td>
                             <td>
-                                <button type="button" class="btn btn-danger" value="Delete" onclick="deleteSegment(@count)">
-                                    Delete
-                                </button>
                                 <button type="button" class="btn btn-primary" onclick="window.open('@Url.Action("Edit", "EventSegments", new { id = segment.Id })')" data-id="@count" data-action="Change">
                                     Edit
+                                </button> &nbsp;
+                                <button type="button" class="btn btn-danger" value="Delete" onclick="deleteSegment(@count)">
+                                    Delete
                                 </button>
                             </td>
                         </tr>
@@ -252,7 +252,7 @@
 
     <div class="form-group">
         <div class="col-md-2">
-            <input onclick="addAllSegmentsToForm();" type="submit" value="Save" class="btn btn-success" />
+            <input onclick="addAllSegmentsToForm();" type="submit" value="Save Event" class="btn-lg btn-success" />
         </div>
     </div>
 </div>
