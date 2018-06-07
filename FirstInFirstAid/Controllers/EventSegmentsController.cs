@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Configuration;
+using Newtonsoft.Json.Converters;
 
 namespace FirstInFirstAid.Controllers
 {
@@ -23,6 +24,13 @@ namespace FirstInFirstAid.Controllers
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly string senderEmailAddress = ConfigurationManager.AppSettings["SenderEmailAddress"];
         private static readonly string senderName = ConfigurationManager.AppSettings["SenderName"];
+        private const string _dateFormat = "yyyy-MM-dd HH:mm:ss";
+        private IsoDateTimeConverter isoConvert = new IsoDateTimeConverter();
+        
+        public EventSegmentsController()
+        {
+            isoConvert.DateTimeFormat = _dateFormat;
+        }
 
         // GET: EventSegments
         public ActionResult Index()
@@ -286,9 +294,15 @@ namespace FirstInFirstAid.Controllers
 
         [HttpGet]
         public JsonResult getupComingEventSegments() {
-            DateTime sevenDays = DateTime.Today.AddDays(7);
-            var upcoming = from EventSegment e in db.EventSegments.Where(s => s.StartTime < sevenDays) select new { Name = e.Name, Start = e.StartTime, Venue = e.Venue.VenueName };
-            var json = new { data = upcoming };
+            List<object> list = new List<object>();
+            var upcoming = from EventSegment e in db.EventSegments.Where(s => s.StartTime > DateTime.Today) select new { Name = e.Name, Start = e.StartTime, Venue = e.Venue.VenueName };
+           
+            foreach (var segment in upcoming.ToList()) {
+                String date = JsonConvert.SerializeObject(segment.Start, isoConvert);
+                String correctDate = date.Substring(1, date.Length - 2);
+                list.Add(new {Name=segment.Name, Start = correctDate, Venue = segment.Venue });
+            }
+            var json = new { data = list };
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
