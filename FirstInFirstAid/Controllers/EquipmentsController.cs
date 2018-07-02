@@ -35,7 +35,7 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Equipment equipment)
+        public ActionResult Create([Bind(Include = "EquipmentName, EquipmentAllocations")] Equipment equipment)
         {
             
             List<EquipmentAllocation> allocations = new List<EquipmentAllocation>();
@@ -59,7 +59,7 @@ namespace FirstInFirstAid.Controllers
 
             db.SaveChanges();
             logger.InfoFormat("Equipment Created, Name : {0}, Id: {1}", equipment.EquipmentName, equipment.Id);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index");            
         }
 
         // GET: Equipments/Edit/5
@@ -70,7 +70,7 @@ namespace FirstInFirstAid.Controllers
                 logger.Warn("Received null Equipment Id to modify");
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Equipment equipment = db.Equipment.Find(id);
+            Equipment equipment = db.Equipment.Include(e => e.EquipmentAllocations.Select(t => t.Trainor)).Where(i => i.Id == id).First();
             if (equipment == null)
             {
                 logger.WarnFormat("Equipment not found to modify, Id: {0}", id);
@@ -86,62 +86,66 @@ namespace FirstInFirstAid.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,EquipmentName,EquipmentAllocations")] Equipment equipment)
         {
-            if (ModelState.IsValid)
+
+            logger.DebugFormat("Modifying Equipment of the Name: {0} and Id:{1}", equipment.EquipmentName, equipment.Id);
+            Equipment dbEquipment = db.Equipment.Include(c => c.EquipmentAllocations).Where(i => i.Id == equipment.Id).First();
+
+            //updating the Equipment fields
+            dbEquipment.EquipmentName = equipment.EquipmentName;
+
+            //Deleting the deleted allocations
+            if (dbEquipment.EquipmentAllocations != null)
             {
-                logger.DebugFormat("Modifying Equipment of the Name: {0} and Id:{}", equipment.EquipmentName, equipment.Id);
-                Equipment dbEquipment = db.Equipment.Include(c => c.EquipmentAllocations).Where(i => i.Id == equipment.Id).First();
-
-                //updating the Equipment fields
-                dbEquipment.EquipmentName = equipment.EquipmentName;
-
-                //Deleting the deleted allocations
-                if (dbEquipment.EquipmentAllocations != null)
-                {
-                    List<EquipmentAllocation> allocationsToBeDeleted = new List<EquipmentAllocation>();
-                    if (equipment.EquipmentAllocations != null)
-                    {
-                        allocationsToBeDeleted = (from equipmentAllocation in dbEquipment.EquipmentAllocations
-                                               let item = equipment.EquipmentAllocations.SingleOrDefault(i => i.Id == equipmentAllocation.Id)
-                                               where item == null
-                                               select equipmentAllocation).ToList();
-                    }
-                    else
-                    {
-                        allocationsToBeDeleted = dbEquipment.EquipmentAllocations.ToList();
-                    }
-
-                    if (allocationsToBeDeleted.Any())
-                    {
-                        foreach (var clientContact in allocationsToBeDeleted.ToList())
-                        {
-                            db.Entry(clientContact).State = EntityState.Deleted;
-                        }
-                    }
-                }
-                
+                List<EquipmentAllocation> allocationsToBeDeleted = new List<EquipmentAllocation>();
                 if (equipment.EquipmentAllocations != null)
                 {
-                    foreach (var equipmentAllocation in equipment.EquipmentAllocations)
+                    allocationsToBeDeleted = (from equipmentAllocation in dbEquipment.EquipmentAllocations
+                                            let item = equipment.EquipmentAllocations.SingleOrDefault(i => i.Id == equipmentAllocation.Id)
+                                            where item == null
+                                            select equipmentAllocation).ToList();
+                }
+                else
+                {
+                    allocationsToBeDeleted = dbEquipment.EquipmentAllocations.ToList();
+                }
+
+                if (allocationsToBeDeleted.Any())
+                {
+                    foreach (var clientContact in allocationsToBeDeleted.ToList())
                     {
-                        //Updating the existing allocations
-                        if (equipmentAllocation.Id > 0)
-                        {
-                            var equipmentAllocationDB = db.EquipmentAllocations.Single(e => e.Id == equipmentAllocation.Id);
-                            db.Entry(equipmentAllocationDB).CurrentValues.SetValues(equipmentAllocation);
-                            db.Entry(equipmentAllocationDB).State = EntityState.Modified;
-                        }
-                        //Adding new allocations
-                        else
-                        {
-                            dbEquipment.EquipmentAllocations.Add(equipmentAllocation);
-                        }
+                        db.Entry(clientContact).State = EntityState.Deleted;
                     }
                 }
-                db.SaveChanges();
-                logger.InfoFormat("Equipment modified, Name: {0}, Id: {1}", dbEquipment.EquipmentName, equipment.Id);
-                return RedirectToAction("Index");
             }
-            return View(equipment);
+                
+            if (equipment.EquipmentAllocations != null)
+            {
+                foreach (var equipmentAllocation in equipment.EquipmentAllocations)
+                {
+
+                    Trainor trainer = db.Trainors.Find(equipmentAllocation.Trainor.Id);
+                    if (trainer != null)
+                    {
+                        equipmentAllocation.Trainor = trainer;
+                    }
+                
+                    //Updating the existing allocations
+                    if (equipmentAllocation.Id > 0)
+                    {
+                        var equipmentAllocationDB = db.EquipmentAllocations.Single(e => e.Id == equipmentAllocation.Id);
+                        db.Entry(equipmentAllocationDB).CurrentValues.SetValues(equipmentAllocation);
+                        db.Entry(equipmentAllocationDB).State = EntityState.Modified;
+                    }
+                    //Adding new allocations
+                    else
+                    {
+                        dbEquipment.EquipmentAllocations.Add(equipmentAllocation);
+                    }
+                }
+            }
+            db.SaveChanges();
+            logger.InfoFormat("Equipment modified, Name: {0}, Id: {1}", dbEquipment.EquipmentName, equipment.Id);
+            return RedirectToAction("Index");            
         }
 
         public JsonResult GetTrainers()

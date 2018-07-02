@@ -107,7 +107,7 @@
                             <th>Supplied Date</th>
                             <th>Retuned Date</th>
                             <th>Trainer</th>
-                            <th> Actions</th>
+                            <th>Actions</th>
                         </tr>
                     </tbody>
                 </table>
@@ -139,22 +139,23 @@
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                     <div class="form-group">
-                        <label class="control-label col-md-3">Date Supplied:</label>
-                        <input type="text" onkeydown = "return false" onpaste = "return false" id="DateSupplied" class="form-control col-md-9 mydatepick" />
+                        <label class="control-label col-md-3">Date Supplied:</label>                        
+                        <div class="col-md-9">
+                            @Html.Editor("DateSupplied", new { htmlAttributes = new { @id = "DateSupplied", @class = "form-control mydatepick", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+                        </div>
                         <p id="dsempty" class="c-val" hidden> Date supplied is missing</p>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-2">Date Returned</label>
-                        <input type="text" onkeydown = "return false" onpaste = "return false" id="DateReturned" class="form-control col-md-9 mydatepick" />
-                        <div class="col-md-10">
-                            @Html.Editor("DateReturned", new { htmlAttributes = new { @id = "DateReturned", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
+                        <label class="control-label col-md-3">Date Returned</label>                        
+                        <div class="col-md-9">
+                            @Html.Editor("DateReturned", new { htmlAttributes = new { @id = "DateReturned", @class = "form-control mydatepick", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-2">Trainer</label>
-                        <div class="col-md-10">
+                        <label class="control-label col-md-3">Trainer</label>
+                        <div class="col-md-9">
                             <select id="Trainer" class="form-control"></select>
                         </div>
                     </div>

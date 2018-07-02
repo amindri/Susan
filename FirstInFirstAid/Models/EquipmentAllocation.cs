@@ -16,6 +16,7 @@ namespace FirstInFirstAid.Models
         [Required(ErrorMessage = "Trainer is missing")]
         public Trainor Trainor { get; set; }
 
+        [Required]
         public Equipment Equipment { get; set; }
     }
 }

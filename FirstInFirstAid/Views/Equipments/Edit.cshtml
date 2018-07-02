@@ -20,15 +20,32 @@
                 "stepMinute": 15
             });
 
+            $.ajax({
+                type: "POST",
+                url: "/Equipments/GetTrainers",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (trainerList) {
+                    $('#Trainer').append($("<option selected value='Please Select'>Please Select</option>"));
+
+                    $.each(trainerList, function (index, trainer) {
+                        $('#Trainer').append($("<option></option>").attr("value", trainer.Id).text(trainer.FirstName + " " + trainer.Lastname));
+                    });
+                },
+                error: function () {
+                    alert("Failed to load Trainers");
+                }
+            });
+            var i = @Model.EquipmentAllocations.Count();
             $("#addAllocation").click(function () {
                 if ($(this).attr('data-action') == "add") {
-                    $('#contacts> tbody:last-child').append(
+                    $('#allocations> tbody:last-child').append(
                         "<tr id=" + i + ">" +
-                        "<td> " + $("#name").val() + "</td>" +
-                        "<td>" + $("#position").val() + "</td>" +
-                        "<td>" + $("#Trainer").val() + "</td>" +
+                        "<td> " + $("#DateSupplied").val() + "</td>" +
+                        "<td>" + $("#DateReturned").val() + "</td>" +
+                        "<td data-trainerid=" + $("#Trainer").val() + ">" + $("#Trainer option:selected").text() + "</td>" +
                         "<td>" +
-                        "<button type= 'button' value= 'Delete' onclick= 'deleteContact(" + i + ")'>" +
+                        "<button type='button' class='btn btn-danger' value= 'Delete' onclick= 'deleteAllocation(" + i + ")'>" +
                         "Delete" +
                         "</button>" +
                         "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
@@ -39,10 +56,10 @@
                     i++;
                 } else {
                     var trId = $("#trId").val();
-                    $("#" + trId + " td:nth-child(1)").html($("#name").val());
-                    $("#" + trId + " td:nth-child(2)").html($("#position").val());
-                    $("#" + trId + " td:nth-child(3)").html($("#phone").val());
-                    $("#" + trId + " td:nth-child(4)").html($("#email").val());
+                    $("#" + trId + " td:nth-child(1)").html($("#DateSupplied").val());
+                    $("#" + trId + " td:nth-child(2)").html($("#DateReturned").val());
+                    $("#" + trId + " td:nth-child(3)").html($("#Trainer option:selected").text());
+                    $("#" + trId + " td:nth-child(3)").attr("data-trainerid", $("#Trainer").val());
                 }
                 $('#modal').modal('hide');
             });
@@ -62,11 +79,10 @@
                     var rowId = button.data('id');
                     modal.find('.modal-footer button span').text(buttonName);
                     modal.find('.modal-footer button').attr("data-action", "change");
-                    modal.find('.modal-body input#name').val($("#" + rowId + " td:nth-child(1)").html());
-                    modal.find('.modal-body input#phone').val($("#" + rowId + " td:nth-child(3)").html());
-                    modal.find('.modal-body input#position').val($("#" + rowId + " td:nth-child(2)").html());
-                    modal.find('.modal-body input#email').val($("#" + rowId + " td:nth-child(4)").html());
-                    modal.find('.modal-body input#trId').val(button.data('id'));
+                    modal.find('.modal-body input#DateSupplied').val($("#" + rowId + " td:nth-child(1)").html());
+                    modal.find('.modal-body input#DateReturned').val($("#" + rowId + " td:nth-child(2)").html());                    
+                    modal.find('.modal-body select#Trainer').val($("#" + rowId + " td:nth-child(3)").attr("data-trainerid")).change();
+                    modal.find('.modal-body input#trId').val(rowId);
                 } else {
                     modal.find('.modal-footer button span').text("Add");
                     modal.find('.modal-footer button').attr("data-action", "add");
@@ -83,11 +99,11 @@
 
             $('#allocations > tbody > tr:not(:first)').each(function () {
                 var columns = $(this).find('td');
-
+                
                 $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].DateSupplied'" + " value='" + $(columns[0]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].DateReturned'" + " value='" + $(columns[1]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].Trainor'" + " value='" + $(columns[2]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].Trainor.Id'" + " value='" + $(columns[2]).attr("data-trainerid").trim() + "'/>");
+                $("#form").append("<input type='hidden' name='EquipmentAllocations[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");
                 count++;
             });
         }
@@ -114,22 +130,20 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2">Add Event Segments:</label>
+            <label class="control-label col-md-2">Add Equipment Allocation:</label>
             <div class="col-md-10">
                 <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
             </div>
         </div>
 
-        <h4 style="padding-top:30px;"> Event Segments</h4>
+        <h4 style="padding-top:30px;"> Equipment Allocation</h4>
         <div class="table-responsive">
-            <table class="table" id="segments" style="width:100%; padding-top:40px;">
+            <table class="table" id="allocations" style="width:100%; padding-top:40px;">
                 <tbody>
                     <tr>
-                        <th>Start Date/Time</th>
-                        <th>End Date/Time</th>
-                        <th>Hours</th>
-                        <th>Required Number Of Staff</th>
-                        <th>Actions</th>
+                        <th>Supplied Date</th>
+                        <th>Retuned Date</th>
+                        <th>Trainer</th>
                     </tr>
 
                     @if (Model.EquipmentAllocations != null)
@@ -140,9 +154,9 @@
                             <tr id=@count data-dbId=@allocation.Id>
                                 <td>@allocation.DateSupplied</td>
                                 <td>@allocation.DateReturned</td>
-                                <td>@allocation.Trainor.FirstName  @allocation.Trainor.Lastname</td>
+                                <td data-trainerid="@allocation.Trainor.Id">@allocation.Trainor.FirstName  @allocation.Trainor.Lastname</td>
                                 <td>
-                                    <button type="button" class="btn btn-danger" value="Delete" onclick="deleteSegment(@count)">
+                                    <button type="button" class="btn btn-danger" value="Delete" onclick="deleteAllocation(@count)">
                                         Delete
                                     </button>
                                     <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#modal"  data-id="@count" data-action="Change">
@@ -158,7 +172,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input onclick="addAllocationsToForm();" type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
@@ -175,34 +189,34 @@
             <div class="modal-body">
                 <div class="form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
+                    <input id="trId" type="hidden"/>
                     <div class="form-group">
-                        <label class="control-label col-md-2">Date Supplied:</label>
-                        <div class="col-md-10">
-                            <!-- Anu edits-->
+                        <label class="control-label col-md-3">Date Supplied</label>
+                        <div class="col-md-9">
                             @Html.Editor("DateSupplied", new { htmlAttributes = new { @id = "DateSupplied", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
-
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-2">Date Returned</label>
-                        <div class="col-md-10">
+                        <label class="control-label col-md-3">Date Returned</label>
+                        <div class="col-md-9">
                             @Html.Editor("DateReturned", new { htmlAttributes = new { @id = "DateReturned", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-2">Trainer</label>
-                        <div class="col-md-10">
-                            @Html.Editor("Trainer", new { htmlAttributes = new { @id = "Trainer", @class = "form-control" } })
+                        <label class="control-label col-md-3">Trainer</label>
+                        <div class="col-md-9">
+                            <select id="Trainer" class="form-control"></select>
                         </div>
                     </div>
                 </div>
 
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="addAllocation" data-dismiss="modal">Add</button>
+            <div class="modal-footer">                
+                <button type="button" class="btn btn-default" id="addAllocation" data-dismiss="modal">
+                    <span class="ui-button-text">Add</span>
+                </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
