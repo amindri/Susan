@@ -51,8 +51,8 @@ namespace FirstInFirstAid.Controllers
             }
             if (ModelState.IsValid)
             {
-                Event evnt = db.Events.Include(c => c.EventSegments).Where(i => i.Id == eventId).First();
-                eventSegment.Hours = (eventSegment.EndTime - eventSegment.StartTime).Hours;
+                Event evnt = db.Events.Include(c => c.EventSegments).Where(i => i.Id == eventId).First();                
+                eventSegment.Hours = eventSegment.EndTime.Subtract(eventSegment.StartTime).TotalHours;
                 evnt.EventSegments.Add(eventSegment);
                 db.SaveChanges();
                 logger.InfoFormat("Event Segment Created, Name : {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
@@ -138,11 +138,11 @@ namespace FirstInFirstAid.Controllers
             if (ModelState.IsValid)
             {
                 logger.DebugFormat("Modifying Event Segment of the Name: {0} and Id:{}", eventSegment.Name, eventSegment.Id);
-                EventSegment dbEventSegment = db.EventSegments.Include(v => v.Venue).Include(c => c.ClientContact).Where(i => i.Id == eventSegment.Id).First();
+                EventSegment dbEventSegment = db.EventSegments.Include(e => e.Event).Include(v => v.Venue).Include(c => c.ClientContact).Where(i => i.Id == eventSegment.Id).First();
 
                 //Updating the Event Segment fields
                 dbEventSegment.Name = eventSegment.Name;
-                dbEventSegment.Hours = (eventSegment.EndTime - eventSegment.StartTime).Hours;
+                dbEventSegment.Hours = eventSegment.EndTime.Subtract(eventSegment.StartTime).TotalHours;
                 dbEventSegment.StartTime = eventSegment.StartTime;
                 dbEventSegment.EndTime = eventSegment.EndTime;
                 dbEventSegment.RequiredNumberOfStaff = eventSegment.RequiredNumberOfStaff;

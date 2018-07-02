@@ -20,7 +20,7 @@ namespace FirstInFirstAid.Models
         [Required(ErrorMessage = "End time is missing")]
         public DateTime EndTime { get; set; }
 
-        public long Hours { get; set; }
+        public double Hours { get; set; }
 
         [Required(ErrorMessage = "Number off staff is missing")]
         public int RequiredNumberOfStaff { get; set; }

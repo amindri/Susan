@@ -8,6 +8,7 @@ using System.Reflection;
 using FirstInFirstAid.DAL;
 using FirstInFirstAid.Models;
 using log4net;
+using System;
 
 namespace FirstInFirstAid.Controllers
 {
@@ -47,7 +48,8 @@ namespace FirstInFirstAid.Controllers
                 {
                     foreach (EventSegment segment in ev3nt.EventSegments)
                     {
-                        segment.Hours = (segment.EndTime - segment.StartTime).Hours;
+                        TimeSpan span = segment.EndTime.Subtract(segment.StartTime);
+                        segment.Hours = span.TotalHours;
                         segment.Event = ev3nt;
                     }
                 }
