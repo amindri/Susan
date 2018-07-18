@@ -20,7 +20,7 @@
                         Event Name
                     </th>
                     <th>
-                        Event Segment Name
+                        Event <br/>Segment Name
                     </th>
                     <th>
                         Start Time
@@ -32,7 +32,7 @@
                         Hours
                     </th>
                     <th>
-                        Required No. of Staff
+                        Required <br/>No. of Staff
                     </th>
                     <th>
                         Client Contact
@@ -73,7 +73,7 @@
                         @Html.DisplayFor(modelItem => item.Venue.VenueName)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) |
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) 
                         <!-- @Html.ActionLink("Details", "Details", new { id = item.Id }) |-->
                         @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class="btn btn-danger" })
                     </td>
