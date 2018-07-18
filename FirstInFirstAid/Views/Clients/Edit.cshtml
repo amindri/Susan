@@ -11,9 +11,61 @@
         $(document).ready(function () {
 
             var i = $("#contacts td").closest("tr").length;
-
+            var valid = true;
             $("#addContact").click(function () {
-                if ($(this).attr('data-action') == "add") {
+              
+                var name = $('#name').val();
+                if (name == '') {
+                    valid = false;
+                    $("#nempty").show();
+                } else {
+                    $("#nempty").hide();
+                }
+
+                var position = $('#position').val();
+                if (position == '') {
+                    valid = false;
+                    $("#pempty").show();
+                } else {
+                    $("#pempty").hide();
+                }
+
+                var phone = $('#phone').val();
+                var intRegex = /[0-9 -()+]+$/;
+                if (phone == '') {
+                    valid = false;
+                    $("#phempty").show();
+                    $("#phwrong").hide();
+                } else if ((phone.length < 10) || (!intRegex.test(phone))) {
+                    valid = false;
+                    $("#phempty").hide();
+                    $("#phwrong").show();
+                } else {
+                    $("#phempty").hide();
+                    $("#phwrong").hide();
+                }
+
+                var email = $('#email').val();
+                var emailReg = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+                if (email == '') {
+                    valid = false;
+                    $("#emempty").show();
+                    $("#emwrong").hide();
+                } else if ((!emailReg.test(email))) {
+                    valid = false;
+                    $("#emempty").hide();
+                    $("#emwrong").show();
+                } else {
+                    $("#emempty").hide();
+                    $("#emwrong").hide();
+                }
+
+                if ((name != '') & (position != '') & (phone != '') & (email != '') & (intRegex.test(phone)) & (phone.length == 10) & emailReg.test(email)) {
+                    valid = true;
+                }
+
+                if (valid == true) {
+                    if ($(this).attr('data-action') == "add") {
                     $('#contacts> tbody:last-child').append(
                         "<tr id=" + i + ">" +
                         "<td> " + $("#name").val() + "</td>" +
@@ -25,7 +77,7 @@
                         "</button>" + "&nbsp;&nbsp;&nbsp;" +
                         "<button type= 'button' class='btn btn-danger' value= 'Delete' onclick= 'deleteContact(" + i + ")'>" +
                         "Delete" +
-                        "</button>" + 
+                        "</button>" +
                         "</td>" +
                         "</tr >");
                     i++;
@@ -37,6 +89,10 @@
                     $("#" + trId + " td:nth-child(4)").html($("#email").val());
                 }
                 $('#modal').modal('hide');
+            }
+                else {
+                    $('#modal').modal('show');
+                }
             });
 
             $("#modal").on('hidden.bs.modal', function () {
@@ -216,27 +272,33 @@
                             <div class="form-group">
                                 <label for="name" class="control-label col-md-2">Name:</label>
                                 <input type="text" class="form-control" id="name" placeholder="Name">
+                                <p id="nempty" class="c-val" hidden> Name is missing</p>
                             </div>
 
                             <div class="form-group">
                                 <label for="position" class="control-label col-md-2">Position:</label>
                                 <input type="text" class="form-control" id="position" placeholder="Position">
+                                <p id="pempty" class="c-val" hidden> Position is missing</p>
                             </div>
 
                             <div class="form-group">
                                 <label for="phone" class="control-label col-md-2">Phone:</label>
                                 <input type="tel" class="form-control" id="phone" placeholder="Phone">
+                                <p id="phempty" class="c-val" hidden> Phone number is missing</p>
+                                <p id="phwrong" class="c-val" hidden> Please enter a valid phone number</p>
                             </div>
 
                             <div class="form-group">
                                 <label for="email" class="control-label col-md-2">Email:</label>
                                 <input type="email" class="form-control" id="email" placeholder="Email">
+                                <p id="emempty" class="c-val" hidden> Email is missing</p>
+                                <p id="emwrong" class="c-val" hidden> Please enter a valid email</p>
                             </div>
                             <input type="hidden" id="trId">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" id="addContact" data-dismiss="modal">
+                        <button type="button" class="btn btn-default" id="addContact">
                             <span class="ui-button-text">Add</span>
                         </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
