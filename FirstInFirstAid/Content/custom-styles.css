@@ -175,7 +175,20 @@
     color:red;
 
 }
+.text-danger {
+    color:red !important;
+}
 
+#warnModalheader {
+    background-color: yellow;
+}
+#confirmModalheader {
+    background-color: #d9534f;
+}
+
+#successModalheader{
+    background-color: greenyellow;
+}
 /*CSS for bootsrap panels*/
 
 .panel {
