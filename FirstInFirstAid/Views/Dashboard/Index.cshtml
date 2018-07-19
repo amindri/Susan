@@ -19,7 +19,12 @@
         .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
             background: none !important;
         }
-
+    .fc-toolbar h2{
+        font-size:16px;
+    }
+    .fc-toolbar .fc-left{
+        padding-top:5px;
+    }
 
 </style>
 @section Scripts {
@@ -69,6 +74,10 @@
             },
 
         });
+        $('#calendar').fullCalendar({
+            defaultView: 'month',
+            Boolean, default: false
+        })
  } );
 </script>
 }
@@ -176,6 +185,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" id="calendar-p">Calendar</div>
                     <div class="panel-body">
+                        <div id="calendar"></div>
 
 
                     </div>
