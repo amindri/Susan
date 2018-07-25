@@ -303,12 +303,12 @@ namespace FirstInFirstAid.Controllers
         [HttpGet]
         public JsonResult getupComingEventSegments() {
             List<object> list = new List<object>();
-            var upcoming = from EventSegment e in db.EventSegments.Where(s => s.StartTime > DateTime.Today) select new { Name = e.Name, Start = e.StartTime, Venue = e.Venue.VenueName };
+            var upcoming = from EventSegment e in db.EventSegments.Where(s => s.StartTime > DateTime.Today) select new { Name = e.Name, Start = e.StartTime, Venue = e.Venue.VenueName, EventName = e.Event.EventName };
            
             foreach (var segment in upcoming.ToList()) {
                 String date = JsonConvert.SerializeObject(segment.Start, isoConvert);
                 String correctDate = date.Substring(1, date.Length - 2);
-                list.Add(new {Name=segment.Name, Start = correctDate, Venue = segment.Venue });
+                list.Add(new {Name=segment.Name, Start = correctDate, Venue = segment.Venue, EventName = segment.EventName });
             }
             var json = new { data = list };
             return Json(json, JsonRequestBehavior.AllowGet);
