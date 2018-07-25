@@ -130,6 +130,9 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
 
+    <!--Including moments.js for Full Calendar by Anu-->
+    <script src="~/Scripts/moment.min.js"></script>
+
     <!--Including jquery client side validation by Anu-->
     @Scripts.Render("~/bundles/jqueryval")
 
@@ -143,6 +146,10 @@
     <link href="~/Content/dataTables.bootstrap.min.css" rel="stylesheet" />
     <script src="~/Scripts/datatables.min.js"></script>
     <script src="~/Scripts/dataTables.bootstrap4.min.js"></script>
+
+    <!--Including Full Calendar by Anu-->
+    <link href="~/Content/fullcalendar.min.css" rel="stylesheet" />
+    <script src="~/Scripts/fullcalendar.min.js"></script>
 
     @RenderSection("scripts", required: false)
 
@@ -187,21 +194,37 @@
             });
 
         });
+        /* Code to fix "field must be a date" issue in Chrome and VFirefox */
+        $.validator.addMethod('date',
+            function (value, element) {
+                if (this.optional(element)) {
+                    return true;
+                }
+                var valid = true;
+                try {
+                    $.datepicker.parseDate('dd.M.yy', value);
+                }
+                catch (err) {
+                    valid = false;
+                }
+                return valid;
+            });
         // function to fix DOB issue in Firefox browser
-        $(function () {
-            $.validator.methods.date = function (value, element) {
-                return this.optional(element) || moment(value, "L", true).isValid();
+        /*$(function () {
+                $.validator.methods.date = function (value, element) {
+                return this.optional(element) || moment(value, "L" , true).isValid();
             }
-        });
+        });*/
+        
     </script>
 
     <div id="warnModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header">
+                <div id="warnModalheader" class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Warning</h4>
+                    <h4 class="modal-title">Warning!</h4>
                 </div>
                 <div id="warnModalBody" class="modal-body">
                 </div>
@@ -216,7 +239,7 @@
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header">
+                <div id="confirmModalheader" class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Info</h4>
                 </div>
@@ -235,7 +258,7 @@
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header">
+                <div id="successModalheader" class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Success</h4>
                 </div>

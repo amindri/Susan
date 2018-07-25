@@ -19,7 +19,12 @@
         .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
             background: none !important;
         }
-
+    .fc-toolbar h2{
+        font-size:16px;
+    }
+    .fc-toolbar .fc-left{
+        padding-top:5px;
+    }
 
 </style>
 @section Scripts {
@@ -69,6 +74,10 @@
             },
 
         });
+        $('#calendar').fullCalendar({
+            defaultView: 'month',
+            Boolean, default: false
+        })
  } );
 </script>
 }
@@ -84,10 +93,10 @@
                     <div class="panel-body">
                         <!--<h4>Number of upcoming events (7days): </h4> <br />-->
                         <div class="table-responsive">
-                            <table id="upcoming" class="table table-bordered dt-responsive nowrap" cellspacing="0">
+                            <table id="upcoming" class="table table-bordered dt-responsive" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
+                                        <th>Event Segment <br/>Name</th>
                                         <th>Start Date/Time</th>
                                         <th>Venue</th>
                                                                                 </tr>
@@ -176,6 +185,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading" id="calendar-p">Calendar</div>
                     <div class="panel-body">
+                        <div id="calendar"></div>
 
 
                     </div>
