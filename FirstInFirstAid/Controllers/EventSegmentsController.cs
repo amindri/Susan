@@ -200,28 +200,36 @@ namespace FirstInFirstAid.Controllers
         {
             if (id == null)
             {
-                logger.Warn("Received null Event Segment Id to delete");
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                logger.Warn("Received null Event Id to delete");
+
+                return Content("{\"Type\":\"Warn\", \"Message\":\"Received null Event Segment Id to delete\"}");
+
             }
-            EventSegment eventSegment = db.EventSegments.Find(id);
-            if (eventSegment == null)
+            else
             {
-                logger.WarnFormat("Event Segment not found to delete, Id: {0}", id);
-                return HttpNotFound();
+
+                EventSegment eventSegment = db.EventSegments.Find(id);
+                if (eventSegment == null)
+                {
+                    logger.WarnFormat("Event Segment not found to delete, Id: {0}", id);
+                    return Content("{\"Type\":\"Warn\", \"Message\":\"Event Segment not found to delete with the Id:" + id + "\"}");
+                }
+                else
+                {
+                    return Content("{\"Type\":\"Confirm\", \"Message\":\"Are you sure you want to delete the Event segment: " + eventSegment.Name + "\", \"Id\": \" " + eventSegment.Id + "\"}");
+                }
             }
-            return View(eventSegment);
         }
 
         // POST: EventSegments/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpPost]
+        public JsonResult DeleteConfirmed(int id)
         {
             EventSegment eventSegment = db.EventSegments.Find(id);
             db.EventSegments.Remove(eventSegment);
             db.SaveChanges();
             logger.InfoFormat("Event Segment deleted, Name: {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
-            return RedirectToAction("Index");
+            return Json("Successfully deleted the Event: " + eventSegment.Name);
         }
 
         [HttpPost]

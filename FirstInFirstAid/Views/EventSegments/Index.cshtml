@@ -5,6 +5,54 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section Scripts {
+    <script type="text/javascript">
+
+
+        function deleteEventSegment(id) {
+            $.ajax({
+                type: "GET",
+                url: "/EventSegments/Delete/" + id,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (obj) {
+                    if (obj.Type == 'Warn') {
+                        $("#warnModalBody").text(obj.Message);
+                        $('#warnModal').modal('show');
+                    } else {
+                        $("#delButton").attr("onclick", "deleteConfirmed(" + obj.Id + ")");
+                        $("#confirmModalBody").text(obj.Message);
+                        $('#confirmModal').modal('show');
+                    }
+                },
+                error: function (obj) {
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
+                }
+            });
+        };
+
+        function deleteConfirmed(id) {
+            $.ajax({
+                type: "POST",
+                url: "/EventSegments/DeleteConfirmed/" + id,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    $("#successModalBody").text(msg);
+                    $('#successModal').modal('show');
+                    location.reload();
+                },
+                error: function (obj) {
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
+                }
+            });
+        }
+    </script>
+}
+
+
 <h3 class="page-header">Event Segments</h3>
 
 <!--<p>
@@ -73,9 +121,8 @@
                         @Html.DisplayFor(modelItem => item.Venue.VenueName)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) |
-                        <!-- @Html.ActionLink("Details", "Details", new { id = item.Id }) |-->
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class="btn btn-danger" })
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) &nbsp;
+                        <button class='btn btn-danger' type='button' value='Delete' onclick='deleteEventSegment(@item.Id)'>Delete</button>
                     </td>
                 </tr>
 

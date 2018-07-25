@@ -39,7 +39,8 @@ namespace FirstInFirstAid.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,BusinessId,EventState,EventSegments")]Event ev3nt, int clientId)
-        {
+        {                        
+
             if (ModelState.IsValid)
             {
                 Client client = db.Clients.Include(e => e.Events).Where(i => i.Id == clientId).First();
@@ -86,8 +87,9 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,BusinessId,EventState,EventSegments")] Event @event, int clientId)
+        public ActionResult Edit([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,BusinessId,EventState")] Event @event, int clientId)
         {
+          
             if (ModelState.IsValid)
             {
                 logger.DebugFormat("Modifying Event of the Name: {0} and Id:{}", @event.EventName, @event.Id);
@@ -115,53 +117,12 @@ namespace FirstInFirstAid.Controllers
                 dbEvent.InvoiceNumber = @event.InvoiceNumber;
                 dbEvent.TotalFee = @event.TotalFee;
 
-                //Deleting the deleted Segments
-                if (dbEvent.EventSegments != null)
-                {
-                    List<EventSegment> segmentsToBeDeleted = new List<EventSegment>();
-                    if (@event.EventSegments != null)
-                    {
-                        segmentsToBeDeleted = (from eventSegment in dbEvent.EventSegments
-                                               let item = @event.EventSegments.SingleOrDefault(i => i.Id == eventSegment.Id)
-                                               where item == null
-                                               select eventSegment).ToList();
-                    }
-                    else
-                    {
-                        segmentsToBeDeleted = dbEvent.EventSegments.ToList();
-                    }
-
-                    if (segmentsToBeDeleted.Any())
-                    {
-                        foreach (var eventSegment in segmentsToBeDeleted.ToList())
-                        {
-                            db.Entry(eventSegment).State = EntityState.Deleted;
-                        }
-                    }
-                }
-                
-                if (@event.EventSegments != null)
-                {
-                    foreach (var eventSegment in @event.EventSegments)
-                    {
-                        //Updating the existing eventSegments
-                        if (eventSegment.Id > 0)
-                        {
-                            var eventsegmentDB = db.EventSegments.Single(e => e.Id == eventSegment.Id);
-                            db.Entry(eventsegmentDB).CurrentValues.SetValues(eventSegment);
-                            db.Entry(eventsegmentDB).State = EntityState.Modified;
-                        }
-                        //Adding new event segments
-                        else
-                        {
-                            dbEvent.EventSegments.Add(eventSegment);
-                        }
-                    }
-                }
                 db.SaveChanges();
                 logger.InfoFormat("Event successfully modified, Name: {0}, Id: {1}", dbEvent.EventName, @event.Id);
                 return RedirectToAction("Index");
             }
+            var clientList = from Client v in db.Clients select new { ID = v.Id, Name = v.Name };
+            ViewBag.Clients = new SelectList(clientList, "ID", "Name", @event.Client.Id);
             return View(@event);
         }
 
@@ -171,27 +132,39 @@ namespace FirstInFirstAid.Controllers
             if (id == null)
             {
                 logger.Warn("Received null Event Id to delete");
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                return Content("{\"Type\":\"Warn\", \"Message\":\"Received null Event Id to delete\"}");
+
             }
-            Event eventVar = db.Events.Find(id);
-            if (eventVar == null)
+            else
             {
-                logger.WarnFormat("Event not found to delete, Id: {0}", id);
-                return HttpNotFound();
+
+                Event @event = db.Events.Include(e => e.EventSegments).Where(i => i.Id == id).First();
+                if (@event == null)
+                {
+                    logger.WarnFormat("Event not found to delete, Id: {0}", id);
+                    return Content("{\"Type\":\"Warn\", \"Message\":\"Event not found to delete with the Id:" + id + "\"}");
+                }
+                else if (@event.EventSegments.Count() > 0)
+                {
+                    return Content("{\"Type\":\"WarnConfirm\", \"Message\":\"Are you sure? This Event is associated with " + @event.EventSegments.Count + " Event Segment/s. Continuing will delete all of it.\"}");
+                }
+                else
+                {
+                    return Content("{\"Type\":\"Confirm\", \"Message\":\"Are you sure you want to delete the Event: " + @event.EventName + "\", \"Id\": \" " + @event.Id + "\"}");
+                }
             }
-            return View(eventVar);
         }
 
         // POST: Events/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpPost]
+        public JsonResult DeleteConfirmed(int id)
         {
             Event eventVar = db.Events.Find(id);            
             db.Events.Remove(eventVar);
             db.SaveChanges();
             logger.InfoFormat("Event deleted, Name: {0}, Id: {1}", eventVar.EventName, eventVar.Id);
-            return RedirectToAction("Index");
+            return Json("Successfully deleted the Event: " + eventVar.EventName);
         }
 
         public JsonResult GetClients() // its a GET, not a POST
