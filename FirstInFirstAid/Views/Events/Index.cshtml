@@ -18,7 +18,9 @@
                         $("#warnModalBody").text(obj.Message);
                         $('#warnModal').modal('show');
                     } else if (obj.Type == 'WarnConfirm') {
+                        $("#warnModalBody").text(obj.Message);
                         $("#warnModal .modal-footer").append("<button onclick='deleteConfirmed(" + obj.Id + ")' id='delButton type='button' class='btn btn- danger' data-dismiss='modal'>Yes</button>");
+                        $('#warnModal').modal('show');
                     } else {
                         $("#delButton").attr("onclick", "deleteConfirmed(" + obj.Id + ")");
                         $("#confirmModalBody").text(obj.Message);

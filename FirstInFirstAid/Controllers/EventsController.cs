@@ -147,7 +147,7 @@ namespace FirstInFirstAid.Controllers
                 }
                 else if (@event.EventSegments.Count() > 0)
                 {
-                    return Content("{\"Type\":\"WarnConfirm\", \"Message\":\"Are you sure? This Event is associated with " + @event.EventSegments.Count + " Event Segment/s. Continuing will delete all of it.\"}");
+                    return Content("{\"Type\":\"WarnConfirm\", \"Message\":\"Are you sure? This Event is associated with " + @event.EventSegments.Count + " Event Segment/s. Continuing will delete all of it.\", \"Id\": \" " + @event.Id + "\"}");
                 }
                 else
                 {
