@@ -314,6 +314,25 @@ namespace FirstInFirstAid.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult getTrainerAllocationState()
+        {
+            List<object> list = new List<object>();
+            foreach (EventSegment segment in db.EventSegments.Include(x => x.TrainorAllocations))
+            {
+                if (segment.RequiredNumberOfStaff > segment.TrainorAllocations.Count())
+                {
+                    list.Add(new {ID=segment.Id, State="incomplete" });
+                }
+                else
+                {
+                    list.Add(new { ID = segment.Id, State = "complete" });
+                }
+            }
+          
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
