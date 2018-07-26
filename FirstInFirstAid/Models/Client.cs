@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using FirstInFirstAid.Helpers;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
@@ -9,8 +10,8 @@ namespace FirstInFirstAid.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Client name is missing")]
-        [Remote("ClientExists", "Clients", ErrorMessage = "Client Name already in use")]
+        [Required(ErrorMessage = "Client name is missing")]        
+        [CustomRemoteValidation("ClientExists", "Clients", AdditionalFields = "Id", ErrorMessage = "Client Name already in use")]
         public string Name { get; set; }
         
         public Address Address { get; set; }

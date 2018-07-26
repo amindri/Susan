@@ -17,16 +17,17 @@ namespace FirstInFirstAid.Controllers
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private FirstInFirstAidDBContext db = new FirstInFirstAidDBContext();
 
-        public ActionResult ClientExists(string Name)
+        public JsonResult ClientExists(string Name, int? Id)
         {
-            if (db.Clients.Any(x => x.Name == Name))
+            var validateName = db.Clients.FirstOrDefault(x => x.Name == Name && x.Id != Id);
+            if (validateName != null)
             {
-                return Content("false");
+                return Json(false, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Content("true");
-            }            
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
         }
 
         // GET: Clients
