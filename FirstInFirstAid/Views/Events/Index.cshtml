@@ -4,6 +4,56 @@
     ViewBag.Title = "Events";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section Scripts {
+    <script type="text/javascript">
+        
+        function deleteEvent(id) {
+            $.ajax({
+                type: "GET",
+                url: "/Events/Delete/" + id,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (obj) {
+                    if (obj.Type == 'Warn') {
+                        $("#warnModalBody").text(obj.Message);
+                        $('#warnModal').modal('show');
+                    } else if (obj.Type == 'WarnConfirm') {
+                        $("#warnModalBody").text(obj.Message);
+                        $("#warnModal .modal-footer").append("<button onclick='deleteConfirmed(" + obj.Id + ")' id='delButton type='button' class='btn btn- danger' data-dismiss='modal'>Yes</button>");
+                        $('#warnModal').modal('show');
+                    } else {
+                        $("#delButton").attr("onclick", "deleteConfirmed(" + obj.Id + ")");
+                        $("#confirmModalBody").text(obj.Message);
+                        $('#confirmModal').modal('show');
+                    }
+                },
+                error: function (obj) {
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
+                }
+            });
+        };
+
+        function deleteConfirmed(id) {
+            $.ajax({
+                type: "POST",
+                url: "/Events/DeleteConfirmed/" + id,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    $("#successModalBody").text(msg);
+                    $('#successModal').modal('show');
+                    location.reload();
+                },
+                error: function (obj) {
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
+                }
+            });
+        }
+    </script>
+}
+
 
 <h3 class="page-header">Events</h3>
 
@@ -64,7 +114,7 @@
                     </td>
                     <td>
                         @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) &nbsp;
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                        <button class='btn btn-danger' type='button' value='Delete' onclick='deleteEvent(@item.Id)'>Delete</button>
                     </td>
                 </tr>
 }

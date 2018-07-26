@@ -17,6 +17,19 @@ namespace FirstInFirstAid.Controllers
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private FirstInFirstAidDBContext db = new FirstInFirstAidDBContext();
 
+        public JsonResult TrainorExists(string Email, int? Id)
+        {
+            var validateName = db.Trainors.FirstOrDefault(x => x.Email == Email && x.Id != Id);
+            if (validateName != null)
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         // GET: Trainors
         public ActionResult Index()
         {

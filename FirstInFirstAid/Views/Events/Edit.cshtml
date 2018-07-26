@@ -24,84 +24,55 @@
                 "stepMinute": 15
             });
 
-            var i = $("#segments td").closest("tr").length;
+       
             $("#addSegment").click(function () {
-                if ($(this).attr('data-action') == "add") {
-                    var segment = {
-                        eventSegment: {
-                            Name: $.trim($("#Name").val()),
-                            StartTime: $.trim($("#StartTime").val()),
-                            EndTime: $.trim($('#EndTime').val()),
-                            RequiredNumberOfStaff: $.trim($('#RequiredNumberOfStaff').val())
-                        },
-                        eventId:@Model.Id
-                    };
+                
+                var segment = {
+                    eventSegment: {
+                        Name: $.trim($("#Name").val()),
+                        StartTime: $.trim($("#StartTime").val()),
+                        EndTime: $.trim($('#EndTime').val()),
+                        RequiredNumberOfStaff: $.trim($('#RequiredNumberOfStaff').val())
+                    },
+                    eventId:@Model.Id
+                };
 
-                    $.ajax({
-                        type: "POST",
-                        url: '@Url.Action("Create", "EventSegments")',
-                        data: JSON.stringify(segment),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (responseSegment) {
-                            var url = '@Url.Action("Edit", "EventSegments")' + '/' + responseSegment.Id;
-                            $('#segments> tbody:last-child').append(
-                                "<tr id=" + i + ">" +
-                                "<td> " + responseSegment.Name + "</td > " +
-                                "<td> " + responseSegment.StartTime + "</td > " +
-                                "<td>" + responseSegment.EndTime + "</td>" +
-                                "<td>" + responseSegment.RequiredNumberOfStaff + "</td>" +
-                                "<td>" +
-                               "<button class='btn btn-primary' onclick='window.open(\" " + url + " \")\' type='button' class='btn btn-primary' data-id=" + i + " data-action='Change'>" +
-                                "Edit" +
-                                "</button>" + "&nbsp;&nbsp;&nbsp;" +
-                                "<button class='btn btn-danger' type= 'button' value= 'Delete' onclick= 'deleteSegment(" + i + ")'>" +
-                                "Delete" +
-                                "</button>" +
-                                "</td>" +
-                                "</tr >");
-                            i++;
-                        },
-                        error: function (msg) {
-                            alert("error" + msg);
-                        }
-                    });
-
-
-                } else {
-                    var segmentId = $("#segmentId").val();
-                    $("#" + segmentId + " td:nth-child(1)").html($("#Name").val());
-                    $("#" + segmentId + " td:nth-child(1)").html($("#StartTime").val());
-                    $("#" + segmentId + " td:nth-child(2)").html($("#EndTime").val());
-                    $("#" + segmentId + " td:nth-child(4)").html($("#RequiredNumberOfStaff").val());
-                }
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Create", "EventSegments")',
+                    data: JSON.stringify(segment),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (responseSegment) {
+                        var url = '@Url.Action("Edit", "EventSegments")' + '/' + responseSegment.Id;
+                        $('#segments> tbody:last-child').append(
+                            "<tr id=" + responseSegment.Id + ">" +
+                            "<td> " + responseSegment.Name + "</td > " +
+                            "<td> " + responseSegment.StartTime + "</td > " +
+                            "<td>" + responseSegment.EndTime + "</td>" +
+                            "<td>" + responseSegment.RequiredNumberOfStaff + "</td>" +
+                            "<td>" +
+                            "<button class='btn btn-primary' onclick='window.open(\" " + url + " \")\' type='button' class='btn btn-primary'>" +
+                            "Edit" +
+                            "</button>" + "&nbsp;&nbsp;&nbsp;" +
+                            "<button class='btn btn-danger' type= 'button' value= 'Delete' onclick= 'deleteSegment(" + responseSegment.Id + ")'>" +
+                            "Delete" +
+                            "</button>" +
+                            "</td>" +
+                            "</tr >");
+                    },
+                    error: function (msg) {
+                        alert("error" + msg);
+                    }
+                });
+                                
                 $('#modal').modal('hide');
             });
 
             $("#modal").on('hidden.bs.modal', function () {
                 $(".modal-body input").val("");
             });
-
-
-            $('#modal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget) // Button that triggered the modal
-                var buttonName = button.data('action') // Extract info from data-* attributes
-                // Update the modal's content.
-                var modal = $(this);
-                if (buttonName == "Change") {
-                    var rowId = button.data('id');
-                    modal.find('.modal-footer button span').text(buttonName);
-                    modal.find('.modal-footer button').attr("data-action", "change");
-                    modal.find('.modal-body input#Name').val($("tr#" + rowId + " td:nth-child(1)").html());
-                    modal.find('.modal-body input#StartTime').val($("tr#" + rowId + " td:nth-child(2)").html());
-                    modal.find('.modal-body input#EndTime').val($("tr#" + rowId + " td:nth-child(3)").html());
-                    modal.find('.modal-body input#RequiredNumberOfStaff').val($("tr#" + rowId + " td:nth-child(5)").html());
-                    modal.find('.modal-body input#segmentId').val(button.data('id'));
-                } else {
-                    modal.find('.modal-footer button span').text("Add");
-                    modal.find('.modal-footer button').attr("data-action", "add");
-                }
-            });
+                       
 
             //initialising the combobox at the very end in document.ready
             $(function () {
@@ -112,25 +83,50 @@
         });
 
         function deleteSegment(id) {
-            $("#" + id).remove();
+            $.ajax({
+                type: "GET",
+                url: "/EventSegments/Delete/" + id,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (obj) {
+                    if (obj.Type == 'Warn') {
+                        $("#warnModalBody").text(obj.Message);
+                        $('#warnModal').modal('show');
+                    } else {
+                        $("#delButton").attr("onclick", "deleteConfirmed(" + obj.Id + ")");
+                        $("#confirmModalBody").text(obj.Message);
+                        $('#confirmModal').modal('show');
+                    }
+                },
+                error: function (obj) {
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
+                }
+            });            
         };
 
-        function addAllSegmentsToForm() {
-            $("#form").append("<input type='hidden' name='clientId'" + " value='" + $("#Client").val() + "'/>");
-            //$("#form").append("<input type='hidden' name='Client.Name'" + " value='" + $("#Client option:selected").text() + "'/>");
-
-            var count = 0;
-            $('#segments > tbody > tr:not(:first)').each(function () {
-                var columns = $(this).find('td');
-               
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Name'" + " value='" + $(columns[0]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].StartTime'" + " value='" + $(columns[1]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].EndTime'" + " value='" + $(columns[2]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].RequiredNumberOfStaff'" + " value='" + $(columns[3]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");
-                count++;
+        function deleteConfirmed(id) {
+            $.ajax({
+                type: "POST",
+                url: "/EventSegments/DeleteConfirmed/" + id,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    $("#successModalBody").text(msg);
+                    $('#successModal').modal('show');
+                    $("#" + id).remove();
+                },
+                error: function (obj) {
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
+                }
             });
         };
+
+        function addElementsToForm() {
+            $("#form").append("<input type='hidden' name='clientId'" + " value='" + $("#Client").val() + "'/>");
+        };
+
     </script>
 }
 
@@ -226,19 +222,18 @@
 
                 @if (Model.EventSegments != null)
                 {
-                    var count = 0;
                     foreach (var segment in Model.EventSegments)
                     {
-                        <tr id=@count data-dbId=@segment.Id>
+                        <tr id=@segment.Id>
                             <td>@segment.Name</td>
                             <td>@segment.StartTime</td>
                             <td>@segment.EndTime</td>
                             <td>@segment.RequiredNumberOfStaff</td>
                             <td>
-                                <button type="button" class="btn btn-primary" onclick="window.open('@Url.Action("Edit", "EventSegments", new { id = segment.Id })')" data-id="@count" data-action="Change">
+                                <button type="button" class="btn btn-primary" onclick="window.open('@Url.Action("Edit", "EventSegments", new { id = segment.Id })')">
                                     Edit
                                 </button> &nbsp;
-                                <button type="button" class="btn btn-danger" value="Delete" onclick="deleteSegment(@count)">
+                                <button type="button" class="btn btn-danger" value="Delete" onclick="deleteSegment(@segment.Id)">
                                     Delete
                                 </button>
                             </td>
@@ -252,7 +247,7 @@
 
     <div class="form-group">
         <div class="col-md-2">
-            <input onclick="addAllSegmentsToForm();" type="submit" value="Save Event" class="btn-lg btn-success" />
+            <input onclick="addElementsToForm();" type="submit" value="Save Event" class="btn-lg btn-success" />
         </div>
     </div>
 </div>
@@ -306,9 +301,8 @@
                 <input type="hidden" id="segmentId">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="addSegment" data-dismiss="modal">
-                    <span class="ui-button-text">Add</span>
-                </button>
+                <button type="button" class="btn btn-default" id="addSegment" data-dismiss="modal">Add</button>      
+                
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

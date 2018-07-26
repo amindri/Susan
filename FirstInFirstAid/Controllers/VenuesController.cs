@@ -16,6 +16,20 @@ namespace FirstInFirstAid.Controllers
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private FirstInFirstAidDBContext db = new FirstInFirstAidDBContext();
 
+        public JsonResult VenueExists(string VenueName, int? Id)
+        {
+            var validateName = db.Venues.FirstOrDefault(x => x.VenueName == VenueName && x.Id != Id);
+
+            if (validateName != null)
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         // GET: Venues
         public ActionResult Index()
         {

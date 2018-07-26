@@ -200,28 +200,36 @@ namespace FirstInFirstAid.Controllers
         {
             if (id == null)
             {
-                logger.Warn("Received null Event Segment Id to delete");
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                logger.Warn("Received null Event Id to delete");
+
+                return Content("{\"Type\":\"Warn\", \"Message\":\"Received null Event Segment Id to delete\"}");
+
             }
-            EventSegment eventSegment = db.EventSegments.Find(id);
-            if (eventSegment == null)
+            else
             {
-                logger.WarnFormat("Event Segment not found to delete, Id: {0}", id);
-                return HttpNotFound();
+
+                EventSegment eventSegment = db.EventSegments.Find(id);
+                if (eventSegment == null)
+                {
+                    logger.WarnFormat("Event Segment not found to delete, Id: {0}", id);
+                    return Content("{\"Type\":\"Warn\", \"Message\":\"Event Segment not found to delete with the Id:" + id + "\"}");
+                }
+                else
+                {
+                    return Content("{\"Type\":\"Confirm\", \"Message\":\"Are you sure you want to delete the Event segment: " + eventSegment.Name + "\", \"Id\": \" " + eventSegment.Id + "\"}");
+                }
             }
-            return View(eventSegment);
         }
 
         // POST: EventSegments/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpPost]
+        public JsonResult DeleteConfirmed(int id)
         {
             EventSegment eventSegment = db.EventSegments.Find(id);
             db.EventSegments.Remove(eventSegment);
             db.SaveChanges();
             logger.InfoFormat("Event Segment deleted, Name: {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
-            return RedirectToAction("Index");
+            return Json("Successfully deleted the Event: " + eventSegment.Name);
         }
 
         [HttpPost]
@@ -295,12 +303,12 @@ namespace FirstInFirstAid.Controllers
         [HttpGet]
         public JsonResult getupComingEventSegments() {
             List<object> list = new List<object>();
-            var upcoming = from EventSegment e in db.EventSegments.Where(s => s.StartTime > DateTime.Today) select new { Name = e.Name, Start = e.StartTime, Venue = e.Venue.VenueName };
+            var upcoming = from EventSegment e in db.EventSegments.Where(s => s.StartTime > DateTime.Today) select new { Name = e.Name, Start = e.StartTime, Venue = e.Venue.VenueName, EventName = e.Event.EventName };
            
             foreach (var segment in upcoming.ToList()) {
                 String date = JsonConvert.SerializeObject(segment.Start, isoConvert);
                 String correctDate = date.Substring(1, date.Length - 2);
-                list.Add(new {Name=segment.Name, Start = correctDate, Venue = segment.Venue });
+                list.Add(new {Name=segment.Name, Start = correctDate, Venue = segment.Venue, EventName = segment.EventName });
             }
             var json = new { data = list };
             return Json(json, JsonRequestBehavior.AllowGet);

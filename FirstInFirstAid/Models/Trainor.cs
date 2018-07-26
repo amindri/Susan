@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FirstInFirstAid.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -19,11 +20,13 @@ namespace FirstInFirstAid.Models
         [RegularExpression("(\\d{10})", ErrorMessage = "Please enter a valid 10 digit phone number")]
         public string PhoneNumber { get; set; }
 
-        [EmailAddress(ErrorMessage = "Invalid email address. Please use \'yourname@example.com\' format")]
+        [Required(ErrorMessage = "Email Address is missing")]
+        [EmailAddress(ErrorMessage = "Invalid email address. Please use \'yourname@example.com\' format")]    
+        [CustomRemoteValidation("TrainorExists", "Trainors", AdditionalFields = "Id", ErrorMessage = "Email Address already in use")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "DOB is missing")]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DOB { get; set; }
 
         [Required(ErrorMessage = "Tax file number is missing")]

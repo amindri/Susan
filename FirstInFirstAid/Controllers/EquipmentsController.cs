@@ -159,27 +159,39 @@ namespace FirstInFirstAid.Controllers
             if (id == null)
             {
                 logger.Warn("Received null Equipment Id to delete");
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+                return Content("{\"Type\":\"Warn\", \"Message\":\"Received null Equipment Id to delete\"}");
+
             }
-            Equipment equipment = db.Equipment.Find(id);
-            if (equipment == null)
+            else
             {
-                logger.WarnFormat("Equipment not found to delete, Id: {0}", id);
-                return HttpNotFound();
+
+                Equipment equipment = db.Equipment.Include(e => e.EquipmentAllocations).Where(i => i.Id == id).First();
+                if (equipment == null)
+                {
+                    logger.WarnFormat("Equipment not found to delete, Id: {0}", id);
+                    return Content("{\"Type\":\"Warn\", \"Message\":\"Equipment not found to delete with the Id:" + id + "\"}");
+                }
+                else if (equipment.EquipmentAllocations.Count() > 0)
+                {
+                    return Content("{\"Type\":\"WarnConfirm\", \"Message\":\"Are you sure? This Equipment is associated with " + equipment.EquipmentAllocations.Count + " Equipment Allocation/s. Continuing will delete all of it.\", \"Id\": \" " + equipment.Id + "\"}");                    
+                }
+                else
+                {
+                    return Content("{\"Type\":\"Confirm\", \"Message\":\"Are you sure you want to delete the Equipment: " + equipment.EquipmentName + "\", \"Id\": \" " + equipment.Id + "\"}");
+                }
             }
-            return View(equipment);
         }
 
         // POST: Equipments/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpPost]
+        public JsonResult DeleteConfirmed(int id)
         {
             Equipment equipment = db.Equipment.Find(id);
             db.Equipment.Remove(equipment);
             db.SaveChanges();
             logger.InfoFormat("Equipment deleted, Name: {0}, Id: {1}", equipment.EquipmentName, equipment.Id);
-            return RedirectToAction("Index");
+            return Json("Successfully deleted the Equipment: " + equipment.EquipmentName);
         }
 
         protected override void Dispose(bool disposing)
