@@ -15,14 +15,26 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $("input[type=datetime]").datetimepicker({
+        $("#StartTime").datetimepicker({
             dateFormat: "dd.M.yy",
             changeMonth: true,
             changeYear: true,
             yearRange: "-100:+5",
             controlType: "select",
             timeFormat: "hh:mm TT",
-            "stepMinute": 15
+            "stepMinute": 15,
+            minDate: 0,
+        });
+
+        $("#EndTime").datetimepicker({
+            dateFormat: "dd.M.yy",
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+5",
+            controlType: "select",
+            timeFormat: "hh:mm TT",
+            "stepMinute": 15,
+            minDate: 0,
         });
 
         $('#Client').append($("<option selected value='Please Select'>Please Select</option>"));
@@ -34,28 +46,61 @@
         $("#addChild").click(function () {
             var segname = $("#Name").val();
             var starttime = $("#StartTime").val();
+            console.log(starttime);
             var endtime = $("#EndTime").val();
+            console.log(endtime);
             var staff = $("#RequiredNumberOfStaff").val();
-
-            if (segname == '') {
+                     
+             if (segname == '') {
                 valid = false;
                 $("#segempty").show();
+            } else {
+                $("#segempty").hide();
             }
 
             if (starttime == '') {
                 valid = false;
                 $("#stempty").show();
+            } else {
+                $("#stempty").hide();
             }
+
             if (endtime == '') {
                 valid = false;
                 $("#etempty").show();
+
+            } else {
+                $("#etempty").hide();
             }
+
+            if (endtime < starttime) {
+                valid = false;
+                
+                if (segname != '') {
+                    $("#segempty").hide();
+                }
+                if (starttime != '') {
+                    $("#stempty").hide();
+                }
+                if (staff != '') {
+                    $("#staffempty").hide();
+                }
+
+                $("#etbig").show();
+            } else {
+                $("#etempty").hide();
+                $("#etbig").hide();
+            }
+
             if (staff == '') {
                 valid = false;
                 $("#staffempty").show();
+            } else {
+                $("#staffempty").hide();
             }
 
-            if (segname != '' & starttime != '' ) {
+            if (segname != '' & starttime != '' & endtime != '' & staff != '' & endtime > starttime) {
+
                 valid = true;
             }
 
@@ -70,8 +115,9 @@
                     "</tr >");
                 i++;
                 $('#modal').modal('hide');
-                $('.modal input p').val('');
-              } else {
+                //  $('.modal-body input p').val('');
+              
+            } else {
                 $('#modal').modal('show');
             };
 
@@ -85,13 +131,9 @@
         $("#createEvent").click(function () {
             
                 var cName = $("#Client").val();
-                console.log(cName)
-
                 if ((cName == 'Please Select') || (cName == '')) {
-                    console.log("inside if");
                     $("#cempty").show();
                 } else {
-                    console.log("inside else")
                     var count = 0;
 
                     $("#form").append("<input type='hidden' name='clientId'" + " value='" + $("#Client").val() + "'/>");
@@ -219,7 +261,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">Add Event Segments:</label>
                     <div class="col-md-10">
-                        <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success .btn-sm"> Add </button>
+                        <button data-target="#modal" data-toggle="modal" type="button" class="btn btn-success" > Add </button>
                     </div>
                 </div>
 
@@ -271,14 +313,13 @@
                         <label class="control-label col-md-2">Start Date/Time:</label>
                         <input type="datetime" onkeydown="return false" onpaste="return false" class="form-control col-md-10" id="StartTime" placeholder="Start Date/Time" />
                         <p id="stempty" class="c-val" hidden> Start date/time is missing</p>
-                        <p id="stless" class="c-val" hidden> Start date must be before end date</p>
-                     </div>
+                        </div>
 
                     <div class="form-group">
                         <label class="control-label col-md-2">End Date/Time:</label>
                         <input type="datetime" onkeydown="return false" onpaste="return false" class="form-control col-md-10" id="EndTime" placeholder="End Date/Time" />
                         <p id="etempty" class="c-val" hidden> End date/time is missing</p>
-                        <p id="etbig" class="c-val" hidden> End date must be after start date</p>
+                        <p id="etbig" class="c-val" hidden> End time must be after start time</p>
                     </div>
 
                     <div class="form-group">

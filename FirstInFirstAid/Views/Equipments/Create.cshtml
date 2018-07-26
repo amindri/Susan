@@ -10,14 +10,28 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".mydatepick").datepicker({
+            $("#DateSupplied").datepicker({
                 dateFormat: "dd.M.yy",
                 changeMonth: true,
                 changeYear: true,
                 yearRange: "-50:+50",
                 controlType: "select",
-            });   
-
+                onSelect: function (selected) {
+                    $("#DateReturned").datepicker("option", "minDate", selected)
+                }
+            });  
+            
+            $("#DateReturned").datepicker({
+                dateFormat: "dd.M.yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-50:+50",
+                controlType: "select",
+                onSelect: function (selected) {
+                    $("#DateSupplied").datepicker("option", "maxDate", selected)
+                }
+            });  
+            
             $("#modal").on('hidden.bs.modal', function () {
                 $(".modal-body input").val("");
             });

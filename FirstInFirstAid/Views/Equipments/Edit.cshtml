@@ -10,15 +10,27 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $("input[type=datetime]").datetimepicker({
+            $("#DateSupplied").datepicker({
                 dateFormat: "dd.M.yy",
                 changeMonth: true,
                 changeYear: true,
-                yearRange: "-100:+5",
+                yearRange: "-50:+50",
                 controlType: "select",
-                timeFormat: "hh:mm TT",
-                "stepMinute": 15
+                onSelect: function (selected) {
+                    $("#DateReturned").datepicker("option", "minDate", selected)
+                }
             });
+
+            $("#DateReturned").datepicker({
+                dateFormat: "dd.M.yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-50:+50",
+                controlType: "select",
+                onSelect: function (selected) {
+                    $("#DateSupplied").datepicker("option", "maxDate", selected)
+                }
+            });  
 
             $.ajax({
                 type: "POST",
@@ -109,14 +121,14 @@
         }
     </script>
 }
-<h2>Edit</h2>
+<h3 class="page-header">Edit Equipment Allocation</h3>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal"  id="form">
-        <h4>Equipment</h4>
+       
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
@@ -136,7 +148,7 @@
             </div>
         </div>
 
-        <h4 style="padding-top:30px;"> Equipment Allocation</h4>
+        <h4 class="page-header"> Equipment Allocation</h4>
         <div class="table-responsive">
             <table class="table" id="allocations" style="width:100%; padding-top:40px;">
                 <tbody>
@@ -144,6 +156,7 @@
                         <th>Supplied Date</th>
                         <th>Retuned Date</th>
                         <th>Trainer</th>
+                        <th>Actions</th>
                     </tr>
 
                     @if (Model.EquipmentAllocations != null)
@@ -156,11 +169,11 @@
                                 <td>@allocation.DateReturned</td>
                                 <td data-trainerid="@allocation.Trainor.Id">@allocation.Trainor.FirstName  @allocation.Trainor.Lastname</td>
                                 <td>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal" data-id="@count" data-action="Change">
+                                        Edit
+                                    </button>
                                     <button type="button" class="btn btn-danger" value="Delete" onclick="deleteAllocation(@count)">
                                         Delete
-                                    </button>
-                                    <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#modal"  data-id="@count" data-action="Change">
-                                        Edit
                                     </button>
                                 </td>
                             </tr>
@@ -171,8 +184,8 @@
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input onclick="addAllocationsToForm();" type="submit" value="Save" class="btn btn-default" />
+            <div class="col-md-10">
+                <input onclick="addAllocationsToForm();" type="submit" value="Save" class="btn btn-success btn-lg" />
             </div>
         </div>
     </div>

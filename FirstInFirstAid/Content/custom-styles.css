@@ -8,6 +8,11 @@
     margin-top:20px;
 }
 
+.redClass{
+    background-color:red !important;
+    color:#fff !important;
+}
+
 .form-control{
     border-radius:0;
 }
