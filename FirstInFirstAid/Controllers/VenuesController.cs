@@ -16,6 +16,18 @@ namespace FirstInFirstAid.Controllers
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private FirstInFirstAidDBContext db = new FirstInFirstAidDBContext();
 
+        public ActionResult VenueExists(string VenueName)
+        {
+            if (db.Venues.Any(x => x.VenueName == VenueName))
+            {
+                return Content("false");
+            }
+            else
+            {
+                return Content("true");
+            }
+        }
+
         // GET: Venues
         public ActionResult Index()
         {

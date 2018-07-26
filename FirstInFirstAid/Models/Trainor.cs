@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace FirstInFirstAid.Models
 {
@@ -19,7 +20,9 @@ namespace FirstInFirstAid.Models
         [RegularExpression("(\\d{10})", ErrorMessage = "Please enter a valid 10 digit phone number")]
         public string PhoneNumber { get; set; }
 
+        [Required(ErrorMessage = "Email Address is missing")]
         [EmailAddress(ErrorMessage = "Invalid email address. Please use \'yourname@example.com\' format")]
+        [Remote("TrainorExists", "Trainors", ErrorMessage = "Email Address already in use")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "DOB is missing")]

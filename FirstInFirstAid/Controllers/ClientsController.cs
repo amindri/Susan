@@ -17,6 +17,18 @@ namespace FirstInFirstAid.Controllers
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private FirstInFirstAidDBContext db = new FirstInFirstAidDBContext();
 
+        public ActionResult ClientExists(string Name)
+        {
+            if (db.Clients.Any(x => x.Name == Name))
+            {
+                return Content("false");
+            }
+            else
+            {
+                return Content("true");
+            }            
+        }
+
         // GET: Clients
         public ActionResult Index()
         {
