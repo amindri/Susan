@@ -16,6 +16,8 @@
                     }
                 }
             });
+
+            /*ajax call t */
         });
 
         function deleteEventSegment(id) {
@@ -106,7 +108,7 @@
 
                     @foreach (var item in Model)
     {
-                <tr>
+                <tr id="@item.Id">
                     <td>
                         @Html.DisplayFor(modelItem => item.Event.EventName)
                     </td>
