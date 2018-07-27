@@ -13,8 +13,13 @@
     color:#fff !important;
 }
 
-.form-control{
-    border-radius:0;
+.greenClass {
+    background-color: green !important;
+    color: #fff !important;
+}
+
+.form-control {
+    border-radius: 0;
 }
 /* Top Navigation */
 .navbar {
