@@ -32,7 +32,11 @@
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#"> <i class="fa fa-user"></i> Hi, Administrator <b class="caret"></b> </a>
                         <ul class="dropdown-menu">
-                            <li><a href='@Url.Action("LogOff", "Accounts")'><i class="fa fa-sign-out"></i> Logout</a></li>
+                            @using (Html.BeginForm("LogOff", "Accounts", FormMethod.Post, new { id = "logoutForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out"></i>Log Off</a></li>
+                            }
                         </ul>
                     </li>
                 </ul>

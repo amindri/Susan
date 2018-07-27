@@ -8,12 +8,24 @@
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#Segdtable').dataTable({
-                "createdRow": function (row, data, dataIndex) {
-                    console.log(data[5]);
-                    if (data[5] < 10) {
-                        $(row).addClass('redClass');
-                    }
+
+            $.ajax({
+                type: "GET",
+                url: "/EventSegments/getTrainerAllocationState/",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (obj) {
+                    $.each(obj, function (key, value) {
+                        if (value.State == "incomplete") {
+                            $("tr#" + value.ID).addClass('redClass');
+                        } else {
+                            $("tr#" + value.ID).addClass('greenClass');
+                        }
+                    });
+                },
+                error: function (obj) {
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
                 }
             });
 
