@@ -30,15 +30,7 @@
                 "stepMinute": 15
                 });
 
-            jQuery.validator.methods.date = function (value, element) {
-                var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-                if (isChrome) {
-                    var d = new Date();
-                    return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
-                } else {
-                    return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
-                }
-            };
+           
 
 
             var dutyTypes = @Html.Raw(ViewBag.DutyTypeEnum);
@@ -135,9 +127,19 @@
                 }
 
             });
-
+           
             /* Color */
         });
+
+        jQuery.validator.methods.date = function (value, element) {
+            var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+            if (isChrome) {
+                var d = new Date();
+                return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
+            } else {
+                return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
+            }
+        };
 
         function gettoken() {
             var token = '@Html.AntiForgeryToken()';

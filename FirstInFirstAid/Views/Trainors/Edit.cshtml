@@ -324,7 +324,7 @@
                     <div class="form-group">
                         <label for="dateAttained" class="control-label col-md-3">Date Attained</label>
                         <input type="text" onkeydown="return false" onpaste="return false" class="form-control col-md-9 mydatepick" id="dateAttained" placeholder="Date attained">
-                        <p id="daempty" hidden>Date attained is missing</p>
+                        <p id="daempty" class="c-val" hidden>Date attained is missing</p>
                         <!-- <div class="col-md-10">
          @Html.Editor("DateAttained", new { htmlAttributes = new { @class = "form-control", @placeholder = "Date Attained", @type = "datetime", onkeydown = "return false", onpaste = "return false", @id = "dateAttained" } })
 
@@ -335,8 +335,8 @@
                     <div class="form-group">
                         <label for="expiry" class="control-label col-md-3">Expiry Date</label>
                         <input type="text" onkeydown="return false" onpaste="return false" class="form-control col-md-9 mydatepick" id="expiry" placeholder="Expiry Date">
-                        <p id="exdempty" hidden>Expiry date is missing</p>
-                        <p id="datebig" hidden> Expiry date must be after qualification attained date</p>
+                        <p id="exdempty"  class="c-val" hidden>Expiry date is missing</p>
+                        <p id="datebig"  class="c-val" hidden> Expiry date must be after qualification attained date</p>
                         <!--          <div class="col-md-10">
                   @Html.Editor("ExpiryDate", new { htmlAttributes = new { @class = "form-control", @placeholder = "Expiry Date", @type = "datetime", onkeydown = "return false", onpaste = "return false", @id = "expiry" } })
               </div> -->
