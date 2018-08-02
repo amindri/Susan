@@ -117,6 +117,9 @@
                             <li> @Html.ActionLink("Add New", "Create", "Equipments") </li>
                         </ul>
                     </li>
+                    <li class="nblue">
+                        <a href="@Url.Action("Index", "Backup")" class="fisfa-eq"> <i class="fa fa-database"> </i> Backup<span class="pull-right"></span> </a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -198,7 +201,7 @@
             });
 
         });
-        /* Code to fix "field must be a date" issue in Chrome and VFirefox 
+        /* Code to fix "field must be a date" issue in Chrome and VFirefox */
         $.validator.addMethod('date',
             function (value, element) {
                 if (this.optional(element)) {
@@ -207,12 +210,12 @@
                 var valid = true;
                 try {
                     $.datepicker.parseDate('dd.M.yy', value);
-                                  }
+                }
                 catch (err) {
                     valid = false;
                 }
                 return valid;
-            });*/
+            });
         // function to fix DOB issue in Firefox browser
         /*$(function () {
                 $.validator.methods.date = function (value, element) {
