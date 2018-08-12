@@ -196,13 +196,19 @@
     background-color: #d9534f;
 }
 
-#successModalheader{
-    background-color: greenyellow;
+#confirmModalheader h4{
+    color:#fff;
 }
+    
+    
+    #successModalheader {
+        background-color: greenyellow;
+    }
 /*CSS for bootsrap panels*/
 
 .panel {
     border-radius: 0px;
+    padding:20px;
 }
 
 .panel-default > .panel-heading {
@@ -214,6 +220,11 @@
     padding:20px;
     margin:2px;
 }
+
+#addAllocation.btn-success {
+    margin-bottom:20px;
+}
+
 
 #event-p {
     background-color: #88c87b;
