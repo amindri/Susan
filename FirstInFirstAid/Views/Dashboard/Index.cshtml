@@ -32,7 +32,9 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#upcoming').DataTable({
-            "lengthChange": false,
+           // "lengthChange": false,
+            "paging": false,
+            "pageLength": 10,
             "searching": false,
             "processing": true,
             "serverSide": true,
@@ -94,7 +96,7 @@
                     <div class="panel-body">
                         <!--<h4>Number of upcoming events (7days): </h4> <br />-->
                         <div class="table-responsive">
-                            <table id="upcoming" class="table table-bordered dt-responsive" cellspacing="0">
+                            <table id="upcoming" class="table table-bordered dt-responsive nowrap" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>Event Segment <br/>Name</th>
