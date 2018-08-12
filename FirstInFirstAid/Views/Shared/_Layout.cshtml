@@ -66,11 +66,11 @@
             <nav class="sidebar-inner collapse navbar-collapse navbar-collapse2" role="navigation">
                 <ul class="nav-sidebar">
                     <li class="nred level1">
-                        <a href="http://localhost:49884/Dashboard/Index" class="fisfa-h"> <i class="fa fa-dashboard"></i> Dashboard </a>
+                        <a href="@Url.Action("Index", "Dashboard")" class="fisfa-h"> <i class="fa fa-dashboard"></i> Dashboard </a>
 
                     </li>
                     <li class="nblue level1">
-                        <a href="http://localhost:49884/eventsegments" class="fisfa-es"> <i class="fa fa-calendar"></i> Event Segments </a>
+                        <a href="@Url.Action("Index", "EventSegments")" class="fisfa-es"> <i class="fa fa-calendar"></i> Event Segments </a>
 
                     </li>
                     <li class="has_submenu nblue level1">
@@ -118,7 +118,7 @@
                         </ul>
                     </li>
                     <li class="nblue">
-                        <a href="@Url.Action("Index", "Backup")" class="fisfa-eq"> <i class="fa fa-database"> </i> Backup<span class="pull-right"></span> </a>
+                        <a href="@Url.Action("Index", "Backup")" class="fisfa-eq"> <i class="fa fa-hdd-o"> </i> Backup/ Restore<span class="pull-right"></span> </a>
                     </li>
                 </ul>
             </nav>
