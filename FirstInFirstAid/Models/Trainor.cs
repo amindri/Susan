@@ -26,7 +26,7 @@ namespace FirstInFirstAid.Models
         public string Email { get; set; }
 
         [Required(ErrorMessage = "DOB is missing")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DOB { get; set; }
 
         [Required(ErrorMessage = "Tax file number is missing")]
