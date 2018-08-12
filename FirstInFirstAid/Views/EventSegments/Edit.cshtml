@@ -10,9 +10,9 @@
     @Scripts.Render("~/Scripts/jquery-ui-timepicker-addon.min.js")
     @Scripts.Render("~/Scripts/jquery-combobox.js")
 
-    <script type="text/javascript">
+<script type="text/javascript">
         $(document).ready(function () {
-        
+
                 $('#emailModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget) // Button that triggered the modal
                 var trainerId = button.data('trainerid') // Extract
@@ -21,16 +21,26 @@
             });
 
             $("input[type=datetime]").datetimepicker({
-                dateFormat: "dd.mm.yy",
+                dateFormat: "dd-M-yy",
                 changeMonth: true,
                 changeYear: true,
                 yearRange: "-100:+5",
                 controlType: "select",
-                timeFormat: "hh:mm",
+                timeFormat: "hh:mm TT",
                 "stepMinute": 15
                 });
 
-           
+            jQuery.validator.methods.date = function (value, element) {
+                var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+                if (isChrome) {
+                    var d = new Date();
+                    return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
+                } else {
+                    return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
+                }
+            };
+
+
 
 
             var dutyTypes = @Html.Raw(ViewBag.DutyTypeEnum);
@@ -118,7 +128,7 @@
                     $("#ccempty").show();
                 } else {
                     $("#form").append("<input type='hidden' name='clientContactId'" + " value='" + $("#ClientContact").val() + "'/>");
-                   
+
                 }
                 if ((venue == 'Please Select') || (venue == '')) {
                     $("#vempty").show();
@@ -127,20 +137,10 @@
                 }
 
             });
-           
+
             /* Color */
         });
-
-        jQuery.validator.methods.date = function (value, element) {
-            var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-            if (isChrome) {
-                var d = new Date();
-                return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
-            } else {
-                return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
-            }
-        };
-
+    
         function gettoken() {
             var token = '@Html.AntiForgeryToken()';
             token = $(token).val();
@@ -252,8 +252,11 @@
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
-                    alert("successfully created the trainer allocation with the trainer ");[value = " + value + "]
-                    location.reload();
+                   $("#successModalBody").text("Successfully created the trainer allocation with the trainer");
+                   location.reload();
+                   $('#successModal').modal('show');
+                   // alert("successfully created the trainer allocation with the trainer ");/*[value = " + value + "]*/
+                    
                 },
                 error: function (message) { }
             });
@@ -278,7 +281,7 @@
                 data: JSON.stringify(allocation),
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
-                success: function (response) { alert("successfully updated the trainer allocation; (Please make me pretty with bootstrap modals)"); },
+                success: function (response) { alert("Successfully updated the trainer allocation"); },
                 error: function (message) { alert("Error while updating the trainer allocation " + message);}
             });
         };
@@ -329,7 +332,7 @@
                 messageBody: $.trim($("#messageBody").val()),
                 subject: $.trim($("#subject").val())
             };
-            
+
             $.ajax({
                 type: "POST",
                 url: '/EventSegments/SendMail',
@@ -345,13 +348,13 @@
                         $('#warnModal').modal('show');
                     }
                 },
-                error: function (xhr, status, error) {                    
+                error: function (xhr, status, error) {
                     $("#warnModalBody").text(error);
                     $('#warnModal').modal('show');
                 }
             });
         };
-    </script>
+</script>
 }
 <h2>Edit</h2>
 

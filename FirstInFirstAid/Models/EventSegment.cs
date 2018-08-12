@@ -12,11 +12,11 @@ namespace FirstInFirstAid.Models
         [Required(ErrorMessage = "Event segment name is missing")]
         public string Name { get; set; }
 
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "Start time is missing")]
         public DateTime StartTime { get; set; }
 
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "End time is missing")]
         public DateTime EndTime { get; set; }
 
