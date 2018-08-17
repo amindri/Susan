@@ -88,38 +88,7 @@ namespace FirstInFirstAid.Controllers
                 logger.Warn("Received null Event Segement Id to modify");
                 return HttpNotFound();
             }
-
-            //Select List for duty type
-            var dutyType = from DutyType d in Enum.GetValues(typeof(DutyType))
-                           select new { ID = (int)d, Name = d.ToString() };
-            ViewBag.DutyTypeEnum = JsonConvert.SerializeObject(dutyType);
-            ViewBag.DutyTypeSelectList = dutyType.ToList();
-
-            //Select List for trainers
-            var trainerList = from Trainor t in getAvailableTrainersList(id) select new { ID = t.Id, Name = t.FirstName + " " + t.Lastname };
-            ViewBag.Trainers = trainerList;
-
-            //Select List for venues
-            var venuelist = from Venue v in db.Venues select new { ID = v.Id, Name = v.VenueName };
-            ViewBag.Venues = new SelectList(venuelist, "ID", "Name", eventSegment.Venue?.Id);
-
-            //Select List for Client Contacts
-            Event evnt = db.Events.Include(x => x.Client).Where(z => z.Id == eventSegment.Event.Id).First();
-            if (evnt.Client != null)
-            {
-                var clientContactList = from ClientContact cc in db.ClientContacts.Where(x => x.Client.Id == evnt.Client.Id)
-                                        select new { ID = cc.Id, Name = cc.ContactName };
-                ViewBag.ClientContact = new SelectList(clientContactList, "ID", "Name", eventSegment.ClientContact?.Id);
-            }
-            else
-            {
-                ViewBag.ClientContact = Enumerable.Empty<SelectListItem>();
-            }
-
-            //select list for true false values
-            var list = new[] { new { Text = "Yes", Value = "true" }, new { Text = "No", Value = "false" } };
-            ViewBag.BoolList = new SelectList(list, "Value", "Text");
-
+            GenerateViewBagItems(eventSegment);
             return View(eventSegment);
         }
 
@@ -135,6 +104,11 @@ namespace FirstInFirstAid.Controllers
             {
                 ModelState["Event"].Errors.Clear();
             }
+            if (eventSegment.StartTime > eventSegment.EndTime)
+            {
+                ModelState.AddModelError("EndTime", "End Time should be greater than Start Time");
+            }
+
             if (ModelState.IsValid)
             {
                 logger.DebugFormat("Modifying Event Segment of the Name: {0} and Id:{}", eventSegment.Name, eventSegment.Id);
@@ -191,8 +165,46 @@ namespace FirstInFirstAid.Controllers
                 logger.InfoFormat("Event Segment modified successfully, Name: {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
                 return RedirectToAction("Index");
             }
-
+            GenerateViewBagItems(eventSegment);
             return View(eventSegment);
+        }
+
+        private void GenerateViewBagItems(EventSegment eventSegment)
+        {
+            if (eventSegment.Event == null)
+            {
+                eventSegment.Event = db.EventSegments.Include(e => e.Event).First().Event;
+            }
+            //Select List for duty type
+            var dutyType = from DutyType d in Enum.GetValues(typeof(DutyType))
+                           select new { ID = (int)d, Name = d.ToString() };
+            ViewBag.DutyTypeEnum = JsonConvert.SerializeObject(dutyType);
+            ViewBag.DutyTypeSelectList = dutyType.ToList();
+
+            //Select List for trainers
+            var trainerList = from Trainor t in getAvailableTrainersList(eventSegment.Id) select new { ID = t.Id, Name = t.FirstName + " " + t.Lastname };
+            ViewBag.Trainers = trainerList;
+
+            //Select List for venues
+            var venuelist = from Venue v in db.Venues select new { ID = v.Id, Name = v.VenueName };
+            ViewBag.Venues = new SelectList(venuelist, "ID", "Name", eventSegment.Venue?.Id);
+
+            //Select List for Client Contacts
+            Event evnt = db.Events.Include(x => x.Client).Where(z => z.Id == eventSegment.Event.Id).First();
+            if (evnt.Client != null)
+            {
+                var clientContactList = from ClientContact cc in db.ClientContacts.Where(x => x.Client.Id == evnt.Client.Id)
+                                        select new { ID = cc.Id, Name = cc.ContactName };
+                ViewBag.ClientContact = new SelectList(clientContactList, "ID", "Name", eventSegment.ClientContact?.Id);
+            }
+            else
+            {
+                ViewBag.ClientContact = Enumerable.Empty<SelectListItem>();
+            }
+
+            //select list for true false values
+            var list = new[] { new { Text = "Yes", Value = "true" }, new { Text = "No", Value = "false" } };
+            ViewBag.BoolList = new SelectList(list, "Value", "Text");
         }
 
         // GET: EventSegments/Delete/5
