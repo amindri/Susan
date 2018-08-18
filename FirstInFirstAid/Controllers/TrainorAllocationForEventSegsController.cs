@@ -31,16 +31,7 @@ namespace FirstInFirstAid.Controllers
                 evntSegment.TrainorAllocations.Add(trainorAllocation);
                 db.SaveChanges();
                 logger.InfoFormat("Trainer Allocation created for the EventSegment : {0}, with the Trainer : {1}", evntSegment.Name, trainorAllocation.Trainor.FirstName  + " " + trainorAllocation.Trainor.Lastname);
-                return Json(new
-                {
-                    Id = trainorAllocation.Id,
-                    DutyType = (int)trainorAllocation.DutyType,
-                    PresenceConfirmation = trainorAllocation.PresenceConfirmation,
-                    Hours = trainorAllocation.Hours,
-                    PaymentNote = trainorAllocation.PaymentNote,
-                    Paid = trainorAllocation.Paid,
-                    Trainor = trainorAllocation.Trainor.Id
-                });
+                return Json("Trainer Allocation created for Trainer: " + trainorAllocation.Trainor.FirstName + " " + trainorAllocation.Trainor.Lastname);
             }
             return Json("Invalid Model State");
         }
@@ -119,7 +110,7 @@ namespace FirstInFirstAid.Controllers
             trainorAllocationForEventSeg.Trainor = null;
             db.TrainorEventSegAllocations.Remove(trainorAllocationForEventSeg);
             db.SaveChanges();
-            return Json("Successfully deleted the trainer allocation of the Id: " + id);
+            return Json("Successfully deleted the trainer allocation");
         }
 
         protected override void Dispose(bool disposing)

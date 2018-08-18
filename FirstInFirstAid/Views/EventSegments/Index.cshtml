@@ -10,26 +10,24 @@
        $(document).ready(function () {
 
            $.ajax({
-                                  type: "GET",
-                                  url: "/EventSegments/getTrainerAllocationState/",
-                                  contentType: "application/json; charset=utf-8",
-                                  dataType: "json",
-                                  success: function (obj) {
-                                      $.each(obj, function (key, value) {
-                                          if (value.State == "incomplete") {
-                                              $("tr#" + value.ID).addClass('redClass');
-                                          } else {
-                                              $("tr#" + value.ID).addClass('greenClass');
-                                          }
-                                      });
-                                  },
-                                  error: function (obj) {
-                                      $("#warnModalBody").text(obj.Message);
-                                      $('#warnModal').modal('show');
-                                  }
-                              });
-
-/*ajax call t */
+                type: "GET",
+                url: "/EventSegments/getTrainerAllocationState/",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (obj) {
+                    $.each(obj, function (key, value) {
+                        if (value.State == "incomplete") {
+                            $("tr#" + value.ID).addClass('redClass');
+                        } else {
+                            $("tr#" + value.ID).addClass('greenClass');
+                        }
+                    });
+                },
+                error: function (obj) {
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
+                }
+           });
        });
             
         function deleteEventSegment(id) {
@@ -63,8 +61,7 @@
                 dataType: "json",
                 success: function (msg) {
                     $("#successModalBody").text(msg);
-                    $('#successModal').modal('show');
-                    location.reload();
+                    $('#successModal').modal('show');                    
                 },
                 error: function (obj) {
                     $("#warnModalBody").text(obj.Message);
@@ -72,8 +69,8 @@
                 }
             });
         }
-                      </script>
-    }
+    </script>
+}
 
 
     <h3 class="page-header">Event Segments</h3>

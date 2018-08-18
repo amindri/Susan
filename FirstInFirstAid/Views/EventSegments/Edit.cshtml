@@ -11,9 +11,9 @@
     @Scripts.Render("~/Scripts/jquery-combobox.js")
 
 <script type="text/javascript">
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-                $('#emailModal').on('show.bs.modal', function (event) {
+            $('#emailModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget) // Button that triggered the modal
                 var trainerId = button.data('trainerid') // Extract
                 var modal = $(this);
@@ -39,8 +39,6 @@
                     return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
                 }
             };
-
-
 
 
             var dutyTypes = @Html.Raw(ViewBag.DutyTypeEnum);
@@ -111,12 +109,7 @@
             $(function () {
                 window.setTimeout(function () {
                     $('#ClientContact').combobox({ getdata: appendClientContacts });
-                    $('#Venue').combobox({ getdata: appendVenues });
-
-                    /*$('#allocations > div > div > div > select#Name').each(function () {
-                        var id = $(this).parent().parent().parent().attr("id");
-                        $(this).combobox({ getdata: getAvailableTrainers, param: id });
-                    });*/
+                    $('#Venue').combobox({ getdata: appendVenues });            
                 }, 0);
             });
 
@@ -136,9 +129,7 @@
                     $("#form").append("<input type='hidden' name='venueId'" + " value='" + $("#Venue").val() + "'/>");
                 }
 
-            });
-
-            /* Color */
+            });            
         });
     
         function gettoken() {
@@ -225,11 +216,7 @@
                 }
             });
         };
-
-      /*  function completeForm() {
-            $("#form").append("<input type='hidden' name='clientContactId'" + " value='" + $("#ClientContact").val() + "'/>");
-            $("#form").append("<input type='hidden' name='venueId'" + " value='" + $("#Venue").val() + "'/>");
-        };*/
+      
 
         function createAllocation(nsId) {
 
@@ -253,10 +240,7 @@
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
                    $("#successModalBody").text("Successfully created the trainer allocation with the trainer");
-                   location.reload();
-                   $('#successModal').modal('show');
-                   // alert("successfully created the trainer allocation with the trainer ");/*[value = " + value + "]*/
-                    
+                   $('#successModal').modal('show');                                                                 
                 },
                 error: function (message) { }
             });
@@ -317,8 +301,7 @@
                 dataType: "json",
                 success: function (msg) {
                     $("#successModalBody").text(msg);
-                    $('#successModal').modal('show');
-                    $('#saved_' + dbId).remove();
+                    $('#successModal').modal('show');    
                 },
                 error: function (obj) {
                     alert("Error while deleting trianer allocation" + obj);

@@ -43,7 +43,6 @@
                 success: function (msg) {
                     $("#successModalBody").text(msg);
                     $('#successModal').modal('show');
-                    location.reload();
                 },
                 error: function (obj) {
                     $("#warnModalBody").text(obj.Message);
