@@ -104,7 +104,8 @@
                             Name: $.trim($("#Name").val()),
                             StartTime: $.trim($("#StartTime").val()),
                             EndTime: $.trim($('#EndTime').val()),
-                            RequiredNumberOfStaff: $.trim($('#RequiredNumberOfStaff').val())
+                            RequiredNumberOfStaff: $.trim($('#RequiredNumberOfStaff').val()),
+                            Coverage: $('#Coverage').val()
                         },
                         eventId:@Model.Id
                      };
@@ -115,26 +116,18 @@
                         data: JSON.stringify(segment),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
-                        success: function (responseSegment) {
-                            var url = '@Url.Action("Edit", "EventSegments")' + '/' + responseSegment.Id;
-                            $('#segments> tbody:last-child').append(
-                                "<tr id=" + responseSegment.Id + ">" +
-                                "<td> " + responseSegment.Name + "</td > " +
-                                "<td> " + responseSegment.StartTime + "</td > " +
-                                "<td>" + responseSegment.EndTime + "</td>" +
-                                "<td>" + responseSegment.RequiredNumberOfStaff + "</td>" +
-                                "<td>" +
-                                "<button class='btn btn-primary' onclick='window.open(\" " + url + " \")\' type='button' class='btn btn-primary'>" +
-                                "Edit" +
-                                "</button>" + "&nbsp;&nbsp;&nbsp;" +
-                                "<button class='btn btn-danger' type= 'button' value= 'Delete' onclick= 'deleteSegment(" + responseSegment.Id + ")'>" +
-                                "Delete" +
-                                "</button>" +
-                                "</td>" +
-                                "</tr >");
+                        success: function (response) {   
+                            if (respose.Type = "Success") {
+                                $("#successModalBody").text(response.Message);
+                                $('#successModal').modal('show');  
+                            } else {
+                                $("#warnModalBody").text(response.Message);
+                                $('#warnModal').modal('show');
+                            }
                         },
                         error: function (msg) {
-                            alert("error" + msg);
+                            $("#warnModalBody").text(msg);
+                            $('#warnModal').modal('show');
                         }
                     });
 
@@ -292,6 +285,7 @@
                     <th>Start Date/Time</th>
                     <th>End Date/Time</th>
                     <th>Required Number Of Staff</th>
+                    <th>Coverage</th>
                     <th>Actions</th>
                 </tr>
 
@@ -304,6 +298,7 @@
                             <td>@segment.StartTime</td>
                             <td>@segment.EndTime</td>
                             <td>@segment.RequiredNumberOfStaff</td>
+                            <td>@segment.Coverage</td>
                             <td>
                                 <button type="button" class="btn btn-primary" onclick="window.open('@Url.Action("Edit", "EventSegments", new { id = segment.Id })')">
                                     Edit
@@ -340,16 +335,16 @@
             <div class="modal-body">
                 <div class="form-horizontal">
                      <div class="form-group">
-                        <label class="control-label col-md-2">Name:</label>
-                        <div class="col-md-10">
+                        <label class="control-label col-md-3">Name</label>
+                        <div class="col-md-9">
                             @Html.Editor("Name", new { htmlAttributes = new { @id = "Name", @class = "form-control"} })
                             <p id="segempty" class="c-val" hidden> Name is missing</p>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-2">Start Date/Time:</label>
-                        <div class="col-md-10">
+                        <label class="control-label col-md-3">Start Date/Time</label>
+                        <div class="col-md-9">
                             @Html.Editor("StartTime", new { htmlAttributes = new { @id = "StartTime", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                             <p id="stempty" class="c-val" hidden>Start Date/Time is missing</p>
                             <p id="stless" class="c-val" hidden> Start date must be before end date</p>
@@ -357,8 +352,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-2">End Date/Time:</label>
-                        <div class="col-md-10">
+                        <label class="control-label col-md-3">End Date/Time</label>
+                        <div class="col-md-9">
                             @Html.Editor("EndTime", new { htmlAttributes = new { @id = "EndTime", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                             <p id="etempty" class="c-val" hidden> End date/time is missing</p>
                             <p id="etbig" class="c-val" hidden> End date must be after start date</p>
@@ -366,11 +361,16 @@
                     </div>
 
                     <div class="form-group">
-                        @Html.Label("Required Number Of Staff", htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        <label class="control-label col-md-3">Required Number Of Staff</label>
+                        <div class="col-md-9">
                             @Html.Editor("RequiredNumberOfStaff", new { htmlAttributes = new { @id = "RequiredNumberOfStaff", @class = "form -control" } })
                             <p id="staffempty" class="c-val" hidden> Required number of staff is missing</p>
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Coverage</label>
+                        @Html.DropDownList("Coverage", new SelectList(ViewBag.CoverageSelectList, "ID", "Name"), new { id = "Coverage", @class = "form-control col-md-9" })
                     </div>
                 </div>
                 <input type="hidden" id="segmentId">

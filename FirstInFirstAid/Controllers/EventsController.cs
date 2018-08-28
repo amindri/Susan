@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -30,6 +29,10 @@ namespace FirstInFirstAid.Controllers
         public ActionResult Create()
         {
             ViewBag.Id = new SelectList(db.Clients, "Id", "Name");
+            //Select List for duty type
+            var dutyType = from Coverage d in Enum.GetValues(typeof(Coverage))
+                           select new { ID = (int)d, Name = d.ToString() };
+            ViewBag.CoverageSelectList = dutyType.ToList();
             return View();
         }
 
@@ -79,6 +82,10 @@ namespace FirstInFirstAid.Controllers
             }
             var clientList = from Client v in db.Clients select new { ID = v.Id, Name = v.Name };
             ViewBag.Clients = new SelectList(clientList, "ID", "Name", @event.Client.Id);
+            //Select List for duty type
+            var dutyType = from Coverage d in Enum.GetValues(typeof(Coverage))
+                           select new { ID = (int)d, Name = d.ToString() };
+            ViewBag.CoverageSelectList = dutyType.ToList();
             return View(@event);
         }
 

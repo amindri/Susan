@@ -40,7 +40,7 @@ namespace FirstInFirstAid.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "Id,DutyType,PresenceConfirmation,PaymentNote,Hours,Paid")] TrainorAllocationForEventSeg trainorAllocation, int trainerId)
+        public ActionResult Edit([Bind(Include = "Id,PresenceConfirmation,PaymentNote,Hours,Paid")] TrainorAllocationForEventSeg trainorAllocation, int trainerId)
         {
             if (ModelState.ContainsKey("trainorAllocation.EventSegment"))
             {
@@ -56,7 +56,6 @@ namespace FirstInFirstAid.Controllers
                 dbTrainerAllocation.Paid = trainorAllocation.Paid;
                 dbTrainerAllocation.PaymentNote = trainorAllocation.PaymentNote;
                 dbTrainerAllocation.PresenceConfirmation = trainorAllocation.PresenceConfirmation;
-                dbTrainerAllocation.DutyType = trainorAllocation.DutyType;
                 dbTrainerAllocation.Hours = trainorAllocation.Hours;
                 dbTrainerAllocation.Trainor = db.Trainors.Find(trainerId);
                 
@@ -65,7 +64,6 @@ namespace FirstInFirstAid.Controllers
                 return Json(new
                 {
                     Id = dbTrainerAllocation.Id,
-                    DutyType = (int)dbTrainerAllocation.DutyType,
                     PresenceConfirmation = dbTrainerAllocation.PresenceConfirmation,
                     Hours = dbTrainerAllocation.Hours,
                     PaymentNote = dbTrainerAllocation.PaymentNote,

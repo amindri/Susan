@@ -58,15 +58,16 @@ namespace FirstInFirstAid.Controllers
                 logger.InfoFormat("Event Segment Created, Name : {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
                 return Json(new
                 {
-                    Name = eventSegment.Name.ToString(),
-                    StartTime = eventSegment.StartTime.ToString(),
-                    EndTime = eventSegment.EndTime.ToString(),
-                    Hours = eventSegment.Hours,
-                    RequiredNumberOfStaff = eventSegment.RequiredNumberOfStaff,
-                    Id = eventSegment.Id
+                    Type = "Success",
+                    Message = "Successfully created Event Segment, " + eventSegment.Name
                 });
             }
-            return Json("Invalid Model State");
+            return Json(new
+            {
+                Type = "Error",
+                Message = "Error while creating Event Eegment " + 
+                    string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage))
+            });
         }
 
         // GET: EventSegments/Edit/5
@@ -97,7 +98,7 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,StartTime,EndTime,Hours,RequiredNumberOfstaff")] EventSegment eventSegment,
+        public ActionResult Edit([Bind(Include = "Id,Name,StartTime,EndTime,Hours,RequiredNumberOfstaff,Coverage")] EventSegment eventSegment,
             int? venueId, int? clientContactId)
         {
             if (ModelState.ContainsKey("Event"))
@@ -120,6 +121,7 @@ namespace FirstInFirstAid.Controllers
                 dbEventSegment.StartTime = eventSegment.StartTime;
                 dbEventSegment.EndTime = eventSegment.EndTime;
                 dbEventSegment.RequiredNumberOfStaff = eventSegment.RequiredNumberOfStaff;
+                dbEventSegment.Coverage = eventSegment.Coverage;
 
                 //Updating the Client Contact
                 if (clientContactId != null) { 
@@ -176,7 +178,7 @@ namespace FirstInFirstAid.Controllers
                 eventSegment.Event = db.EventSegments.Include(e => e.Event).First().Event;
             }
             //Select List for duty type
-            var dutyType = from DutyType d in Enum.GetValues(typeof(DutyType))
+            var dutyType = from Coverage d in Enum.GetValues(typeof(Coverage))
                            select new { ID = (int)d, Name = d.ToString() };
             ViewBag.DutyTypeEnum = JsonConvert.SerializeObject(dutyType);
             ViewBag.DutyTypeSelectList = dutyType.ToList();
