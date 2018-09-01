@@ -20,13 +20,13 @@
                     $("#nempty").hide();
                 }
 
-                var position = $('#position').val();
+                /*var position = $('#position').val();
                 if (position == '') {
                     valid = false;
                     $("#pempty").show();
                 } else {
                     $("#pempty").hide();
-                }
+                }*/
 
                 var phone = $('#phone').val();
                 var intRegex = /[0-9 -()+]+$/;
@@ -34,7 +34,7 @@
                     valid = false;
                     $("#phempty").show();
                     $("#phwrong").hide();
-                } else if ((phone.length < 10) || (!intRegex.test(phone))) {
+                } else if ((phone.length != 10) || (!intRegex.test(phone))) {
                     valid = false;
                     $("#phempty").hide();
                     $("#phwrong").show();
@@ -43,7 +43,7 @@
                     $("#phwrong").hide();
                 }
 
-                var email = $('#email').val();
+               /* var email = $('#email').val();
                 var emailReg = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
                 if (email == '') {
                     valid = false;
@@ -56,9 +56,9 @@
                 } else {
                     $("#emempty").hide();
                     $("#emwrong").hide();
-                }
+                }*/
 
-                if ((name != '') & (position != '') & (phone != '') & (email != '') & (intRegex.test(phone)) & (phone.length == 10) & emailReg.test(email)) {
+                if ((name != '') & (position != '') & (phone != '') & (intRegex.test(phone)) & (phone.length == 10) ) {
                     valid = true;
                 }
 
@@ -217,7 +217,7 @@
                         <label for="phone" class="control-label col-md-2">Phone:</label>
                         <input type="tel" class="form-control col-md-10" id="phone" placeholder="Phone">
                         <p id="phempty" class="c-val" hidden> Phone number is missing</p>
-                        <p id="phwrong" class="c-val" hidden> Please enter a valid phone number</p>
+                        <p id="phwrong" class="c-val" hidden> Please enter a valid 10 digit phone number</p>
                     </div>
 
                     <div class="form-group">

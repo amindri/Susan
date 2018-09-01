@@ -20,16 +20,16 @@ namespace FirstInFirstAid.Models
         [RegularExpression("(\\d{10})", ErrorMessage = "Please enter a valid 10 digit phone number")]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Email Address is missing")]
+       
         [EmailAddress(ErrorMessage = "Invalid email address. Please use \'yourname@example.com\' format")]    
         [CustomRemoteValidation("TrainorExists", "Trainors", AdditionalFields = "Id", ErrorMessage = "Email Address already in use")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "DOB is missing")]
+       
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DOB { get; set; }
 
-        [Required(ErrorMessage = "Tax file number is missing")]
+        
         public string TaxFileNo { get; set; }
 
         public Address Address { get; set; }

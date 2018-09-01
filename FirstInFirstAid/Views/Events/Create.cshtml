@@ -37,6 +37,8 @@
             minDate: 0,
         });
 
+      
+
         $('#Client').append($("<option selected value='Please Select'>Please Select</option>"));
         $("#Client").combobox({ getdata: addClientsToList});
 
@@ -71,7 +73,7 @@
                 $("#etempty").hide();
             }
 
-            if (endtime < starttime) {
+           /* if (endtime < starttime) {
                 valid = false;
                 
                 if (segname != '') {
@@ -88,7 +90,7 @@
             } else {
                 $("#etempty").hide();
                 $("#etbig").hide();
-            }
+            }*/
 
             if (staff == '') {
                 valid = false;
@@ -97,7 +99,7 @@
                 $("#staffempty").hide();
             }
 
-            if (segname != '' & starttime != '' & endtime != '' & staff != '' & endtime > starttime) {
+            if (segname != '' & starttime != '' & endtime != '' & staff != '') {
 
                 valid = true;
             }
@@ -120,10 +122,10 @@
             };
 
         });
+
         $("#modal").on('hidden.bs.modal', function () {
             $(".modal-body input p").val("");
         });
-
 
         // client-side validation for client name combo box and submit form
         $("#createEvent").click(function () {
@@ -317,7 +319,7 @@
                         <label class="control-label col-md-2">End Date/Time:</label>
                         <input type="datetime" onkeydown="return false" onpaste="return false" class="form-control col-md-10" id="EndTime" placeholder="End Date/Time" />
                         <p id="etempty" class="c-val" hidden> End date/time is missing</p>
-                        <p id="etbig" class="c-val" hidden> End time must be after start time</p>
+                       <!--<p id="etbig" class="c-val" hidden> End time must be after start time</p> -->
                     </div>
 
                     <div class="form-group">

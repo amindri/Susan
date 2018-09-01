@@ -55,7 +55,7 @@
 
             var i = 0;
             $("#addAllocation").click(function () {
-                $('#allocations> tbody:last-child').append(
+                 $('#allocations> tbody:last-child').append(
                     "<tr id=" + i + ">" +
                     "<td> " + $("#DateSupplied").val() + "</td>" +
                     "<td>" + $("#DateReturned").val() + "</td>" +
@@ -161,10 +161,11 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-3">Date Returned</label>                        
+                        <label class="control-label col-md-3">Date Returned</label>
                         <div class="col-md-9">
                             @Html.Editor("DateReturned", new { htmlAttributes = new { @id = "DateReturned", @class = "form-control mydatepick", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                         </div>
+                        <p id="drempty" class="c-val" hidden> Date returned is missing</p>
                     </div>
 
                     <div class="form-group">
@@ -172,6 +173,7 @@
                         <div class="col-md-9">
                             <select id="Trainer" class="form-control"></select>
                         </div>
+                        <p id="taempty" class="c-val" hidden> Trainer allocation is missing</p>
                     </div>
                 </div>
 
