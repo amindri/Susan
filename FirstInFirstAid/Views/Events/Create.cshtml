@@ -43,8 +43,7 @@
         $("#Client").combobox({ getdata: addClientsToList});
 
         var i = 0;
-        //client-side validation
-        var valid = true;
+        var valid = true;//for client side validation
         $("#addChild").click(function () {
             var segname = $("#Name").val();
             var starttime = $("#StartTime").val();
@@ -111,6 +110,7 @@
                     "<td> " + $("#StartTime").val() + "</td>" +
                     "<td>" + $("#EndTime").val() + "</td>" +
                     "<td>" + $("#RequiredNumberOfStaff").val() + "</td>" +
+                    "<td id='" + $("#Coverage").val() + "'>" + $("#Coverage :selected").text() + "</td>" +
                     "<td><input type='button' class='btn btn-danger' value='Delete' onclick='deleteSegment(" + i + ")'/></td>" +
                     "</tr >");
                 i++;
@@ -140,17 +140,16 @@
 
                     $('#segments > tbody > tr:not(:first)').each(function () {
                         var columns = $(this).find('td');
-                        /*var start = new Date($(columns[1]).html().trim());
-                        var end = new Date($(columns[2]).html().trim());
-                        var timeDiff = Math.abs(end - start) / 36e5;*/
+                        
                         $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Name'" + " value='" + $(columns[0]).html().trim() + "'/>");
                         $("#form").append("<input type='hidden' name='EventSegments[" + count + "].StartTime'" + " value='" + $(columns[1]).html().trim() + "'/>");
                         $("#form").append("<input type='hidden' name='EventSegments[" + count + "].EndTime'" + " value='" + $(columns[2]).html().trim() + "'/>");
                         $("#form").append("<input type='hidden' name='EventSegments[" + count + "].RequiredNumberOfStaff'" + " value='" + $(columns[3]).html().trim() + "'/>");
+                        $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Coverage'" + " value='" + $(columns[4]).html().trim() + "'/>");
+
                         $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Event.EventName'" + " value='" + $('#EventName').val() + "'/>");
                         $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Event.InvoiceNumber'" + " value='" + $('#InvoiceNumber').val() + "'/>");
                         $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Event.BusinessId'" + " value='" + $('#BusinessId').val() + "'/>");
-                        $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Event.EventState'" + " value='" + $('#EventState').val() + "'/>");
                         $("#form").append("<input type='hidden' name='EventSegments[" + count + "].Event.EventState'" + " value='" + $('#EventState').val() + "'/>");
 
                         count++;
@@ -182,10 +181,6 @@
         $("#" + id).remove();
     };
 
-   
-    function addASegmentsToForm() {
-                
-    }
 </script>    
 }
 
@@ -275,6 +270,7 @@
                                 <th>Start Date/Time</th>
                                 <th>End Date/Time</th>
                                 <th>Required Number Of Staff</th>
+                                <th>Coverage</th>
                                 <th>Actions</th>
                             </tr>
                         </tbody>
@@ -304,28 +300,33 @@
             <div class="modal-body">
                 <div class="form-horizontal" id="modalform">
                    <div class="form-group">
-                        <label class="control-label col-md-2">Name:</label>
-                        <input type="text" class="form-control col-md-10" id="Name" placeholder="Event Segment Name" />
+                        <label class="control-label col-md-4">Name</label>
+                        <input type="text" class="form-control col-md-9" id="Name" placeholder="Event Segment Name" />
                         <p id="segempty" class="c-val" hidden> Event segment name is missing</p>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-2">Start Date/Time:</label>
-                        <input type="datetime" onkeydown="return false" onpaste="return false" class="form-control col-md-10" id="StartTime" placeholder="Start Date/Time" />
+                        <label class="control-label col-md-4">Start Date/Time</label>
+                        <input type="datetime" onkeydown="return false" onpaste="return false" class="form-control col-md-9" id="StartTime" placeholder="Start Date/Time" />
                         <p id="stempty" class="c-val" hidden> Start date/time is missing</p>
                         </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-2">End Date/Time:</label>
-                        <input type="datetime" onkeydown="return false" onpaste="return false" class="form-control col-md-10" id="EndTime" placeholder="End Date/Time" />
+                        <label class="control-label col-md-4">End Date/Time</label>
+                        <input type="datetime" onkeydown="return false" onpaste="return false" class="form-control col-md-9" id="EndTime" placeholder="End Date/Time" />
                         <p id="etempty" class="c-val" hidden> End date/time is missing</p>
                        <!--<p id="etbig" class="c-val" hidden> End time must be after start time</p> -->
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-2">Required Number Of Staff: </label>
-                        <input type="text" class="form-control col-md-10" id="RequiredNumberOfStaff" placeholder="Required number of staff"/>
+                        <label class="control-label col-md-4">Required Number Of Staff</label>
+                        <input type="text" class="form-control col-md-9" id="RequiredNumberOfStaff" placeholder="Required number of staff"/>
                         <p id="staffempty" class="c-val" hidden> Required number of staff is missing</p>                      
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Coverage</label>                        
+                        @Html.DropDownList("Coverage", new SelectList(ViewBag.CoverageSelectList, "ID", "Name"), new { id = "Coverage", @class = "form-control col-md-9" })                        
                     </div>
                 </div>
 

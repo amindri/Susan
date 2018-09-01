@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FirstInFirstAid.Models
 {
+    public enum Coverage { COVERAGE = 1, TBC_COVERAGE = 2, TRAINING = 3, SUSAN_COVERAGE = 4, ADMIN = 5, PERSONAL = 6 }
+
     public class EventSegment
     {
         [Key]
@@ -11,6 +13,9 @@ namespace FirstInFirstAid.Models
 
         [Required(ErrorMessage = "Event segment name is missing")]
         public string Name { get; set; }
+
+        [Required(ErrorMessage = "Coverage is missing")]
+        public Coverage Coverage { get; set; }
 
         [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "Start time is missing")]

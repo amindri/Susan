@@ -30,7 +30,7 @@
                 "stepMinute": 15
                 });
 
-            jQuery.validator.methods.date = function (value, element) {
+            $.validator.methods.date = function (value, element) {
                 var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
                 if (isChrome) {
                     var d = new Date();
@@ -392,6 +392,14 @@
         </div>
 
         <div class="form-group">
+            <label class="control-label col-md-2">Coverage:</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Coverage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Coverage, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
             <label class="control-label col-md-2" for="ClientContact">Client Contact:</label> 
             <div class="col-md-10">
                 @Html.DropDownListFor(m => m.ClientContact.Id, (SelectList)ViewBag?.ClientContact, new { id = "ClientContact" }) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Html.ActionLink("Edit Client", "Index", "Clients", null, new { @id = "link", target = "_blank" })
@@ -420,7 +428,7 @@
             <div id="allocations" class="panel panel-default panel-body col-md-8">
                 <button id="addAllocation" data-target="#modal" data-toggle="modal" type="button" class="btn btn-success"> Add </button> <br/>
                 @if (Model.TrainorAllocations != null)
-            {
+                {
                 for(var i = 0; i < Model.TrainorAllocations.Count(); i++)
                 {
                     <div class="panel panel-default col-md-12 saved panel-t" id='saved_@Model.TrainorAllocations[i].Id'>
@@ -429,13 +437,7 @@
                             <div class="col-md-9">
                                 <input type="text" class="form-control col-md-9" id="Name" readonly data-trainerId="@Model.TrainorAllocations[i].Trainor.Id" value="@Model.TrainorAllocations[i].Trainor.FirstName @Model.TrainorAllocations[i].Trainor.Lastname">
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Duty Type</label>
-                            <div class="col-md-9">
-                                @Html.DropDownListFor(m => m.TrainorAllocations[i].DutyType, new SelectList(ViewBag.DutyTypeSelectList, "ID", "Name", (int)Model.TrainorAllocations[i].DutyType), new { id = "DutyType", @class = "form-control" })
-                            </div>
-                        </div>
+                        </div>                        
                         <div class="form-group">
                             <label class="control-label col-md-3">Hours</label>
                             <div class="col-md-9">
