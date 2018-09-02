@@ -54,12 +54,12 @@
                             '<select class=\"form-control combobox\" id=\"Name\"></select>' +
                         '</div>' +
                     '</div>' +
-                    '<div class="form-group">' +
+                   /* '<div class="form-group">' +
                         '<label class="control-label col-md-4">Duty Type</label>' +
                         '<div class="col-md-8">' +
                             '<select id=\"DutyType\" class=\"form-control combobox\"></select>' +
                         '</div>' +
-                    '</div>' +
+                    '</div>' +*/
                     '<div class="form-group">' +
                         '<label class="control-label col-md-4">Hours</label>' +
                         '<div class="col-md-8">' +
@@ -118,13 +118,13 @@
                 var cContact = $("#ClientContact").val();
                 var venue = $("#Venue").val();
                 if ((cContact == 'Please Select') || (cContact == '')) {
-                    $("#ccempty").show();
+                   // $("#ccempty").show();
                 } else {
                     $("#form").append("<input type='hidden' name='clientContactId'" + " value='" + $("#ClientContact").val() + "'/>");
 
                 }
                 if ((venue == 'Please Select') || (venue == '')) {
-                    $("#vempty").show();
+                  //  $("#vempty").show();
                 } else {
                     $("#form").append("<input type='hidden' name='venueId'" + " value='" + $("#Venue").val() + "'/>");
                 }
@@ -265,8 +265,11 @@
                 data: JSON.stringify(allocation),
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
-                success: function (response) { alert("Successfully updated the trainer allocation"); },
-                error: function (message) { alert("Error while updating the trainer allocation " + message);}
+                success: function (response) {
+                    $("#successModalBody").text("Successfully updated the trainer allocation");
+                    $('#successModal').modal('show');
+                },
+               error: function (message) { alert("Error while updating the trainer allocation " + message);}
             });
         };
 
@@ -392,9 +395,12 @@
         </div>
 
         <div class="form-group">
-            <label class="control-label col-md-2">Coverage:</label>
+            <label class="control-label col-md-2">Duty Type:</label>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Coverage, new { htmlAttributes = new { @class = "form-control" } })
+                <!--@Html.EditorFor(model => model.Coverage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Coverage, "", new { @class = "text-danger" })-->
+                <!--Drop down added by Anu-->
+                @Html.EnumDropDownListFor(model => model.Coverage, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Coverage, "", new { @class = "text-danger" })
             </div>
         </div>
