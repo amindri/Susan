@@ -66,7 +66,7 @@
                     $("#etempty").hide();
                 }
 
-                if (endtime < starttime) {
+                /*if (endtime < starttime) {
                     valid = false;
 
                     if (segname != '') {
@@ -83,7 +83,7 @@
                 } else {
                     $("#etempty").hide();
                     $("#etbig").hide();
-                }
+                }*/
 
                 if (staff == '') {
                     valid = false;
@@ -92,7 +92,7 @@
                     $("#staffempty").hide();
                 }
 
-                if (segname != '' & starttime != '' & endtime != '' & staff != '' & endtime > starttime) {
+                if (segname != '' & starttime != '' & endtime != '' & staff != '' ) {
 
                     valid = true;
                 }
@@ -285,7 +285,7 @@
                     <th>Start Date/Time</th>
                     <th>End Date/Time</th>
                     <th>Required Number Of Staff</th>
-                    <th>Coverage</th>
+                    <th>Duty Type</th>
                     <th>Actions</th>
                 </tr>
 
@@ -346,8 +346,8 @@
                         <label class="control-label col-md-3">Start Date/Time</label>
                         <div class="col-md-9">
                             @Html.Editor("StartTime", new { htmlAttributes = new { @id = "StartTime", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
-                            <p id="stempty" class="c-val" hidden>Start Date/Time is missing</p>
-                            <p id="stless" class="c-val" hidden> Start date must be before end date</p>
+                              <p id="stempty" class="c-val" hidden>Start Date/Time is missing</p>
+                           <!-- <p id="stless" class="c-val" hidden> Start date must be before end date</p> -->
                         </div>
                     </div>
 
@@ -356,22 +356,24 @@
                         <div class="col-md-9">
                             @Html.Editor("EndTime", new { htmlAttributes = new { @id = "EndTime", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                             <p id="etempty" class="c-val" hidden> End date/time is missing</p>
-                            <p id="etbig" class="c-val" hidden> End date must be after start date</p>
+                         <!--  <p id="etbig" class="c-val" hidden> End date must be after start date</p> -->
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label col-md-3">Required Number Of Staff</label>
                         <div class="col-md-9">
-                            @Html.Editor("RequiredNumberOfStaff", new { htmlAttributes = new { @id = "RequiredNumberOfStaff", @class = "form -control" } })
+                            @Html.Editor("RequiredNumberOfStaff", new { htmlAttributes = new { @id = "RequiredNumberOfStaff", @class = "form-control" } })
                             <p id="staffempty" class="c-val" hidden> Required number of staff is missing</p>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-3">Coverage</label>
+                        <label class="control-label col-md-3">Duty Type</label>
+                         <div class="col-md-9">
                         @Html.DropDownList("Coverage", new SelectList(ViewBag.CoverageSelectList, "ID", "Name"), new { id = "Coverage", @class = "form-control col-md-9" })
                     </div>
+                         </div>
                 </div>
                 <input type="hidden" id="segmentId">
             </div>
