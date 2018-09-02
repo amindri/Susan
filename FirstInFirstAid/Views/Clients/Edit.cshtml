@@ -22,13 +22,13 @@
                     $("#nempty").hide();
                 }
 
-                var position = $('#position').val();
+               /* var position = $('#position').val();
                 if (position == '') {
                     valid = false;
                     $("#pempty").show();
                 } else {
                     $("#pempty").hide();
-                }
+                }*/
 
                 var phone = $('#phone').val();
                 var intRegex = /[0-9 -()+]+$/;
@@ -45,7 +45,7 @@
                     $("#phwrong").hide();
                 }
 
-                var email = $('#email').val();
+               /* var email = $('#email').val();
                 var emailReg = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
                 if (email == '') {
                     valid = false;
@@ -58,9 +58,9 @@
                 } else {
                     $("#emempty").hide();
                     $("#emwrong").hide();
-                }
+                }*/
 
-                if ((name != '') & (position != '') & (phone != '') & (email != '') & (intRegex.test(phone)) & (phone.length == 10) & emailReg.test(email)) {
+                if ((name != '')  & (phone != '')  & (intRegex.test(phone)) & (phone.length == 10)) {
                     valid = true;
                 }
 
@@ -71,6 +71,7 @@
                         "<td> " + $("#name").val() + "</td>" +
                         "<td>" + $("#position").val() + "</td>" +
                         "<td>" + $("#phone").val() + "</td>" +
+                        "<td>" + $("#phoneoff").val() + "</td>" +
                         "<td>" + $("#email").val() + "</td>" +
                         "<td>" + "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modal' data-id=" + i + " data-action='Change'>" +
                         "Edit" +
@@ -86,7 +87,8 @@
                     $("#" + trId + " td:nth-child(1)").html($("#name").val());
                     $("#" + trId + " td:nth-child(2)").html($("#position").val());
                     $("#" + trId + " td:nth-child(3)").html($("#phone").val());
-                    $("#" + trId + " td:nth-child(4)").html($("#email").val());
+                    $("#" + trId + " td:nth-child(4)").html($("#phoneoff").val());
+                    $("#" + trId + " td:nth-child(5)").html($("#email").val());
                 }
                 $('#modal').modal('hide');
             }
@@ -218,6 +220,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Position</th>
+                                <th>Mobile</th>
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <th>Actions</th>
@@ -231,6 +234,7 @@
                                         <td>@contact.ContactName</td>
                                         <td>@contact.ContactPosition</td>
                                         <td>@contact.ContactPhone</td>
+                                        <td>CotactOffice</td>
                                         <td>@contact.ContactEmail</td>
                                         <td>
 
@@ -278,21 +282,25 @@
                             <div class="form-group">
                                 <label for="position" class="control-label col-md-2">Position:</label>
                                 <input type="text" class="form-control" id="position" placeholder="Position">
-                                <p id="pempty" class="c-val" hidden> Position is missing</p>
+
                             </div>
 
                             <div class="form-group">
-                                <label for="phone" class="control-label col-md-2">Phone:</label>
-                                <input type="tel" class="form-control" id="phone" placeholder="Phone">
+                                <label for="phone" class="control-label col-md-2">Mobile:</label>
+                                <input type="tel" class="form-control" id="phone" placeholder="Mobile">
                                 <p id="phempty" class="c-val" hidden> Phone number is missing</p>
                                 <p id="phwrong" class="c-val" hidden> Please enter a valid phone number</p>
+                            </div>
+                            <!--New field to add office phone-->
+                            <div class="form-group">
+                                <label for="phone" class="control-label col-md-2">Phone:</label>
+                                <input type="tel" class="form-control" id="phoneoff" placeholder="Phone">
                             </div>
 
                             <div class="form-group">
                                 <label for="email" class="control-label col-md-2">Email:</label>
                                 <input type="email" class="form-control" id="email" placeholder="Email">
-                                <p id="emempty" class="c-val" hidden> Email is missing</p>
-                                <p id="emwrong" class="c-val" hidden> Please enter a valid email</p>
+                              
                             </div>
                             <input type="hidden" id="trId">
                         </div>
