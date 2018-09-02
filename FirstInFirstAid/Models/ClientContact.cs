@@ -15,6 +15,10 @@ namespace FirstInFirstAid.Models
         [RegularExpression("(\\d{10})", ErrorMessage = "Please enter a valid 10 digit phone number")]
         public string ContactPhone { get; set; }
 
+        /* new code to add office phone -Anu*/
+        [RegularExpression("(\\d{10})", ErrorMessage = "Please enter a valid 10 digit phone number")]
+        public string ContactPhoneOff { get; set; }
+
         [EmailAddress(ErrorMessage = "Invalid email address. Please use \'yourname@example.com\' format")]
         [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                             @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
