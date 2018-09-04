@@ -68,6 +68,7 @@
                         "<td> " + $("#name").val() + "</td>" +
                         "<td>" + $("#position").val() + "</td>" +
                         "<td>" + $("#phone").val() + "</td>" +
+                        "<td>" + $("#phoneoff").val() + "</td>" +
                         "<td>" + $("#email").val() + "</td>" +
                         "<td><input class='btn btn-danger' type='button' value='Delete' onclick='deleteContact(" + i + ")'/></td>" +
                         "</tr >");
@@ -97,7 +98,8 @@
                 $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactName'" + " value='" + $(columns[0]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactPosition'" + " value='" + $(columns[1]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactPhone'" + " value='" + $(columns[2]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactEmail'" + " value='" + $(columns[3]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactPhoneOff'" + " value='" + $(columns[3]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactEmail'" + " value='" + $(columns[4]).html().trim() + "'/>");
                 count++;
             });
         }

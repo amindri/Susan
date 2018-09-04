@@ -138,7 +138,8 @@
                 $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactName'" + " value='" + $(columns[0]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactPosition'" + " value='" + $(columns[1]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactPhone'" + " value='" + $(columns[2]).html().trim() + "'/>");
-                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactEmail'" + " value='" + $(columns[3]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactPhoneOff'" + " value='" + $(columns[3]).html().trim() + "'/>");
+                $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].ContactEmail'" + " value='" + $(columns[4]).html().trim() + "'/>");
                 $("#form").append("<input type='hidden' name='ClientContacts[" + count + "].Id'" + " value='" + $(this).attr("data-dbId").trim() + "'/>");                
                 count++;
             });
