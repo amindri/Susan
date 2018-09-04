@@ -356,7 +356,7 @@ namespace FirstInFirstAid.Controllers
                         }
                     }
                     
-                    list.Add(new { ID = segment.Id, State = "complete", Confirmed  = allConfirmed, DutyType = segment.Coverage });
+                    list.Add(new { ID = segment.Id, State = "complete", Confirmed  = allConfirmed, DutyType = (Coverage)segment.Coverage });
                 }
             }
           
