@@ -18,6 +18,11 @@
     color: #fff !important;
 }
 
+.pinkClass {
+    background-color: pink !important;
+    color: #fff !important;
+}
+
 .form-control {
     border-radius: 0;
 }

@@ -7,74 +7,70 @@
 
 @section Scripts {
     <script type="text/javascript">
-       $(document).ready(function () {
+        $(document).ready(function () { 
 
-  
-
-           $.ajax({
-               type: "GET",
-               url: "/EventSegments/getDutyTypeState",
-               contentType: "application/json; charset=utf-8",
-               dataType: "json",
-               success: function (obj) {
-                   $.each(obj, function (key, value) {
-                       if (value.State == "incomplete") {
-                           $("tr#" + value.ID).addClass('redClass');
-                       } else {
-                           if (value.DutyType == 1) {
-                               if (value.Confirmed) {
-                                   $("tr#" + value.ID).addClass('orangeClass');
-                               } else {
-                                   $("tr#" + value.ID).addClass('lightorangeClass');
-                               }
-                           } else if (value.DutyType == 2) {
-                               if (value.Confirmed) {
-                                   $("tr#" + value.ID).addClass('purpleClass');
-                               } else {
-                                   $("tr#" + value.ID).addClass('lightpurpleClass');
-                               }
-                           } else if (value.DutyType == 3) {
-                               if (value.Confirmed) {
-                                   $("tr#" + value.ID).addClass('yellowClass');
-                               } else {
-                                   $("tr#" + value.ID).addClass('lightyellowClass');
-                               }
-                           } else if (value.DutyType = 4) {
-                               if (value.Confirmed) {
-                                   $("tr#" + value.ID).addClass('greenClass');
-                               } else {
-                                   $("tr#" + value.ID).addClass('lightgreenClass');
-                               }
-                           } else if (value.DutyType == 5) {
-                               if (value.Confirmed) {
-                                   $("tr#" + value.ID).addClass('blueClass');
-                               } else {
-                                   $("tr#" + value.ID).addClass('lightblueClass');
-                               }
-                           } else if (value.DutyType == 6) {
-                               if (value.Confirmed) {
-                                   $("tr#" + value.ID).addClass('greyClass');
-                               } else {
-                                   $("tr#" + value.ID).addClass('lightgreyClass');
-                               }
-                           } else if (value.DutyType == 7) {
-                               if (value.Confirmed) {
-                                   $("tr#" + value.ID).addClass('pinkClass');
-                               } else {
-                                   $("tr#" + value.ID).addClass('lightpinkClass');
-                               }
-                           }
-                       }               
-                   });
-               },
-               error: function (obj) {
-                   $("#warnModalBody").text(obj.Message);
-                   $('#warnModal').modal('show');
-               }
-           });
-       });      
-              
-
+            $.ajax({
+                type: "GET",
+                url: "/EventSegments/getDutyTypeState",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (obj) {
+                    $.each(obj, function (key, value) {
+                        if (value.State == "incomplete") {
+                            $("tr#" + value.ID).addClass('redClass');
+                        } else {
+                            if (value.DutyType == 1) {
+                                if (value.Confirmed) {
+                                    $("tr#" + value.ID).addClass('orangeClass');
+                                } else {
+                                    $("tr#" + value.ID).addClass('lightorangeClass');
+                                }
+                            } else if (value.DutyType == 2) {
+                                if (value.Confirmed) {
+                                    $("tr#" + value.ID).addClass('purpleClass');
+                                } else {
+                                    $("tr#" + value.ID).addClass('lightpurpleClass');
+                                }
+                            } else if (value.DutyType == 3) {
+                                if (value.Confirmed) {
+                                    $("tr#" + value.ID).addClass('yellowClass');
+                                } else {
+                                    $("tr#" + value.ID).addClass('lightyellowClass');
+                                }
+                            } else if (value.DutyType == 4) {
+                                if (value.Confirmed) {
+                                    $("tr#" + value.ID).addClass('greenClass');
+                                } else {
+                                    $("tr#" + value.ID).addClass('lightgreenClass');
+                                }
+                            } else if (value.DutyType == 5) {
+                                if (value.Confirmed) {
+                                    $("tr#" + value.ID).addClass('blueClass');
+                                } else {
+                                    $("tr#" + value.ID).addClass('lightblueClass');
+                                }
+                            } else if (value.DutyType == 6) {
+                                if (value.Confirmed) {
+                                    $("tr#" + value.ID).addClass('greyClass');
+                                } else {
+                                    $("tr#" + value.ID).addClass('lightgreyClass');
+                                }
+                            } else if (value.DutyType == 7) {
+                                if (value.Confirmed) {
+                                    $("tr#" + value.ID).addClass('pinkClass');
+                                } else {
+                                    $("tr#" + value.ID).addClass('lightpinkClass');
+                                }
+                            }
+                        }               
+                    });
+                },
+                error: function (obj) {
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
+                }
+            });
+        });                    
      
         function deleteEventSegment(id) {
             $.ajax({
@@ -117,7 +113,6 @@
         }
     </script>
 }
-
 
     <h3 class="page-header">Event Segments</h3>
 

@@ -6,7 +6,37 @@
 }
 @section Scripts {
     <script type="text/javascript">
-        
+        $(document).ready(function () {
+
+            $.ajax({
+                type: "GET",
+                url: "/Events/getEventState",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (obj) {
+                    $.each(obj, function (key, value) {
+                        if (value.State == 1) {                               
+                            $("tr#" + value.ID).addClass('pinkClass');                               
+                        } else if (value.State == 2) {                                
+                            $("tr#" + value.ID).addClass('purpleClass');                                
+                        } else if (value.State == 3) {                                
+                            $("tr#" + value.ID).addClass('yellowClass');                                
+                        } else if (value.State == 4) {                                
+                            $("tr#" + value.ID).addClass('greenClass');                                
+                        } else if (value.State == 5) {                                
+                            $("tr#" + value.ID).addClass('blueClass');                                
+                        } else if (value.State == 6) {                                
+                            $("tr#" + value.ID).addClass('greyClass');                                
+                        }                      
+                    });
+                },
+                error: function (obj) {
+                    $("#warnModalBody").text(obj.Message);
+                    $('#warnModal').modal('show');
+                }
+            });
+        });   
+
         function deleteEvent(id) {
             $.ajax({
                 type: "GET",
@@ -88,30 +118,31 @@
                 </thead>
            
                 <tbody>
+
                     @foreach (var item in Model)
-    {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Client.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EventName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.InvoiceNumber)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.HourlyRate)
-                    </td>                    
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EventState)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) &nbsp;
-                        <button class='btn btn-danger' type='button' value='Delete' onclick='deleteEvent(@item.Id)'>Delete</button>
-                    </td>
-                </tr>
-}
+                    {
+                        <tr id="@item.Id">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Client.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EventName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InvoiceNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HourlyRate)
+                            </td>                    
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EventState)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" }) &nbsp;
+                                <button class='btn btn-danger' type='button' value='Delete' onclick='deleteEvent(@item.Id)'>Delete</button>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
               
 

@@ -8,6 +8,7 @@ using FirstInFirstAid.DAL;
 using FirstInFirstAid.Models;
 using log4net;
 using System;
+using System.Collections.Generic;
 
 namespace FirstInFirstAid.Controllers
 {
@@ -170,6 +171,18 @@ namespace FirstInFirstAid.Controllers
         public JsonResult GetClients() // its a GET, not a POST
         {
             return Json(db.Clients, JsonRequestBehavior.AllowGet);
+        }
+
+        
+        public JsonResult getEventState()
+        {
+            List<object> list = new List<object>();
+            foreach (Event ev3nt in db.Events)
+            {                
+                list.Add(new { ID = ev3nt.Id, State = ev3nt.EventState});                
+            }
+
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

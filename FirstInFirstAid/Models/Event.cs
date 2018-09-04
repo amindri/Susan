@@ -5,7 +5,7 @@ namespace FirstInFirstAid.Models
 {
     public enum BusinessId { FISFA, FA_SERVICES }
 
-    public enum EventState { YES, NO, CANCELLED, POSTPONED, QUOTE_NO_DATE, NOT_ACCEPTED}
+    public enum EventState { YES = 1, NO = 2, CANCELLED = 3, POSTPONED = 4, QUOTE_NO_DATE = 5, NOT_ACCEPTED = 6}
 
     public class Event
     {
