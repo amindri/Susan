@@ -41,26 +41,20 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,BusinessId,EventState,EventSegments")]Event ev3nt, int clientId)
+        public ActionResult Create([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,BusinessId,EventState")]Event ev3nt, int clientId)
         {                        
 
             if (ModelState.IsValid)
             {
                 Client client = db.Clients.Include(e => e.Events).Where(i => i.Id == clientId).First();
-                client.Events.Add(ev3nt);
-                if (ev3nt.EventSegments != null)
-                {
-                    foreach (EventSegment segment in ev3nt.EventSegments)
-                    {
-                        TimeSpan span = segment.EndTime.Subtract(segment.StartTime);
-                        segment.Hours = span.TotalHours;
-                        segment.Event = ev3nt;
-                    }
-                }
+                client.Events.Add(ev3nt);        
                 db.SaveChanges();
                 logger.InfoFormat("Event Created, Name : {0}, Id: {1}", ev3nt.EventName, ev3nt.Id);
-                return RedirectToAction("Index");
-
+                var id = ev3nt.Id;
+                return RedirectToAction("Edit", new
+                {
+                    id = ev3nt.Id,
+                });
             }
             ViewBag.Id = new SelectList(db.Clients, "Id", "Name");
             return View(ev3nt);

@@ -64,26 +64,7 @@
 
                 } else {
                     $("#etempty").hide();
-                }
-
-                /*if (endtime < starttime) {
-                    valid = false;
-
-                    if (segname != '') {
-                        $("#segempty").hide();
-                    }
-                    if (starttime != '') {
-                        $("#stempty").hide();
-                    }
-                    if (staff != '') {
-                        $("#staffempty").hide();
-                    }
-
-                    $("#etbig").show();
-                } else {
-                    $("#etempty").hide();
-                    $("#etbig").hide();
-                }*/
+                }                   
 
                 if (staff == '') {
                     valid = false;
@@ -91,14 +72,10 @@
                 } else {
                     $("#staffempty").hide();
                 }
+                               
+                $("#etbig").hide();
 
-                if (segname != '' & starttime != '' & endtime != '' & staff != '' ) {
-
-                    valid = true;
-                }
-
-
-                if(valid==true) {
+                if(Boolean(valid)) {
                     var segment = {
                         eventSegment: {
                             Name: $.trim($("#Name").val()),
@@ -116,10 +93,14 @@
                         data: JSON.stringify(segment),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
-                        success: function (response) {   
-                            if (respose.Type = "Success") {
+                        success: function (response) {
+                            console.log(response);
+                            if (response.Type == "Success") {
+                                $('#modal').modal('hide');
                                 $("#successModalBody").text(response.Message);
                                 $('#successModal').modal('show');  
+                            } else if (response.Type == "EndTime")  {
+                                $("#etbig").show();
                             } else {
                                 $("#warnModalBody").text(response.Message);
                                 $('#warnModal').modal('show');
@@ -130,8 +111,7 @@
                             $('#warnModal').modal('show');
                         }
                     });
-
-                    $('#modal').modal('hide');
+                    
                 } else {
                     $('#modal').modal('show');
                 };
@@ -356,7 +336,7 @@
                         <div class="col-md-9">
                             @Html.Editor("EndTime", new { htmlAttributes = new { @id = "EndTime", @class = "form-control", @type = "datetime", onkeydown = "return false", onpaste = "return false" } })
                             <p id="etempty" class="c-val" hidden> End date/time is missing</p>
-                         <!--  <p id="etbig" class="c-val" hidden> End date must be after start date</p> -->
+                            <p id="etbig" class="c-val" hidden> End date must be after start date</p> 
                         </div>
                     </div>
 

@@ -49,6 +49,13 @@ namespace FirstInFirstAid.Controllers
             {
                 ModelState["eventSegment.Event"].Errors.Clear();
             }
+            if (eventSegment.StartTime > eventSegment.EndTime)
+            {
+                ModelState.AddModelError("EndTime", "End Time should be greater than Start Time");
+                return Json(new
+                    { Type = "EndTime" }
+                );
+            }
             if (ModelState.IsValid)
             {
                 Event evnt = db.Events.Include(c => c.EventSegments).Where(i => i.Id == eventId).First();                
@@ -65,8 +72,8 @@ namespace FirstInFirstAid.Controllers
             return Json(new
             {
                 Type = "Error",
-                Message = "Error while creating Event Eegment " + 
-                    string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage))
+                Message = "Error while creating Event Eegment " +
+                     string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage))
             });
         }
 
@@ -329,7 +336,7 @@ namespace FirstInFirstAid.Controllers
         }
 
         [HttpGet]
-        public JsonResult getTrainerAllocationState()
+        public JsonResult getDutyTypeState()
         {
             List<object> list = new List<object>();
             foreach (EventSegment segment in db.EventSegments.Include(x => x.TrainorAllocations))
@@ -340,7 +347,16 @@ namespace FirstInFirstAid.Controllers
                 }
                 else
                 {
-                    list.Add(new { ID = segment.Id, State = "complete" });
+                    Boolean allConfirmed = true;
+                    foreach (TrainorAllocationForEventSeg allocation in segment.TrainorAllocations)
+                    {
+                        if (!allocation.PresenceConfirmation)
+                        {
+                            allConfirmed = false;
+                        }
+                    }
+                    
+                    list.Add(new { ID = segment.Id, State = "complete", Confirmed  = allConfirmed, DutyType = segment.Coverage });
                 }
             }
           
