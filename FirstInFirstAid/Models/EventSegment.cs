@@ -26,6 +26,8 @@ namespace FirstInFirstAid.Models
         public DateTime EndTime { get; set; }
 
         public double Hours { get; set; }
+                
+        public double TotalFee { get; set; }
 
         [Required(ErrorMessage = "Number off staff is missing")]
         public int RequiredNumberOfStaff { get; set; }

@@ -60,6 +60,7 @@ namespace FirstInFirstAid.Controllers
             {
                 Event evnt = db.Events.Include(c => c.EventSegments).Where(i => i.Id == eventId).First();                
                 eventSegment.Hours = eventSegment.EndTime.Subtract(eventSegment.StartTime).TotalHours;
+                eventSegment.TotalFee = evnt.HourlyRate * eventSegment.RequiredNumberOfStaff * eventSegment.Hours;
                 evnt.EventSegments.Add(eventSegment);
                 db.SaveChanges();
                 logger.InfoFormat("Event Segment Created, Name : {0}, Id: {1}", eventSegment.Name, eventSegment.Id);
@@ -129,7 +130,7 @@ namespace FirstInFirstAid.Controllers
                 dbEventSegment.EndTime = eventSegment.EndTime;
                 dbEventSegment.RequiredNumberOfStaff = eventSegment.RequiredNumberOfStaff;
                 dbEventSegment.Coverage = eventSegment.Coverage;
-
+                dbEventSegment.TotalFee = dbEventSegment.Event.HourlyRate * dbEventSegment.RequiredNumberOfStaff * dbEventSegment.Hours;
                 //Updating the Client Contact
                 if (clientContactId != null) { 
                     ClientContact existingClientContact = dbEventSegment.ClientContact;

@@ -41,7 +41,7 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,BusinessId,EventState")]Event ev3nt, int clientId)
+        public ActionResult Create([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,BusinessId,EventState")]Event ev3nt, int clientId)
         {                        
 
             if (ModelState.IsValid)
@@ -88,7 +88,7 @@ namespace FirstInFirstAid.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,TotalFee,BusinessId,EventState")] Event @event, int clientId)
+        public ActionResult Edit([Bind(Include = "Id,EventName,InvoiceNumber,HourlyRate,BusinessId,EventState")] Event @event, int clientId)
         {
           
             if (ModelState.IsValid)
@@ -116,7 +116,6 @@ namespace FirstInFirstAid.Controllers
                 dbEvent.BusinessId = @event.BusinessId;
                 dbEvent.HourlyRate = @event.HourlyRate;
                 dbEvent.InvoiceNumber = @event.InvoiceNumber;
-                dbEvent.TotalFee = @event.TotalFee;
 
                 db.SaveChanges();
                 logger.InfoFormat("Event successfully modified, Name: {0}, Id: {1}", dbEvent.EventName, @event.Id);

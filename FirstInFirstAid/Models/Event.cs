@@ -19,10 +19,7 @@ namespace FirstInFirstAid.Models
         public string InvoiceNumber { get; set; }
 
         [Required(ErrorMessage = "Hourly rate is missing")]
-        public long HourlyRate { get; set; }
-
-        [Required(ErrorMessage = "Total fee is missing")]
-        public long TotalFee { get; set; }
+        public double HourlyRate { get; set; }             
 
         [Required(ErrorMessage = "Business id is missing")]
         public BusinessId BusinessId { get; set; }
