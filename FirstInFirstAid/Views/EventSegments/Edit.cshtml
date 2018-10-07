@@ -18,6 +18,23 @@
                 var trainerId = button.data('trainerid') // Extract
                 var modal = $(this);
                 modal.find('.modal-body input#trainerId').val(trainerId);
+
+                //add email body
+                $.ajax({
+                type: "GET",
+                url: '/EventSegments/getEmailBody/' + '@Model.Id',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    modal.find('.modal-body textarea#messageBody').val(response.Body);
+                    modal.find('.modal-body input#subject').val(response.Subject);
+                },
+                error: function (xhr, status, error) {
+                    $("#warnModalBody").text(error);
+                    $('#warnModal').modal('show');
+                }
+            });
+
             });
 
             $("input[type=datetime]").datetimepicker({
@@ -109,7 +126,7 @@
             $(function () {
                 window.setTimeout(function () {
                     $('#ClientContact').combobox({ getdata: appendClientContacts });
-                    $('#Venue').combobox({ getdata: appendVenues });            
+                    $('#Venue').combobox({ getdata: appendVenues });
                 }, 0);
             });
 
@@ -129,9 +146,9 @@
                     $("#form").append("<input type='hidden' name='venueId'" + " value='" + $("#Venue").val() + "'/>");
                 }
 
-            });            
+            });
         });
-    
+
         function gettoken() {
             var token = '@Html.AntiForgeryToken()';
             token = $(token).val();
@@ -216,7 +233,7 @@
                 }
             });
         };
-      
+
 
         function createAllocation(nsId) {
 
@@ -240,7 +257,7 @@
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
                    $("#successModalBody").text("Successfully created the trainer allocation with the trainer");
-                   $('#successModal').modal('show');                                                                 
+                   $('#successModal').modal('show');
                 },
                 error: function (message) { }
             });
@@ -304,7 +321,7 @@
                 dataType: "json",
                 success: function (msg) {
                     $("#successModalBody").text(msg);
-                    $('#successModal').modal('show');    
+                    $('#successModal').modal('show');
                 },
                 error: function (obj) {
                     alert("Error while deleting trianer allocation" + obj);
@@ -513,7 +530,8 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">Message</label>
                         <div class="col-md-10">
-                            <textarea id="messageBody"></textarea>
+                            <textarea style="width:350px;height:200px" id="messageBody">                             
+                            </textarea>
                         </div>
                     </div>                    
                 </div>

@@ -88,10 +88,14 @@ namespace FirstInFirstAid.Controllers
             }
             EventSegment eventSegment = db.EventSegments.Include(e => e.Event).
                 Include(c => c.ClientContact).
-                Include(v => v.Venue).
+                Include(v => v.Venue).  
                 Include(a => a.TrainorAllocations.Select(t => t.Trainor)).
                 Where(x => x.Id == id).First();
-          
+
+            //db.Entry(eventSegment?.Venue).Reference(v => v.Address).Load();
+
+           
+
             if (eventSegment == null)
             {
                 logger.Warn("Received null Event Segement Id to modify");
@@ -320,6 +324,27 @@ namespace FirstInFirstAid.Controllers
         public JsonResult getVenues()
         {
             return Json(db.Venues.Select(i => new { i.Id, i.VenueName }), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult getEmailBody(int id)
+        {
+            EventSegment eventSegment = db.EventSegments.Include(e => e.Event).
+               Include("Event.Client").
+               Include(c => c.ClientContact).
+               Include(v => v.Venue).
+               Include("Venue.Address").
+               Where(x => x.Id == id).First();
+
+            string mailBody = "Are you available for the following event? \n\nEvent Name : " + eventSegment.Event.EventName + "\n"
+                + "Event Segment Name : " + eventSegment.Name + "\n"
+                + "Venue : " + eventSegment.Venue? .Address.ToString() + "\n"
+                + "Start Time : " + eventSegment.StartTime + "\n"
+                + "End Time : " + eventSegment.EndTime + "\n"
+                + "Client : " + eventSegment.Event.Client.Name + "\n"
+                + "Client Contact: " + eventSegment.ClientContact.ContactName + ", Ph: " + eventSegment.ClientContact.ContactPhone + 
+                    ", OfficePh: " + eventSegment.ClientContact.ContactPhoneOff;
+
+            return Json (new { Body = mailBody, Subject = eventSegment.Coverage.ToString() }, JsonRequestBehavior.AllowGet);   
         }
 
         [HttpGet]

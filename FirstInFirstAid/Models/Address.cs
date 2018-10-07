@@ -23,5 +23,10 @@ namespace FirstInFirstAid.Models
 
        /* [Required(ErrorMessage = "State is missing")]*/
         public State? State { get; set; }
+
+        public override string ToString()
+        {
+            return StreetNumber + " " + StreetNumber + " " + Suburb + " " + Postcode + " " + State.Value;
+        }
     }
 }
