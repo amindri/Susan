@@ -13,16 +13,16 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-            $('#emailModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget) // Button that triggered the modal
-                var trainerId = button.data('trainerid') // Extract
-                var modal = $(this);
-                modal.find('.modal-body input#trainerId').val(trainerId);
+        $('#emailModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var trainerId = button.data('trainerid') // Extract
+            var modal = $(this);
+            modal.find('.modal-body input#trainerId').val(trainerId);
 
-                //add email body
-                $.ajax({
+            //add email body
+            $.ajax({
                 type: "GET",
-                url: '/EventSegments/getEmailBody/' + '@Model.Id',
+                url: '/EventSegments/getEmailBodyTrainer/' + '@Model.Id',
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
@@ -34,101 +34,130 @@
                     $('#warnModal').modal('show');
                 }
             });
+        });
 
-            });
+        $('.modal').on('hidden.bs.modal', function (e) {
+            $(this).removeData();
+        });
 
-            $("input[type=datetime]").datetimepicker({
-                dateFormat: "dd-M-yy",
-                changeMonth: true,
-                changeYear: true,
-                yearRange: "-100:+5",
-                controlType: "select",
-                timeFormat: "hh:mm TT",
-                "stepMinute": 15
-                });
+        $('#clientEmailModal').on('show.bs.modal', function (event) {
 
-            $.validator.methods.date = function (value, element) {
-                var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-                if (isChrome) {
-                    var d = new Date();
-                    return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
-                } else {
-                    return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
+            var modal = $(this);
+            var clientContactId = $("#ClientContact").val();
+            console.log(clientContactId);
+            modal.find('.modal-body input#clientContactId').val(clientContactId);
+
+
+            //add email body
+            $.ajax({
+                type: "GET",
+                url: '/EventSegments/getEmailBodyClient/' + '@Model.Id',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    modal.find('.modal-body textarea#messageBody').val(response.Body);
+                    modal.find('.modal-body input#subject').val(response.Subject);
+                },
+                error: function (xhr, status, error) {
+                    $("#warnModalBody").text(error);
+                    $('#warnModal').modal('show');
                 }
-            };
+            });
+        });
 
 
-            var dutyTypes = @Html.Raw(ViewBag.DutyTypeEnum);
-
-            var i = 0;
-            $("#addAllocation").click(function () {
-                i++;
-
-                $('<div class="panel panel-default col-md-12" id=\"NS' + i + '\">' +
-                    '<div class="form-group">' +
-                        '<label class="control-label col-md-4">Available Trainers</label>' +
-                        '<div class="col-md-8">' +
-                            '<select class=\"form-control combobox\" id=\"Name\"></select>' +
-                        '</div>' +
-                    '</div>' +
-                   /* '<div class="form-group">' +
-                        '<label class="control-label col-md-4">Duty Type</label>' +
-                        '<div class="col-md-8">' +
-                            '<select id=\"DutyType\" class=\"form-control combobox\"></select>' +
-                        '</div>' +
-                    '</div>' +*/
-                    '<div class="form-group">' +
-                        '<label class="control-label col-md-4">Hours</label>' +
-                        '<div class="col-md-8">' +
-                            '<input id=\"Hours\" type="\text\" class=\"form-control\">' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="form-group">' +
-                        '<label class="control-label col-md-4">Paid</label>' +
-                        '<div class="col-md-8">' +
-                            '<select id=\"Paid\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="form-group">' +
-                        '<label class="control-label col-md-4">PresenceConfirmation</label>' +
-                        '<div class="col-md-8">' +
-                            '<select id=\"Confirmation\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="form-group">' +
-                        '<label class="control-label col-md-4">PaymentNote</label>' +
-                        '<div class="col-md-8">' +
-                            '<textarea id=\"PaymentNote\" type="\text\" class=\"form-control\"></textarea>' +
-                        '</div>' +
-                    '</div>' +
-
-                    '<button type="button" value="Create" class="btn btn-success" onclick="createAllocation(' + i + ');">Create</button>' +
-                    '<button type="button" value="Delete" class="btn btn-danger" onclick="$(this).parent().remove();">Delete</button>' +
-                '</div>').insertAfter("#addAllocation");
-
-                $("#NS" + i + " select#Name").combobox({ getdata: getAvailableTrainers, param: "NS" + i });
-                $("#NS" + i + " select#DutyType").append($("<option>Please Select</option>"));
-                $.each(dutyTypes, function (index, dutyType) {
-                    $("#NS" + i + " select#DutyType").append($("<option></option>").attr("value", dutyType.ID).text(dutyType.Name));
-                });
+        $("input[type=datetime]").datetimepicker({
+            dateFormat: "dd-M-yy",
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+5",
+            controlType: "select",
+            timeFormat: "hh:mm TT",
+            "stepMinute": 15
             });
 
-            var clinetContactId = @(Model.ClientContact == null ? -1 : Model.ClientContact.Id);
-            if (clinetContactId == -1) {
-                $('#ClientContact').append($("<option selected value='Please Select'>Please Select</option>"));
+        $.validator.methods.date = function (value, element) {
+            var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+            if (isChrome) {
+                var d = new Date();
+                return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
+            } else {
+                return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
             }
+        };
 
-            var venueId = @(Model.Venue == null ? -1 : Model.Venue.Id);
-            if (venueId == -1) {
-                $('#Venue').append($("<option selected value='Please Select'>Please Select</option>"));
-            }
 
-            $(function () {
-                window.setTimeout(function () {
-                    $('#ClientContact').combobox({ getdata: appendClientContacts });
-                    $('#Venue').combobox({ getdata: appendVenues });
-                }, 0);
+        var dutyTypes = @Html.Raw(ViewBag.DutyTypeEnum);
+
+        var i = 0;
+        $("#addAllocation").click(function () {
+            i++;
+
+            $('<div class="panel panel-default col-md-12" id=\"NS' + i + '\">' +
+                '<div class="form-group">' +
+                    '<label class="control-label col-md-4">Available Trainers</label>' +
+                    '<div class="col-md-8">' +
+                        '<select class=\"form-control combobox\" id=\"Name\"></select>' +
+                    '</div>' +
+                '</div>' +
+                /* '<div class="form-group">' +
+                    '<label class="control-label col-md-4">Duty Type</label>' +
+                    '<div class="col-md-8">' +
+                        '<select id=\"DutyType\" class=\"form-control combobox\"></select>' +
+                    '</div>' +
+                '</div>' +*/
+                '<div class="form-group">' +
+                    '<label class="control-label col-md-4">Hours</label>' +
+                    '<div class="col-md-8">' +
+                        '<input id=\"Hours\" type="\text\" class=\"form-control\">' +
+                    '</div>' +
+                '</div>' +
+                '<div class="form-group">' +
+                    '<label class="control-label col-md-4">Paid</label>' +
+                    '<div class="col-md-8">' +
+                        '<select id=\"Paid\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="form-group">' +
+                    '<label class="control-label col-md-4">PresenceConfirmation</label>' +
+                    '<div class="col-md-8">' +
+                        '<select id=\"Confirmation\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="form-group">' +
+                    '<label class="control-label col-md-4">PaymentNote</label>' +
+                    '<div class="col-md-8">' +
+                        '<textarea id=\"PaymentNote\" type="\text\" class=\"form-control\"></textarea>' +
+                    '</div>' +
+                '</div>' +
+
+                '<button type="button" value="Create" class="btn btn-success" onclick="createAllocation(' + i + ');">Create</button>' +
+                '<button type="button" value="Delete" class="btn btn-danger" onclick="$(this).parent().remove();">Delete</button>' +
+            '</div>').insertAfter("#addAllocation");
+
+            $("#NS" + i + " select#Name").combobox({ getdata: getAvailableTrainers, param: "NS" + i });
+            $("#NS" + i + " select#DutyType").append($("<option>Please Select</option>"));
+            $.each(dutyTypes, function (index, dutyType) {
+                $("#NS" + i + " select#DutyType").append($("<option></option>").attr("value", dutyType.ID).text(dutyType.Name));
             });
+        });
+
+        var clinetContactId = @(Model.ClientContact == null ? -1 : Model.ClientContact.Id);
+        if (clinetContactId == -1) {
+            $('#ClientContact').append($("<option selected value='Please Select'>Please Select</option>"));
+        }
+
+        var venueId = @(Model.Venue == null ? -1 : Model.Venue.Id);
+        if (venueId == -1) {
+            $('#Venue').append($("<option selected value='Please Select'>Please Select</option>"));
+        }
+
+        $(function () {
+            window.setTimeout(function () {
+                $('#ClientContact').combobox({ getdata: appendClientContacts });
+                $('#Venue').combobox({ getdata: appendVenues });
+            }, 0);
+        });
 
             /* Client side validation for client contact drop box */
             $("#saveEventSeg").click(function () {
@@ -329,11 +358,12 @@
             });
         };
 
-        function sendEmail() {
+        function sendEmail(idName) {
             var mail = {
-                trainerId: $.trim($("#trainerId").val()),
+                id: $.trim($("#" + idName).val()),
                 messageBody: $.trim($("#messageBody").val()),
-                subject: $.trim($("#subject").val())
+                subject: $.trim($("#subject").val()),
+                idName: idName
             };
 
             $.ajax({
@@ -432,9 +462,12 @@
 
         <div class="form-group">
             <label class="control-label col-md-2" for="ClientContact">Client Contact:</label> 
-            <div class="col-md-10">
+            <div class="col-md-8">
                 @Html.DropDownListFor(m => m.ClientContact.Id, (SelectList)ViewBag?.ClientContact, new { id = "ClientContact" }) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Html.ActionLink("Edit Client", "Index", "Clients", null, new { @id = "link", target = "_blank" })
                 <p id="ccempty" class="c-val" hidden>Client contact is missing</p>
+            </div>
+            <div class="col-md-2">
+                <button data-target="#clientEmailModal" data-toggle="modal" id="sendClientEmail" type="button" class="btn btn-primary"> Send Email </button>
             </div>
         </div>
 
@@ -498,8 +531,8 @@
                         <button type="button" value="Delete" class="btn btn-danger" onclick="deleteAllocation(@Model.TrainorAllocations[i].Id)">Delete</button>
                         <button data-target="#emailModal" data-toggle="modal" id="sendEmail" data-trainerId="@Model.TrainorAllocations[i].Trainor.Id"  type="button" class="btn btn-primary"> Send Email </button>
                     </div>
-            }
-        }
+                 }
+                }
             </div>
         </div>
     </div>
@@ -537,7 +570,45 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" onclick="sendEmail()" data-dismiss="modal">Send</button>
+                <button type="button" class="btn btn-default" onclick="sendEmail('trainerId')" data-dismiss="modal">Send</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="clientEmailModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Send Email</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <input type="hidden" id="clientContactId" />
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Subject</label>
+                        <div class="col-md-10">
+                            <input type="text" id="subject" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Message</label>
+                        <div class="col-md-10">
+                            <textarea style="width:350px;height:200px" id="messageBody">      
+                                Event Name : @Model.Event.EventName&#13;&#10;
+                                
+                       
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="sendEmail('clientContactId')" data-dismiss="modal">Send</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
         </div>

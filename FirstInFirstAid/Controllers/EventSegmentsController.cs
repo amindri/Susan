@@ -259,27 +259,50 @@ namespace FirstInFirstAid.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> SendMail(int trainerId, string subject, string messageBody)
+        public async Task<ActionResult> SendMail(int id, string subject, string messageBody, string idName)
         {
-            Trainor trainer = db.Trainors.Find(trainerId);
-            if (trainer != null && trainer.Email != null) {
-                var body = "<p>Email From: {0} ({1})</p><p>Message:</p><p>{2}</p>";
-                var message = new MailMessage();
-                message.To.Add(new MailAddress(trainer.Email));
-                message.Subject = subject;
-                message.Body = string.Format(body, senderName, senderEmailAddress, messageBody);
-                message.IsBodyHtml = true;
-                using (var smtp = new SmtpClient())
+            string email;
+            string name;
+            if ("trainerId".Equals(idName))
+            {
+                Trainor trainer = db.Trainors.Find(id);
+                if (trainer != null && trainer.Email != null)
                 {
-                    await smtp.SendMailAsync(message);
-                    var successMessage = "Email Successfully sent to " + trainer.FirstName;
-                    logger.InfoFormat("Email Successfully sent to {0} {1}", trainer.FirstName, trainer.Lastname);
-                    return Content("{\"Type\":\"Success\", \"Message\":\"" + successMessage + "\"}");
+                    email = trainer.Email;
+                    name = trainer.FirstName + " " + trainer.Lastname;
+                }
+                else
+                {
+                    var errorMessage = (trainer == null ? "Specified trainer was not found" : "Specified trainer doesn't have an email address assigned");
+                    return Content("{\"Type\":\"Warn\", \"Message\":\"" + errorMessage + "\"}");
+                }
+            } else
+            {
+                ClientContact clientContact = db.ClientContacts.Find(id);
+                if (clientContact != null && clientContact.ContactEmail != null)
+                {
+                    email = clientContact.ContactEmail;
+                    name = clientContact.ContactName;
+                } else
+                {
+                    var errorMessage = (clientContact == null ? "Specified client contact was not found" : "Specified client contact doesn't have an email address assigned");
+                    return Content("{\"Type\":\"Warn\", \"Message\":\"" + errorMessage + "\"}");
                 }
             }
-            var errorMessage = (trainer == null ? "Specified trainer was not found" : "Specified trainer doesn't have an assigned email address");
-            return Content("{\"Type\":\"Warn\", \"Message\":\"" + errorMessage + "\"}");
 
+            var body = "<p>Email From: {0} ({1})</p><p>Message:</p><p>{2}</p>";
+            var message = new MailMessage();
+            message.To.Add(new MailAddress(email));
+            message.Subject = subject;
+            message.Body = string.Format(body, senderName, senderEmailAddress, messageBody);
+            message.IsBodyHtml = true;
+            using (var smtp = new SmtpClient())
+            {
+                await smtp.SendMailAsync(message);
+                var successMessage = "Email Successfully sent to " + name;
+                logger.InfoFormat("Email Successfully sent to {0}", name);
+                return Content("{\"Type\":\"Success\", \"Message\":\"" + successMessage + "\"}");
+            }             
         }
 
         public JsonResult getAvailableTrainers(int segmentId)
@@ -326,7 +349,7 @@ namespace FirstInFirstAid.Controllers
             return Json(db.Venues.Select(i => new { i.Id, i.VenueName }), JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult getEmailBody(int id)
+        public JsonResult getEmailBodygetEmailBodyTrainer(int id)
         {
             EventSegment eventSegment = db.EventSegments.Include(e => e.Event).
                Include("Event.Client").
@@ -340,11 +363,36 @@ namespace FirstInFirstAid.Controllers
                 + "Venue : " + eventSegment.Venue? .Address.ToString() + "\n"
                 + "Start Time : " + eventSegment.StartTime + "\n"
                 + "End Time : " + eventSegment.EndTime + "\n"
+                + "Number of Hours :" + eventSegment.Hours + "\n"
+                + "Duty Type : " + eventSegment.Coverage.ToString() + "\n"
                 + "Client : " + eventSegment.Event.Client.Name + "\n"
                 + "Client Contact: " + eventSegment.ClientContact.ContactName + ", Ph: " + eventSegment.ClientContact.ContactPhone + 
                     ", OfficePh: " + eventSegment.ClientContact.ContactPhoneOff;
 
             return Json (new { Body = mailBody, Subject = eventSegment.Coverage.ToString() }, JsonRequestBehavior.AllowGet);   
+        }
+
+        public JsonResult getEmailBodyClient(int id)
+        {
+            EventSegment eventSegment = db.EventSegments.Include(e => e.Event).
+               Include("Event.Client").
+               Include(c => c.ClientContact).
+               Include(v => v.Venue).
+               Include("Venue.Address").
+               Where(x => x.Id == id).First();
+
+            string mailBody =
+                "Event Name: " + eventSegment.Event.EventName + "\n"
+                + "Event Segment Name : " + eventSegment.Name + "\n"
+                + "Venue : " + eventSegment.Venue?.Address.ToString() + "\n"
+                + "Start Time : " + eventSegment.StartTime + "\n"
+                + "End Time : " + eventSegment.EndTime + "\n"
+                + "Number of Hours :" + eventSegment.Hours + "\n"
+                + "Duty Type : " + eventSegment.Coverage.ToString() + "\n"
+                + "Total Fee : " + eventSegment.TotalFee + "\n"
+                + "Number of Staff : " + eventSegment.RequiredNumberOfStaff + "\n";
+
+            return Json(new { Body = mailBody, Subject = eventSegment.Coverage.ToString() }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
