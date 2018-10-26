@@ -298,10 +298,17 @@ namespace FirstInFirstAid.Controllers
             message.IsBodyHtml = true;
             using (var smtp = new SmtpClient())
             {
-                await smtp.SendMailAsync(message);
-                var successMessage = "Email Successfully sent to " + name;
-                logger.InfoFormat("Email Successfully sent to {0}", name);
-                return Content("{\"Type\":\"Success\", \"Message\":\"" + successMessage + "\"}");
+                try
+                {
+                    await smtp.SendMailAsync(message);
+                    var successMessage = "Email Successfully sent to " + name;
+                    logger.InfoFormat("Email Successfully sent to {0}", name);
+                    return Content("{\"Type\":\"Success\", \"Message\":\"" + successMessage + "\"}");
+                }
+                catch(Exception e)
+                {
+                    return Content("{\"Type\":\"Success\", \"Message\":\"" + e.Message + "\"}");
+                }
             }             
         }
 
@@ -349,7 +356,7 @@ namespace FirstInFirstAid.Controllers
             return Json(db.Venues.Select(i => new { i.Id, i.VenueName }), JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult getEmailBodygetEmailBodyTrainer(int id)
+        public JsonResult getEmailBodyTrainer(int id)
         {
             EventSegment eventSegment = db.EventSegments.Include(e => e.Event).
                Include("Event.Client").
