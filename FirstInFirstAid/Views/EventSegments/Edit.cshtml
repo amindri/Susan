@@ -91,55 +91,78 @@
 
         var i = 0;
         $("#addAllocation").click(function () {
-            i++;
 
-            $('<div class="panel panel-default col-md-12" id=\"NS' + i + '\">' +
-                '<div class="form-group">' +
-                    '<label class="control-label col-md-4">Available Trainers</label>' +
-                    '<div class="col-md-8">' +
-                        '<select class=\"form-control combobox\" id=\"Name\"></select>' +
-                    '</div>' +
-                '</div>' +
-                /* '<div class="form-group">' +
-                    '<label class="control-label col-md-4">Duty Type</label>' +
-                    '<div class="col-md-8">' +
-                        '<select id=\"DutyType\" class=\"form-control combobox\"></select>' +
-                    '</div>' +
-                '</div>' +*/
-                '<div class="form-group">' +
-                    '<label class="control-label col-md-4">Hours</label>' +
-                    '<div class="col-md-8">' +
-                        '<input id=\"Hours\" type="\text\" class=\"form-control\">' +
-                    '</div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                    '<label class="control-label col-md-4">Paid</label>' +
-                    '<div class="col-md-8">' +
-                        '<select id=\"Paid\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
-                    '</div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                    '<label class="control-label col-md-4">PresenceConfirmation</label>' +
-                    '<div class="col-md-8">' +
-                        '<select id=\"Confirmation\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
-                    '</div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                    '<label class="control-label col-md-4">PaymentNote</label>' +
-                    '<div class="col-md-8">' +
-                        '<textarea id=\"PaymentNote\" type="\text\" class=\"form-control\"></textarea>' +
-                    '</div>' +
-                '</div>' +
+            $.ajax({
+                type: "GET",
+                url: '/EventSegments/needMoreTrainerAllocs/' + @Model.Id,
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    var domDivNUmber = $('#allocations').children('div').length;
+                    var requiredNoStaff = @Model.RequiredNumberOfStaff;
 
-                '<button type="button" value="Create" class="btn btn-success" onclick="createAllocation(' + i + ');">Create</button>' +
-                '<button type="button" value="Delete" class="btn btn-danger" onclick="$(this).parent().remove();">Delete</button>' +
-            '</div>').insertAfter("#addAllocation");
+                    if (response && (requiredNoStaff > domDivNUmber)) {
+                        i++;
 
-            $("#NS" + i + " select#Name").combobox({ getdata: getAvailableTrainers, param: "NS" + i });
-            $("#NS" + i + " select#DutyType").append($("<option>Please Select</option>"));
-            $.each(dutyTypes, function (index, dutyType) {
-                $("#NS" + i + " select#DutyType").append($("<option></option>").attr("value", dutyType.ID).text(dutyType.Name));
+                        $('<div class="panel panel-default col-md-12" id=\"NS' + i + '\">' +
+                            '<div class="form-group">' +
+                            '<label class="control-label col-md-4">Available Trainers</label>' +
+                            '<div class="col-md-8">' +
+                            '<select class=\"form-control combobox\" id=\"Name\"></select>' +
+                            '</div>' +
+                            '</div>' +
+                            /* '<div class="form-group">' +
+                                '<label class="control-label col-md-4">Duty Type</label>' +
+                                '<div class="col-md-8">' +
+                                    '<select id=\"DutyType\" class=\"form-control combobox\"></select>' +
+                                '</div>' +
+                            '</div>' +*/
+                            '<div class="form-group">' +
+                            '<label class="control-label col-md-4">Hours</label>' +
+                            '<div class="col-md-8">' +
+                            '<input id=\"Hours\" type="\text\" class=\"form-control\">' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="form-group">' +
+                            '<label class="control-label col-md-4">Paid</label>' +
+                            '<div class="col-md-8">' +
+                            '<select id=\"Paid\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="form-group">' +
+                            '<label class="control-label col-md-4">PresenceConfirmation</label>' +
+                            '<div class="col-md-8">' +
+                            '<select id=\"Confirmation\" class=\"form-control\"><option selected value=\"false\">No</option><option value=\"true\">Yes</option></select>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="form-group">' +
+                            '<label class="control-label col-md-4">PaymentNote</label>' +
+                            '<div class="col-md-8">' +
+                            '<textarea id=\"PaymentNote\" type="\text\" class=\"form-control\"></textarea>' +
+                            '</div>' +
+                            '</div>' +
+
+                            '<button type="button" value="Create" class="btn btn-success" onclick="createAllocation(' + i + ');">Create</button>' +
+                            '<button type="button" value="Delete" class="btn btn-danger" onclick="$(this).parent().remove();">Delete</button>' +
+                            '</div>').insertAfter("#addAllocation");
+
+                        $("#NS" + i + " select#Name").combobox({ getdata: getAvailableTrainers, param: "NS" + i });
+                        $("#NS" + i + " select#DutyType").append($("<option>Please Select</option>"));
+                        $.each(dutyTypes, function (index, dutyType) {
+                            $("#NS" + i + " select#DutyType").append($("<option></option>").attr("value", dutyType.ID).text(dutyType.Name));
+                        });
+                    } else {
+                        $("#warnModalBody").text("Required Number of trainers are allocated. Delete an existing allocation to add a  new one");
+                        $('#warnModal').modal('show');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $("#warnModalBody").text(error);
+                    $('#warnModal').modal('show');
+                }
             });
+
+            
         });
 
         var clinetContactId = @(Model.ClientContact == null ? -1 : Model.ClientContact.Id);
@@ -159,165 +182,165 @@
             }, 0);
         });
 
-            /* Client side validation for client contact drop box */
-            $("#saveEventSeg").click(function () {
-                var cContact = $("#ClientContact").val();
-                var venue = $("#Venue").val();
-                if ((cContact == 'Please Select') || (cContact == '')) {
-                   // $("#ccempty").show();
-                } else {
-                    $("#form").append("<input type='hidden' name='clientContactId'" + " value='" + $("#ClientContact").val() + "'/>");
+        /* Client side validation for client contact drop box */
+        $("#saveEventSeg").click(function () {
+            var cContact = $("#ClientContact").val();
+            var venue = $("#Venue").val();
+            if ((cContact == 'Please Select') || (cContact == '')) {
+                // $("#ccempty").show();
+            } else {
+                $("#form").append("<input type='hidden' name='clientContactId'" + " value='" + $("#ClientContact").val() + "'/>");
 
-                }
-                if ((venue == 'Please Select') || (venue == '')) {
-                  //  $("#vempty").show();
-                } else {
-                    $("#form").append("<input type='hidden' name='venueId'" + " value='" + $("#Venue").val() + "'/>");
-                }
+            }
+            if ((venue == 'Please Select') || (venue == '')) {
+                //  $("#vempty").show();
+            } else {
+                $("#form").append("<input type='hidden' name='venueId'" + " value='" + $("#Venue").val() + "'/>");
+            }
 
-            });
+        });
+    });
+
+    function gettoken() {
+        var token = '@Html.AntiForgeryToken()';
+        token = $(token).val();
+        return token;
+    };
+
+    function appendVenues(select) {
+        $.ajax({
+            type: "POST",
+            url: "/EventSegments/getVenues",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (venues) {
+                $('#Venue').empty();
+                if (venues.length == 0) {
+                    $('#Venue').append($("<option></option>").text("No Venues created. Please create the venue"));
+                } else {
+                    $.each(venues, function (index, venue) {
+                        if (venue.Id == select) {
+                            $('#Venue').append($("<option selected></option>").attr("value", venue.Id).text(venue.VenueName));
+                        } else {
+                            $('#Venue').append($("<option></option>").attr("value", venue.Id).text(venue.VenueName));
+                        }
+                    });
+                }
+            },
+            error: function () {
+                alert("Failed to load venues");
+            }
         });
 
-        function gettoken() {
-            var token = '@Html.AntiForgeryToken()';
-            token = $(token).val();
-            return token;
-        };
+    };
 
-        function appendVenues(select) {
-            $.ajax({
-                type: "POST",
-                url: "/EventSegments/getVenues",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (venues) {
-                    $('#Venue').empty();
-                    if (venues.length == 0) {
-                        $('#Venue').append($("<option></option>").text("No Venues created. Please create the venue"));
-                    } else {
-                        $.each(venues, function (index, venue) {
-                            if (venue.Id == select) {
-                                $('#Venue').append($("<option selected></option>").attr("value", venue.Id).text(venue.VenueName));
-                            } else {
-                                $('#Venue').append($("<option></option>").attr("value", venue.Id).text(venue.VenueName));
-                            }
-                        });
-                    }
-                },
-                error: function () {
-                    alert("Failed to load venues");
+    function appendClientContacts(select) {
+        $.ajax({
+            type: "POST",
+            url: "/EventSegments/getClientContacts",
+            contentType: "application/json; charset=utf-8",
+            data: "{'eventId' : '" + @Model.Event.Id + "'}",
+            dataType: "json",
+            success: function (clientContactList) {
+                $('#ClientContact').empty();
+
+                if (clientContactList.length == 0) {
+                    $('#ClientContact').append($("<option></option>").text("No Client Contacts assigned to the client"));
+                } else {
+                    $.each(clientContactList, function (index, client) {
+                        if (client.Id == select) {
+                            $('#ClientContact').append($("<option selected></option>").attr("value", client.Id).text(client.ContactName));
+                        } else {
+                            $('#ClientContact').append($("<option></option>").attr("value", client.Id).text(client.ContactName));
+                        }
+                    });
                 }
-            });
+            },
+            error: function () {
+                alert("Failed to load Client Contacts");
+            }
+        });
+    };
 
-        }
-        function appendClientContacts(select) {
-            $.ajax({
-                type: "POST",
-                url: "/EventSegments/getClientContacts",
-                contentType: "application/json; charset=utf-8",
-                data: "{'eventId' : '" + @Model.Event.Id + "'}",
-                dataType: "json",
-                success: function (clientContactList) {
-                    $('#ClientContact').empty();
+    function getAvailableTrainers(divId) {
+        $.ajax({
+            type: 'POST',
+            url: '/EventSegments/getAvailableTrainers',
+            data: "{'segmentId' : '" + @Model.Id + "'}",
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function (trainerList) {
 
-                    if (clientContactList.length == 0) {
-                        $('#ClientContact').append($("<option></option>").text("No Client Contacts assigned to the client"));
-                    } else {
-                        $.each(clientContactList, function (index, client) {
-                            if (client.Id == select) {
-                                $('#ClientContact').append($("<option selected></option>").attr("value", client.Id).text(client.ContactName));
-                            } else {
-                                $('#ClientContact').append($("<option></option>").attr("value", client.Id).text(client.ContactName));
-                            }
-                        });
-                    }
-                },
-                error: function () {
-                    alert("Failed to load Client Contacts");
+                $("#" + divId + " select#Name").empty();
+
+                if (trainerList.length == 0) {
+                    $("#" + divId + " select#Name").append($("<option></option>").text("No Available Trainers for this time"));
+                } else {
+                    $.each(trainerList, function (index, trainer) {
+                        $("#" + divId + " select#Name").append($("<option></option>").attr("value", trainer.Id).text(trainer.FirstName + " " + trainer.Lastname));
+                    });
                 }
-            });
+            },
+            error: function (msg) {
+                console.log(msg);
+            }
+        });
+    };
+
+    function createAllocation(nsId) {
+
+        var allocation = {
+            trainorAllocation: {
+                DutyType: $.trim($("#NS" + nsId + ' #DutyType').val()),
+                PresenceConfirmation: $.trim($("#NS" + nsId + ' #Confirmation').val()),
+                PaymentNote: $.trim($("#NS" + nsId + ' #PaymentNote').val()),
+                Hours: $.trim($("#NS" + nsId + ' #Hours').val()),
+                Paid: $.trim($("#NS" + nsId + ' #Paid').val())
+            },
+            eventSegmentId: '@Model.Id',
+            trainerId: $.trim($("#NS" + nsId + ' #Name').val())
         };
 
-        function getAvailableTrainers(divId) {
-            $.ajax({
-                type: 'POST',
-                url: '/EventSegments/getAvailableTrainers',
-                data: "{'segmentId' : '" + @Model.Id + "'}",
-                dataType: 'json',
-                contentType: "application/json; charset=utf-8",
-                success: function (trainerList) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Create", "TrainorAllocationForEventSegs")',
+            data: JSON.stringify(allocation),
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $("#successModalBody").text("Successfully created the trainer allocation with the trainer");
+                $('#successModal').modal('show');
+            },
+            error: function (message) { }
+        });
+    };
 
-                    $("#" + divId + " select#Name").empty();
+    function updateAllocation(dbId) {
 
-                    if (trainerList.length == 0) {
-                        $("#" + divId + " select#Name").append($("<option></option>").text("No Available Trainers for this time"));
-                    } else {
-                        $.each(trainerList, function (index, trainer) {
-                            $("#" + divId + " select#Name").append($("<option></option>").attr("value", trainer.Id).text(trainer.FirstName + " " + trainer.Lastname));
-                        });
-                    }
-                },
-                error: function (msg) {
-                    console.log(msg);
-                }
-            });
+        var allocation = {
+            trainorAllocation: {
+                DutyType: $.trim($("#saved_" + dbId + ' #DutyType').val()),
+                PresenceConfirmation: $.trim($("#saved_" + dbId + ' #Confirmation').val()),
+                PaymentNote: $.trim($("#saved_" + dbId + ' #PaymentNote').val()),
+                Hours: $.trim($("#saved_" + dbId + ' #Hours').val()),
+                Paid: $.trim($("#saved_" + dbId + ' #Paid').val()),
+                Id: dbId
+            },
+            trainerId: $.trim($("#saved_" + dbId + ' #Name').attr("data-trainerId"))
         };
-
-
-        function createAllocation(nsId) {
-
-            var allocation = {
-                trainorAllocation: {
-                    DutyType: $.trim($("#NS" + nsId + ' #DutyType').val()),
-                    PresenceConfirmation: $.trim($("#NS" + nsId + ' #Confirmation').val()),
-                    PaymentNote: $.trim($("#NS" + nsId + ' #PaymentNote').val()),
-                    Hours: $.trim($("#NS" + nsId + ' #Hours').val()),
-                    Paid: $.trim($("#NS" + nsId + ' #Paid').val())
-                },
-                eventSegmentId: '@Model.Id',
-                trainerId: $.trim($("#NS" + nsId + ' #Name').val())
-            };
-
-            $.ajax({
-                type: "POST",
-                url: '@Url.Action("Create", "TrainorAllocationForEventSegs")',
-                data: JSON.stringify(allocation),
-                dataType: 'json',
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-                   $("#successModalBody").text("Successfully created the trainer allocation with the trainer");
-                   $('#successModal').modal('show');
-                },
-                error: function (message) { }
-            });
-        };
-
-        function updateAllocation(dbId) {
-
-            var allocation = {
-                trainorAllocation: {
-                    DutyType: $.trim($("#saved_" + dbId + ' #DutyType').val()),
-                    PresenceConfirmation: $.trim($("#saved_" + dbId + ' #Confirmation').val()),
-                    PaymentNote: $.trim($("#saved_" + dbId + ' #PaymentNote').val()),
-                    Hours: $.trim($("#saved_" + dbId + ' #Hours').val()),
-                    Paid: $.trim($("#saved_" + dbId + ' #Paid').val()),
-                    Id: dbId
-                },
-                trainerId: $.trim($("#saved_" + dbId + ' #Name').attr("data-trainerId"))
-            };
-            $.ajax({
-                type: "POST",
-                url: '@Url.Action("Edit", "TrainorAllocationForEventSegs")',
-                data: JSON.stringify(allocation),
-                dataType: 'json',
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-                    $("#successModalBody").text("Successfully updated the trainer allocation");
-                    $('#successModal').modal('show');
-                },
-               error: function (message) { alert("Error while updating the trainer allocation " + message);}
-            });
-        };
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Edit", "TrainorAllocationForEventSegs")',
+            data: JSON.stringify(allocation),
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                $("#successModalBody").text("Successfully updated the trainer allocation");
+                $('#successModal').modal('show');
+            },
+            error: function (message) { alert("Error while updating the trainer allocation " + message);}
+        });
+    };
 
         function deleteAllocation(dbId) {
 
@@ -358,35 +381,36 @@
             });
         };
 
-        function sendEmail(idName) {
-            var mail = {
-                id: $.trim($("#" + idName).val()),
-                messageBody: $.trim($("#messageBody").val()),
-                subject: $.trim($("#subject").val()),
-                idName: idName
-            };
+    function sendEmail(idName) {
+        var mail = {
+            id: $.trim($("#" + idName).val()),
+            messageBody: $.trim($("#messageBody").val()),
+            subject: $.trim($("#subject").val()),
+            idName: idName
+        };
 
-            $.ajax({
-                type: "POST",
-                url: '/EventSegments/SendMail',
-                data: JSON.stringify(mail),
-                dataType: 'json',
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-                    if (response.Type == "Success") {
-                        $("#successModalBody").text(response.Message);
-                        $('#successModal').modal('show');
-                    } else {
-                        $("#warnModalBody").text(response.Message);
-                        $('#warnModal').modal('show');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    $("#warnModalBody").text(error);
+        $.ajax({
+            type: "POST",
+            url: '/EventSegments/SendMail',
+            data: JSON.stringify(mail),
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                if (response.Type == "Success") {
+                    $("#successModalBody").text(response.Message);
+                    $('#successModal').modal('show');
+                } else {
+                    $("#warnModalBody").text(response.Message);
                     $('#warnModal').modal('show');
                 }
-            });
-        };
+            },
+            error: function (xhr, status, error) {
+                $("#warnModalBody").text(error);
+                $('#warnModal').modal('show');
+            }
+        });
+    };
+
 </script>
 }
 <h2>Edit</h2>
@@ -490,7 +514,7 @@
         <div class="form-group">
             <label class="control-label col-md-2">Trainer Allocations</label>
             <div id="allocations" class="panel panel-default panel-body col-md-8">
-                <button id="addAllocation" data-target="#modal" data-toggle="modal" type="button" class="btn btn-success"> Add </button> <br/>
+                <button id="addAllocation" type="button" class="btn btn-success"> Add </button> <br/>
                 @if (Model.TrainorAllocations != null)
                 {
                 for(var i = 0; i < Model.TrainorAllocations.Count(); i++)
@@ -599,8 +623,7 @@
                         <label class="control-label col-md-2">Message</label>
                         <div class="col-md-10">
                             <textarea style="width:350px;height:200px" id="messageBody">      
-                                Event Name : @Model.Event.EventName&#13;&#10;
-                                
+                                Event Name : @Model.Event.EventName&#13;&#10;                       
                        
                             </textarea>
                         </div>

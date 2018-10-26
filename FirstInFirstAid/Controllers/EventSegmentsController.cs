@@ -437,6 +437,25 @@ namespace FirstInFirstAid.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult needMoreTrainerAllocs(int id)
+        {
+            EventSegment eventSegment = db.EventSegments.Include(e => e.TrainorAllocations).     
+              Where(x => x.Id == id).First();
+
+            Boolean needMoreAllocs;
+            if (eventSegment.RequiredNumberOfStaff > eventSegment.TrainorAllocations.Count())
+            {
+                needMoreAllocs = true;
+            } 
+            else
+            {
+                needMoreAllocs = false;
+            }
+
+            return Json(needMoreAllocs, JsonRequestBehavior.AllowGet);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
