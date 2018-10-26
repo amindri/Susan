@@ -29,7 +29,7 @@
                     modal.find('.modal-body textarea#messageBody').val(response.Body);
                     modal.find('.modal-body input#subject').val(response.Subject);
                 },
-                error: function (xhr, status, error) {
+                error: function (xhr, status, error) {             
                     $("#warnModalBody").text(error);
                     $('#warnModal').modal('show');
                 }
@@ -308,7 +308,7 @@
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
             success: function (response) {
-                $("#successModalBody").text("Successfully created the trainer allocation with the trainer");
+                $("#successModalBody").text(response);
                 $('#successModal').modal('show');
             },
             error: function (message) { }
@@ -623,7 +623,6 @@
                         <label class="control-label col-md-2">Message</label>
                         <div class="col-md-10">
                             <textarea style="width:350px;height:200px" id="messageBody">      
-                                Event Name : @Model.Event.EventName&#13;&#10;                       
                        
                             </textarea>
                         </div>

@@ -30,8 +30,8 @@ namespace FirstInFirstAid.Controllers
                 trainorAllocation.Trainor = trainer;
                 evntSegment.TrainorAllocations.Add(trainorAllocation);
                 db.SaveChanges();
-                logger.InfoFormat("Trainer Allocation created for the EventSegment : {0}, with the Trainer : {1}", evntSegment.Name, trainorAllocation.Trainor.FirstName  + " " + trainorAllocation.Trainor.Lastname);
-                return Json("Trainer Allocation created for Trainer: " + trainorAllocation.Trainor.FirstName + " " + trainorAllocation.Trainor.Lastname);
+                logger.InfoFormat("Trainer Allocation created for the EventSegment : {0}, with the Trainer : {1}", evntSegment.Name, trainer.FirstName  + " " + trainer.Lastname);
+                return Json("Trainer Allocation created for Trainer: " + trainer.FirstName + " " + trainer.Lastname);
             }
             return Json("Invalid Model State");
         }
