@@ -114,8 +114,9 @@
                     modal.find('.modal-footer button').attr("data-action", "change");
                     modal.find('.modal-body input#name').val($("#" + rowId + " td:nth-child(1)").html());
                     modal.find('.modal-body input#phone').val($("#" + rowId + " td:nth-child(3)").html());
+                    modal.find('.modal-body input#phoneoff').val($("#" + rowId + " td:nth-child(4)").html());
                     modal.find('.modal-body input#position').val($("#" + rowId + " td:nth-child(2)").html());
-                    modal.find('.modal-body input#email').val($("#" + rowId + " td:nth-child(4)").html());
+                    modal.find('.modal-body input#email').val($("#" + rowId + " td:nth-child(5)").html());
                     modal.find('.modal-body input#trId').val(button.data('id'));
                 } else {
                     modal.find('.modal-footer button span').text("Add");
@@ -235,7 +236,7 @@
                                         <td>@contact.ContactName</td>
                                         <td>@contact.ContactPosition</td>
                                         <td>@contact.ContactPhone</td>
-                                        <td>CotactOffice</td>
+                                        <td>@contact.ContactPhoneOff</td>
                                         <td>@contact.ContactEmail</td>
                                         <td>
 
