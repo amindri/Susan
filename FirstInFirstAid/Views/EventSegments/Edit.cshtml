@@ -26,8 +26,8 @@
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
-                    modal.find('.modal-body textarea#messageBody').val(response.Body);
-                    modal.find('.modal-body input#subject').val(response.Subject);
+                    modal.find('.modal-body textarea#messageBodytrainerId').val(response.Body);
+                    modal.find('.modal-body input#subjecttrainerId').val(response.Subject);
                 },
                 error: function (xhr, status, error) {             
                     $("#warnModalBody").text(error);
@@ -55,8 +55,8 @@
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
-                    modal.find('.modal-body textarea#messageBody').val(response.Body);
-                    modal.find('.modal-body input#subject').val(response.Subject);
+                    modal.find('.modal-body textarea#messageBodyclientContactId').val(response.Body);
+                    modal.find('.modal-body input#subjectclientContactId').val(response.Subject);
                 },
                 error: function (xhr, status, error) {
                     $("#warnModalBody").text(error);
@@ -384,8 +384,8 @@
     function sendEmail(idName) {
         var mail = {
             id: $.trim($("#" + idName).val()),
-            messageBody: $.trim($("#messageBody").val()),
-            subject: $.trim($("#subject").val()),
+            messageBody: $.trim($("#messageBody" + idName).val()),
+            subject: $.trim($("#subject" + idName).val()),
             idName: idName
         };
 
@@ -581,13 +581,13 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">Subject</label>
                         <div class="col-md-10">
-                            <input type="text" id="subject"/>
+                            <input type="text" id="subjecttrainerId"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-2">Message</label>
                         <div class="col-md-10">
-                            <textarea style="width:350px;height:200px" id="messageBody">                             
+                            <textarea style="width:350px;height:200px" id="messageBodytrainerId">                             
                             </textarea>
                         </div>
                     </div>                    
@@ -616,14 +616,13 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">Subject</label>
                         <div class="col-md-10">
-                            <input type="text" id="subject" />
+                            <input type="text" id="subjectclientContactId" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-2">Message</label>
                         <div class="col-md-10">
-                            <textarea style="width:350px;height:200px" id="messageBody">      
-                       
+                            <textarea style="width:350px;height:200px" id="messageBodyclientContactId">                       
                             </textarea>
                         </div>
                     </div>

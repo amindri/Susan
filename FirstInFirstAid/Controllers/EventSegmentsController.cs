@@ -389,9 +389,9 @@ namespace FirstInFirstAid.Controllers
                Where(x => x.Id == id).First();
 
             string mailBody =
-                "Event Name: " + eventSegment.Event.EventName + "\n"
-                + "Event Segment Name : " + eventSegment.Name + "\n"
-                + "Venue : " + eventSegment.Venue?.Address.ToString() + "\n"
+                "Event Name: " + eventSegment.Event.EventName + "<br/>"
+                + "Event Segment Name : " + eventSegment.Name + "&#8203;"
+                + "Venue : " + eventSegment.Venue?.Address.ToString() + "<wbr>"
                 + "Start Time : " + eventSegment.StartTime + "\n"
                 + "End Time : " + eventSegment.EndTime + "\n"
                 + "Number of Hours :" + eventSegment.Hours + "\n"
