@@ -366,13 +366,13 @@ namespace FirstInFirstAid.Controllers
                Where(x => x.Id == id).First();
 
             string mailBody = "Are you available for the following event? \n\nEvent Name : " + eventSegment.Event.EventName + "\n"
-                + "Event Segment Name : " + eventSegment.Name + "\n"
-                + "Venue : " + eventSegment.Venue? .Address.ToString() + "\n"
-                + "Start Time : " + eventSegment.StartTime + "\n"
-                + "End Time : " + eventSegment.EndTime + "\n"
-                + "Number of Hours :" + eventSegment.Hours + "\n"
-                + "Duty Type : " + eventSegment.Coverage.ToString() + "\n"
-                + "Client : " + eventSegment.Event.Client.Name + "\n"
+                + "Event Segment Name : " + eventSegment.Name + "<br/>\n"
+                + "Venue : " + eventSegment.Venue? .Address.ToString() + "<br/>\n"
+                + "Start Time : " + eventSegment.StartTime + "<br/>\n"
+                + "End Time : " + eventSegment.EndTime + "<br/>\n"
+                + "Number of Hours :" + eventSegment.Hours + "<br/>\n"
+                + "Duty Type : " + eventSegment.Coverage.ToString() + "<br/>\n"
+                + "Client : " + eventSegment.Event.Client.Name + "<br/>\n"
                 + "Client Contact: " + eventSegment.ClientContact.ContactName + ", Ph: " + eventSegment.ClientContact.ContactPhone + 
                     ", OfficePh: " + eventSegment.ClientContact.ContactPhoneOff;
 
@@ -389,15 +389,15 @@ namespace FirstInFirstAid.Controllers
                Where(x => x.Id == id).First();
 
             string mailBody =
-                "Event Name: " + eventSegment.Event.EventName + "<br/>"
-                + "Event Segment Name : " + eventSegment.Name + "&#8203;"
-                + "Venue : " + eventSegment.Venue?.Address.ToString() + "<wbr>"
-                + "Start Time : " + eventSegment.StartTime + "\n"
-                + "End Time : " + eventSegment.EndTime + "\n"
-                + "Number of Hours :" + eventSegment.Hours + "\n"
-                + "Duty Type : " + eventSegment.Coverage.ToString() + "\n"
-                + "Total Fee : " + eventSegment.TotalFee + "\n"
-                + "Number of Staff : " + eventSegment.RequiredNumberOfStaff + "\n";
+                "Event Name: " + eventSegment.Event.EventName + "<br/>\n"
+                + "Event Segment Name : " + eventSegment.Name + "<br/>\n"
+                + "Venue : " + eventSegment.Venue?.Address.ToString() + "<br/>\n"
+                + "Start Time : " + eventSegment.StartTime + "<br/>\n"
+                + "End Time : " + eventSegment.EndTime + "<br/>\n"
+                + "Number of Hours :" + eventSegment.Hours + "<br/>\n"
+                + "Duty Type : " + eventSegment.Coverage.ToString() + "<br/>\n"
+                + "Total Fee : " + eventSegment.TotalFee + "<br/>\n"
+                + "Number of Staff : " + eventSegment.RequiredNumberOfStaff + "<br/>\n";
 
             return Json(new { Body = mailBody, Subject = eventSegment.Coverage.ToString() }, JsonRequestBehavior.AllowGet);
         }
