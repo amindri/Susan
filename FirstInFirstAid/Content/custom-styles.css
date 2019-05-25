@@ -20,8 +20,29 @@
 
 .pinkClass {
     background-color: pink !important;
+    color: #222 !important;
+}
+
+.purpleClass {
+    background-color: purple !important;
+    color: #222 !important;
+}
+.yellowClass {
+    background-color: yellow !important;
+    color: #222 !important;
+}
+
+.blueClass {
+    background-color: blue !important;
     color: #fff !important;
 }
+
+.greyClass {
+    background-color: grey !important;
+    color: #222 !important;
+}
+
+
 
 .form-control {
     border-radius: 0;
