@@ -25,8 +25,8 @@ namespace FirstInFirstAid.Models
         public State? State { get; set; }
 
         public override string ToString()
-        {
-            return StreetNumber + " " + StreetNumber + " " + Suburb + " " + Postcode + " " + State.Value;
+        {         
+            return StreetNumber + " " + StreetNumber + " " + Suburb + " " + Postcode + " " + (State == null ? "" : State.ToString());
         }
     }
 }
