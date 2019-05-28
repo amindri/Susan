@@ -289,13 +289,13 @@ namespace FirstInFirstAid.Controllers
                     return Content("{\"Type\":\"Warn\", \"Message\":\"" + errorMessage + "\"}");
                 }
             }
-            messageBody.Replace("\n", "<br/>");
-            System.Web.HttpUtility.HtmlEncode(messageBody);
+            string modifiedMessage = messageBody.Replace("\n", "<br/>").Replace(Environment.NewLine, "<br/>");
+            //System.Web.HttpUtility.HtmlEncode(messageBody);
             var body = "<p>Email From: {0} ({1})</p><p>Message:</p><p>{2}</p>";
             var message = new MailMessage();
             message.To.Add(new MailAddress(email));
             message.Subject = subject;
-            message.Body = string.Format(body, senderName, senderEmailAddress, messageBody);
+            message.Body = string.Format(body, senderName, senderEmailAddress, modifiedMessage);
             message.IsBodyHtml = true;
             using (var smtp = new SmtpClient())
             {
