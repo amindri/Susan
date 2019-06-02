@@ -13,8 +13,23 @@
     color:#fff !important;
 }
 
+.orangeClass {
+    background-color: orange !important;
+    color: #fff !important;
+}
+
+.lightorangeClass {
+    background-color: !important;
+    color: #fff !important;
+}
+
 .greenClass {
     background-color: green !important;
+    color: #fff !important;
+}
+
+lightgreenClass {
+    background-color: lightgreen !important;
     color: #fff !important;
 }
 
@@ -27,6 +42,12 @@
     background-color: purple !important;
     color: #222 !important;
 }
+
+.lightpurpleClass {
+    background-color:  !important;
+    color: #222 !important;
+}
+
 .yellowClass {
     background-color: yellow !important;
     color: #222 !important;
