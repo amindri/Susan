@@ -136,7 +136,7 @@ namespace FirstInFirstAid.Controllers
                 dbEventSegment.Coverage = eventSegment.Coverage;
                 dbEventSegment.TotalFee = dbEventSegment.Event.HourlyRate * dbEventSegment.RequiredNumberOfStaff * dbEventSegment.Hours;
                 //Updating the Client Contact
-                if (!"null".Equals(clientContactId)) { 
+                if (clientContactId != null && !"null".Equals(clientContactId)) { 
                     ClientContact existingClientContact = dbEventSegment.ClientContact;
                     int clientContactIdInt = Int32.Parse(clientContactId);
                     if (existingClientContact != null)
@@ -164,7 +164,7 @@ namespace FirstInFirstAid.Controllers
                 }
 
                 //Updating the Venue
-                if (!"null".Equals(venueId))
+                if (venueId != null && !"null".Equals(venueId))
                 {
                     Venue existingVenue = dbEventSegment.Venue;
                     int venueIdInt = Int32.Parse(venueId); 
