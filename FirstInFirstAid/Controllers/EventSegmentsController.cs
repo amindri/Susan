@@ -111,7 +111,7 @@ namespace FirstInFirstAid.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,StartTime,EndTime,Hours,RequiredNumberOfstaff,Coverage")] EventSegment eventSegment,
-            int? venueId, int? clientContactId)
+            string venueId, string clientContactId)
         {
             if (ModelState.ContainsKey("Event"))
             {
@@ -124,7 +124,7 @@ namespace FirstInFirstAid.Controllers
 
             if (ModelState.IsValid)
             {
-                logger.DebugFormat("Modifying Event Segment of the Name: {0} and Id:{}", eventSegment.Name, eventSegment.Id);
+                logger.DebugFormat("Modifying Event Segment of the Name: {0} and Id:{1}", eventSegment.Name, eventSegment.Id);
                 EventSegment dbEventSegment = db.EventSegments.Include(e => e.Event).Include(v => v.Venue).Include(c => c.ClientContact).Where(i => i.Id == eventSegment.Id).First();
 
                 //Updating the Event Segment fields
@@ -136,43 +136,61 @@ namespace FirstInFirstAid.Controllers
                 dbEventSegment.Coverage = eventSegment.Coverage;
                 dbEventSegment.TotalFee = dbEventSegment.Event.HourlyRate * dbEventSegment.RequiredNumberOfStaff * dbEventSegment.Hours;
                 //Updating the Client Contact
-                if (clientContactId != null) { 
+                if (!"null".Equals(clientContactId)) { 
                     ClientContact existingClientContact = dbEventSegment.ClientContact;
+                    int clientContactIdInt = Int32.Parse(clientContactId);
                     if (existingClientContact != null)
                     {
-                        if (clientContactId > 0 && clientContactId != existingClientContact.Id) // A new client contact is assigned
+                        if (clientContactIdInt > 0 && clientContactIdInt != existingClientContact.Id) // A new client contact is assigned
                         {
-                            ClientContact newClientContact = db.ClientContacts.Include(e => e.EventSegments).Where(i => i.Id == clientContactId).First();
+                            ClientContact newClientContact = db.ClientContacts.Include(e => e.EventSegments).Where(i => i.Id == clientContactIdInt).First();
                             existingClientContact.EventSegments.Remove(dbEventSegment);
                             newClientContact.EventSegments.Add(dbEventSegment);
                         }
                     }
                     else  //When the event segment is not assigned a client contact before
                     {
-                        ClientContact newClientContact = db.ClientContacts.Include(e => e.EventSegments).Where(i => i.Id == clientContactId).First();
+                        ClientContact newClientContact = db.ClientContacts.Include(e => e.EventSegments).Where(i => i.Id == clientContactIdInt).First();
                         newClientContact.EventSegments.Add(dbEventSegment);
+                    }
+                }
+                else
+                {
+                    ClientContact existingClientContact = dbEventSegment.ClientContact;
+                    if (existingClientContact != null)
+                    {
+                        existingClientContact.EventSegments.Remove(dbEventSegment);
                     }
                 }
 
                 //Updating the Venue
-                if (venueId != null)
+                if (!"null".Equals(venueId))
                 {
                     Venue existingVenue = dbEventSegment.Venue;
+                    int venueIdInt = Int32.Parse(venueId); 
                     if (existingVenue != null)
                     {
-                        if (venueId > 0 && venueId != existingVenue.Id) // A new venue is assigned
+                        if (venueIdInt > 0 && venueIdInt != existingVenue.Id) // A new venue is assigned
                         {
-                            Venue newVenue = db.Venues.Include(e => e.EventSegments).Where(i => i.Id == venueId).First();
+                            Venue newVenue = db.Venues.Include(e => e.EventSegments).Where(i => i.Id == venueIdInt).First();
                             existingVenue.EventSegments.Remove(dbEventSegment);
                             newVenue.EventSegments.Add(dbEventSegment);
                         }
                     }
 
-                    else if (venueId > 0) //When the event segment is not assigned a venue before
+                    else if (venueIdInt > 0) //When the event segment is not assigned a venue before
                     {
-                        Venue newVenue = db.Venues.Include(e => e.EventSegments).Where(i => i.Id == venueId).First();
+                        Venue newVenue = db.Venues.Include(e => e.EventSegments).Where(i => i.Id == venueIdInt).First();
                         newVenue.EventSegments.Add(dbEventSegment);
                     }
+                }
+                else //removing an assigned venue
+                {
+                    Venue existingVenue = dbEventSegment.Venue;                    
+                    if (existingVenue != null)
+                    {
+                        existingVenue.EventSegments.Remove(dbEventSegment);
+                    }                   
                 }
 
                 db.SaveChanges();
