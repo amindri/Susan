@@ -307,13 +307,14 @@ namespace FirstInFirstAid.Controllers
                     return Content("{\"Type\":\"Warn\", \"Message\":\"" + errorMessage + "\"}");
                 }
             }
-
+            string modifiedMessage = messageBody.Replace("\n", "<br/>").Replace(Environment.NewLine, "<br/>");
+            //System.Web.HttpUtility.HtmlEncode(messageBody);
             var body = "<p>Email From: {0} ({1})</p><p>Message:</p><p>{2}</p>";
             var message = new MailMessage();
             message.To.Add(new MailAddress(email));
             message.To.Add(new MailAddress("susan@firstinsportsfirstaid.com.au"));
             message.Subject = subject;
-            message.Body = string.Format(body, senderName, senderEmailAddress, messageBody);
+            message.Body = string.Format(body, senderName, senderEmailAddress, modifiedMessage);
             message.IsBodyHtml = true;
             using (var smtp = new SmtpClient())
             {
@@ -385,16 +386,25 @@ namespace FirstInFirstAid.Controllers
                Where(x => x.Id == id).First();
 
             string mailBody = "Are you available for the following event? \n\nEvent Name : " + eventSegment.Event.EventName + "\n"
-                + "Event Segment Name : " + eventSegment.Name + "<br/>\n"
-                + "Venue : " + eventSegment.Venue? .Address.ToString() + "<br/>\n"
-                + "Start Time : " + eventSegment.StartTime + "<br/>\n"
-                + "End Time : " + eventSegment.EndTime + "<br/>\n"
-                + "Number of Hours :" + eventSegment.Hours + "<br/>\n"
-                + "Duty Type : " + eventSegment.Coverage.ToString() + "<br/>\n"
-                + "Client : " + eventSegment.Event.Client.Name + "<br/>\n"
-                + "Client Contact: " + eventSegment.ClientContact.ContactName + ", Ph: " + eventSegment.ClientContact.ContactPhone + 
-                    ", OfficePh: " + eventSegment.ClientContact.ContactPhoneOff;
+                + "Event Segment Name : " + eventSegment.Name + "\n"
+                + "Venue : " + eventSegment.Venue?.Address.ToString() + "\n"
+                + "Start Time : " + eventSegment.StartTime + "\n"
+                + "End Time : " + eventSegment.EndTime + "\n"
+                + "Number of Hours :" + eventSegment.Hours + "\n"
+                + "Duty Type : " + eventSegment.Coverage.ToString() + "\n";
 
+            if (eventSegment.Event.Client != null)
+            {
+                mailBody = mailBody
+                    + "Client : " + eventSegment.Event.Client.Name + "\n";                       
+            }
+
+            if (eventSegment.ClientContact != null)
+            {
+                mailBody = mailBody +
+                    "Client Contact: " + eventSegment.ClientContact.ContactName + ", Ph: " + eventSegment.ClientContact.ContactPhone +
+                        ", OfficePh: " + eventSegment.ClientContact.ContactPhoneOff;
+            }
             return Json (new { Body = mailBody, Subject = eventSegment.Coverage.ToString() }, JsonRequestBehavior.AllowGet);   
         }
 
@@ -408,15 +418,15 @@ namespace FirstInFirstAid.Controllers
                Where(x => x.Id == id).First();
 
             string mailBody =
-                "Event Name: " + eventSegment.Event.EventName + "<br/>\n"
-                + "Event Segment Name : " + eventSegment.Name + "<br/>\n"
-                + "Venue : " + eventSegment.Venue?.Address.ToString() + "<br/>\n"
-                + "Start Time : " + eventSegment.StartTime + "<br/>\n"
-                + "End Time : " + eventSegment.EndTime + "<br/>\n"
-                + "Number of Hours :" + eventSegment.Hours + "<br/>\n"
-                + "Duty Type : " + eventSegment.Coverage.ToString() + "<br/>\n"
-                + "Total Fee : " + eventSegment.TotalFee + "<br/>\n"
-                + "Number of Staff : " + eventSegment.RequiredNumberOfStaff + "<br/>\n";
+                "Event Name: " + eventSegment.Event.EventName + "\n"
+                + "Event Segment Name : " + eventSegment.Name + "\n"
+                + "Venue : " + eventSegment.Venue?.Address.ToString() + "\n"
+                + "Start Time : " + eventSegment.StartTime + "\n"
+                + "End Time : " + eventSegment.EndTime + "\n"
+                + "Number of Hours :" + eventSegment.Hours + "\n"
+                + "Duty Type : " + eventSegment.Coverage.ToString() + "\n"
+                + "Total Fee : " + eventSegment.TotalFee + "\n"
+                + "Number of Staff : " + eventSegment.RequiredNumberOfStaff + "\n";
 
             return Json(new { Body = mailBody, Subject = eventSegment.Coverage.ToString() }, JsonRequestBehavior.AllowGet);
         }

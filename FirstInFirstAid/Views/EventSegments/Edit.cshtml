@@ -382,33 +382,41 @@
         };
 
     function sendEmail(idName) {
-        var mail = {
-            id: $.trim($("#" + idName).val()),
-            messageBody: $.trim($("#messageBody" + idName).val()),
-            subject: $.trim($("#subject" + idName).val()),
-            idName: idName
-        };
+        var senderid = $.trim($("#" + idName).val());
+        
+        if (senderid == "Please Select") {
+            $("#warnModalBody").text("Client not specified");
+            $('#warnModal').modal('show');
 
-        $.ajax({
-            type: "POST",
-            url: '/EventSegments/SendMail',
-            data: JSON.stringify(mail),
-            dataType: 'json',
-            contentType: "application/json; charset=utf-8",
-            success: function (response) {
-                if (response.Type == "Success") {
-                    $("#successModalBody").text(response.Message);
-                    $('#successModal').modal('show');
-                } else {
-                    $("#warnModalBody").text(response.Message);
+        } else {
+            var mail = {
+                id: senderid,
+                messageBody: $.trim($("#messageBody" + idName).val()),
+                subject: $.trim($("#subject" + idName).val()),
+                idName: idName
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '/EventSegments/SendMail',
+                data: JSON.stringify(mail),
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    if (response.Type == "Success") {
+                        $("#successModalBody").text(response.Message);
+                        $('#successModal').modal('show');
+                    } else {
+                        $("#warnModalBody").text(response.Message);
+                        $('#warnModal').modal('show');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $("#warnModalBody").text(error);
                     $('#warnModal').modal('show');
                 }
-            },
-            error: function (xhr, status, error) {
-                $("#warnModalBody").text(error);
-                $('#warnModal').modal('show');
-            }
-        });
+            });
+        }
     };
 
 </script>
