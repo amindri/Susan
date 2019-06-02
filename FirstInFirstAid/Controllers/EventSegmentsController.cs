@@ -311,6 +311,7 @@ namespace FirstInFirstAid.Controllers
             var body = "<p>Email From: {0} ({1})</p><p>Message:</p><p>{2}</p>";
             var message = new MailMessage();
             message.To.Add(new MailAddress(email));
+            message.To.Add(new MailAddress("susan@firstinsportsfirstaid.com.au"));
             message.Subject = subject;
             message.Body = string.Format(body, senderName, senderEmailAddress, messageBody);
             message.IsBodyHtml = true;
