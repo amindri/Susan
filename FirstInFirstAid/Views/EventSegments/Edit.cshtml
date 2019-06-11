@@ -532,6 +532,7 @@
                             <label class="control-label col-md-3">Trainer Name</label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control col-md-9" id="Name" readonly data-trainerId="@Model.TrainorAllocations[i].Trainor.Id" value="@Model.TrainorAllocations[i].Trainor.FirstName @Model.TrainorAllocations[i].Trainor.Lastname">
+                                <p id="traempty" class="c-val" hidden>Trainer name is missing</p>
                             </div>
                         </div>                        
                         <div class="form-group">
