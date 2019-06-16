@@ -42,19 +42,21 @@
 
         $("#modal").on('hidden.bs.modal', function () {
             $(".modal-body input p").val("");
-        });
-
-        // client-side validation for client name combo box and submit form
-        $("#createEvent").click(function () {
-            
-            var cName = $("#Client").val();
-            if ((cName == 'Please Select') || (cName == '')) {
-                $("#cempty").show();
-            } else {
-                $("#form").append("<input type='hidden' name='clientId'" + " value='" + $("#Client").val() + "'/>");                    
-            }       
-        });  
+        });                
     });
+
+    // client-side validation for client name combo box and submit form
+    function sendform() {
+
+        var cName = $("#Client").val();
+        if ((cName == 'Please Select') || (cName == '')) {
+            $("#cempty").show();
+            return false;
+        } else {
+            $("#form").append("<input type='hidden' name='clientId'" + " value='" + $("#Client").val() + "'/>");                    
+            return true;
+        }       
+    }
 
     function addClientsToList() {
         $.ajax({
@@ -140,7 +142,7 @@
 
                 <div class="form-group">
                     <div class=" col-md-2">
-                        <input type="submit" value="Add Event" class="btn-lg btn-success" id="createEvent" />
+                        <input type="submit" value="Add Event" class="btn-lg btn-success" id="createEvent"  onClick="return sendform()" />
                     </div>
                 </div>
             </div>
